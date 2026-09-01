@@ -56,24 +56,64 @@ describe('sending an army', () => {
 })
 
 describe('resolving a battle', () => {
-  it('takes the acres when the force is overwhelming', () => {
+  it('wins the battle when the force is overwhelming', () => {
     const state = armedRealm(60)
     launchExpedition(state, testRegistry, 'hamlet', 60)
 
     const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
 
     expect(afterBattle.statistics.battlesWon).toBe(1)
-    expect(afterBattle.acres).toBe(state.acres + HAMLET.acresGained)
     expect(afterBattle.expeditions[0]!.phase).toBe('returning')
   })
 
-  it('collects plunder from a won battle', () => {
+  it('leaves the acres untouched until the victorious army walks back in', () => {
+    const state = armedRealm(60)
+    const acresBefore = state.acres
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+
+    const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
+    expect(afterBattle.acres).toBe(acresBefore)
+    expect(afterBattle.expeditions[0]!.outcomeAcresGained).toBe(HAMLET.acresGained)
+
+    const afterReturn = advanceGame(afterBattle, HAMLET.returnSeconds + 1, testRegistry)
+    expect(afterReturn.acres).toBe(acresBefore + HAMLET.acresGained)
+    expect(afterReturn.statistics.acresConquered).toBe(HAMLET.acresGained)
+  })
+
+  it('holds the plunder until the army is home', () => {
     const state = armedRealm(60, { resources: { food: 0 } })
     launchExpedition(state, testRegistry, 'hamlet', 60)
 
     const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
+    expect(afterBattle.resources.gold).toBe(0)
 
-    expect(afterBattle.resources.gold).toBeGreaterThan(0)
+    const afterReturn = advanceGame(afterBattle, HAMLET.returnSeconds + 1, testRegistry)
+    expect(afterReturn.resources.gold).toBeGreaterThan(0)
+  })
+
+  it('settles the plunder at the battle, so a boost that has since faded still pays out', () => {
+    const soulHarvest = testRegistry.spellsById.get('dark.soulHarvest')!
+    const withBoost = armedRealm(60, { resources: { food: 0 } })
+    withBoost.magic.activeBuffs.push({
+      spellId: soulHarvest.id,
+      label: soulHarvest.name,
+      remainingSeconds: HAMLET.travelSeconds + 2,
+      modifiers: soulHarvest.effect.kind === 'buff' ? soulHarvest.effect.modifiers : [],
+    })
+    launchExpedition(withBoost, testRegistry, 'hamlet', 60)
+
+    const plain = armedRealm(60, { resources: { food: 0 } })
+    launchExpedition(plain, testRegistry, 'hamlet', 60)
+
+    const goldAfterTheWholeCampaign = (state: GameState): number => {
+      const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
+      return advanceGame(afterBattle, HAMLET.returnSeconds + 1, testRegistry).resources.gold
+    }
+
+    expect(withBoost.magic.activeBuffs).toHaveLength(1)
+    expect(goldAfterTheWholeCampaign(withBoost)).toBeGreaterThan(
+      goldAfterTheWholeCampaign(plain),
+    )
   })
 
   it('fails and takes no acres when the defences far outmatch the force sent', () => {

@@ -21,16 +21,22 @@ export const englishTranslations = {
     marchBegan_other:
       '{{count}} soldiers march on {{targetName}}, arriving in {{arrivalSeconds, duration}}.',
     victoryWithoutLosses:
-      '{{targetName}} falls, and {{acres}} acres are taken without a single loss.',
+      '{{targetName}} falls without a single loss. The army starts home with {{acres}} acres.',
     victoryWithLosses_one:
-      '{{targetName}} falls. {{acres}} acres taken, and {{count}} soldier does not come back.',
+      '{{targetName}} falls, though {{count}} soldier does not come back. The rest start home with {{acres}} acres.',
     victoryWithLosses_other:
-      '{{targetName}} falls. {{acres}} acres taken, and {{count}} soldiers do not come back.',
+      '{{targetName}} falls, though {{count}} soldiers do not come back. The rest start home with {{acres}} acres.',
     defeatWithoutLosses: 'The assault on {{targetName}} falters, though nobody falls.',
     defeatWithLosses_one:
       'The assault on {{targetName}} falters, and {{count}} soldier does not come back.',
     defeatWithLosses_other:
       'The assault on {{targetName}} falters, and {{count}} soldiers do not come back.',
+    spoilsArrived_one:
+      '{{count}} soldier is home, and {{acres}} acres and the plunder are yours.',
+    spoilsArrived_other:
+      '{{count}} soldiers are home, and {{acres}} acres and the plunder are yours.',
+    spoilsArrivedWithoutSurvivors:
+      'Nobody came back from {{targetName}}, but its {{acres}} acres and its plunder are yours.',
     soldiersHome_one: '{{count}} soldier is home again.',
     soldiersHome_other: '{{count}} soldiers are home again.',
 
@@ -152,11 +158,15 @@ export const englishTranslations = {
       power: 'power {{power}}',
       targetSummary: '{{acres}} acres · {{garrison}} · {{travel}} each way',
       plunder: 'plunder {{loot}}',
+      carryingHome: 'carrying home {{acres}} acres and {{loot}}',
     },
     thievery: {
       title: 'Thievery',
       jobsTitle: 'Jobs in progress',
       jobsSubtitle: 'Thieves can miss, and thieves can die.',
+      targetSummary_one: '{{count}} thief · {{success}} success · {{duration}}',
+      targetSummary_other: '{{count}} thieves · {{success}} success · {{duration}}',
+      takes: 'takes {{loot}}',
     },
     wonder: {
       title: 'The Wonder of Hai and Yah',

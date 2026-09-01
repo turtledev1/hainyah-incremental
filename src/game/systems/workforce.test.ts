@@ -48,6 +48,7 @@ describe('losing citizens', () => {
       totalPhaseSeconds: 60,
       appliedBoostSpellIds: [],
       outcomeAcresGained: 0,
+      outcomePlunder: {},
       outcomeSoldiersLost: 0,
       outcomeSucceeded: false,
     })

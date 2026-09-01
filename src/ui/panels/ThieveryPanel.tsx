@@ -13,7 +13,7 @@ import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
 import { SectionCard } from '../components/SectionCard'
 import { BALANCE } from '../../game/content/balance'
-import { amountEntries, formatDuration, formatNumber, formatPercentage } from '../format'
+import { formatAmounts, formatDuration, formatPercentage } from '../format'
 
 interface ThieveryPanelProps {
   readonly state: GameState
@@ -34,14 +34,14 @@ function MarkCard({ target }: { readonly target: ThieveryTargetView }) {
           {target.definition.flavor}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          {target.definition.requiredThieves} thieves · {formatPercentage(target.successChance)} success ·{' '}
-          {formatDuration(target.definition.durationSeconds)}
+          {t('panels.thievery.targetSummary', {
+            count: target.definition.requiredThieves,
+            success: formatPercentage(target.successChance),
+            duration: formatDuration(target.definition.durationSeconds),
+          })}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          takes{' '}
-          {amountEntries(target.definition.loot)
-            .map(([resourceId, amount]) => `${formatNumber(amount)} ${resourceId}`)
-            .join(', ')}
+          {t('panels.thievery.takes', { loot: formatAmounts(target.definition.loot) })}
         </Typography>
         <Tooltip
           title={target.refusal ? t(`refusals.heist.${target.refusal}`) : t('actions.sendThemOut')}

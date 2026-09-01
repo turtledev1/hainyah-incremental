@@ -3,6 +3,7 @@ import type {
   ConquestTargetId,
   MagicCircleId,
   RaceId,
+  ResourceAmounts,
   ResourceId,
   SpellId,
   ThieveryTargetId,
@@ -64,6 +65,7 @@ export interface Expedition {
   /** Spell ids, so a save never stores balance numbers a later version contradicts. */
   readonly appliedBoostSpellIds: readonly SpellId[]
   outcomeAcresGained: number
+  outcomePlunder: ResourceAmounts
   outcomeSoldiersLost: number
   outcomeSucceeded: boolean
 }

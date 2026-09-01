@@ -71,3 +71,9 @@ export function amountEntries(amounts: ResourceAmounts): readonly [ResourceId, n
     .filter(([, amount]) => (amount ?? 0) > 0)
     .map(([resourceId, amount]) => [resourceId as ResourceId, amount ?? 0])
 }
+
+export function formatAmounts(amounts: ResourceAmounts): string {
+  return amountEntries(amounts)
+    .map(([resourceId, amount]) => `${formatNumber(amount)} ${resourceId}`)
+    .join(', ')
+}

@@ -15,7 +15,7 @@ import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
 import { SectionCard } from '../components/SectionCard'
-import { amountEntries, formatDuration, formatNumber } from '../format'
+import { formatAmounts, formatDuration, formatNumber } from '../format'
 
 interface WarfarePanelProps {
   readonly state: GameState
@@ -65,16 +65,17 @@ function TargetCard({
         </Typography>
 
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          {formatNumber(target.definition.acresGained)} acres ·{' '}
-          {t('realm.targetGarrison', { strength: formatNumber(target.estimatedDefense) })} ·{' '}
-          {formatDuration(target.definition.travelSeconds)} each way
+          {t('panels.conquest.targetSummary', {
+            acres: formatNumber(target.definition.acresGained),
+            garrison: t('realm.targetGarrison', {
+              strength: formatNumber(target.estimatedDefense),
+            }),
+            travel: formatDuration(target.definition.travelSeconds),
+          })}
         </Typography>
 
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          plunder{' '}
-          {amountEntries(target.definition.plunder)
-            .map(([resourceId, amount]) => `${formatNumber(amount)} ${resourceId}`)
-            .join(', ')}
+          {t('panels.conquest.plunder', { loot: formatAmounts(target.definition.plunder) })}
         </Typography>
 
         <Stack direction="row" sx={{ gap: 1, alignItems: "center" }}>
@@ -88,7 +89,7 @@ function TargetCard({
             slotProps={{ htmlInput: { min: target.definition.requiredSoldiers, step: 1 } }}
           />
           <Typography variant="caption" color={isFavourable ? 'success.main' : 'error.main'} sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-            power {formatNumber(projectedPower)}
+            {t('panels.conquest.power', { power: formatNumber(projectedPower) })}
           </Typography>
         </Stack>
 
@@ -157,6 +158,18 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
                     value={progress}
                     color={expedition.phase === 'travelling' ? 'primary' : 'success'}
                   />
+                  {expedition.outcomeSucceeded ? (
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ fontFamily: NUMERIC_FONT_FAMILY }}
+                    >
+                      {t('panels.conquest.carryingHome', {
+                        acres: formatNumber(expedition.outcomeAcresGained),
+                        loot: formatAmounts(expedition.outcomePlunder),
+                      })}
+                    </Typography>
+                  ) : null}
                 </Stack>
               )
             })}

@@ -93,6 +93,7 @@ export function launchExpedition(
     totalPhaseSeconds: travelSeconds,
     appliedBoostSpellIds,
     outcomeAcresGained: 0,
+    outcomePlunder: {},
     outcomeSoldiersLost: 0,
     outcomeSucceeded: false,
   })
@@ -159,13 +160,14 @@ function resolveBattle(
   state.lastBattleSoldiersLost = soldiersLost
 
   if (succeeded) {
-    grantAcres(state, target.acresGained)
-    addResources(state, scalePlunder(target.plunder, resolveMultiplier(index, 'warfare.plunder')))
     state.defeatedConquestTargets[expedition.targetId] = timesConquered(state, expedition.targetId) + 1
     state.highestConquestTierDefeated = Math.max(state.highestConquestTierDefeated, target.tier)
     state.statistics.battlesWon += 1
-    state.statistics.acresConquered += target.acresGained
     expedition.outcomeAcresGained = target.acresGained
+    expedition.outcomePlunder = scalePlunder(
+      target.plunder,
+      resolveMultiplier(index, 'warfare.plunder'),
+    )
     emitEvent(
       state,
       'warfare',
@@ -216,7 +218,23 @@ export const advanceExpeditions = ({ state, registry, deltaSeconds, random }: Ti
   state.expeditions = state.expeditions.filter((expedition) => !arrived.includes(expedition))
   for (const expedition of arrived) {
     state.soldiersAtHome += expedition.soldiers
-    if (expedition.soldiers > 0) {
+    if (expedition.outcomeSucceeded) {
+      grantAcres(state, expedition.outcomeAcresGained)
+      addResources(state, expedition.outcomePlunder)
+      state.statistics.acresConquered += expedition.outcomeAcresGained
+      emitEvent(
+        state,
+        'warfare',
+        expedition.soldiers > 0
+          ? 'chronicle.spoilsArrived'
+          : 'chronicle.spoilsArrivedWithoutSurvivors',
+        {
+          count: expedition.soldiers,
+          acres: expedition.outcomeAcresGained,
+          targetName: registry.conquestTargetsById.get(expedition.targetId)?.name ?? '',
+        },
+      )
+    } else if (expedition.soldiers > 0) {
       emitEvent(state, 'warfare', 'chronicle.soldiersHome', { count: expedition.soldiers })
     }
   }

@@ -4,6 +4,7 @@ import type {
   ConquestTargetId,
   MagicCircleId,
   RaceId,
+  ResourceAmounts,
   ResourceId,
   SpellId,
   ThieveryTargetId,
@@ -57,6 +58,7 @@ export interface PersistedSave {
     totalPhaseSeconds: number
     appliedBoostSpellIds: readonly SpellId[]
     outcomeAcresGained: number
+    outcomePlunder: ResourceAmounts
     outcomeSoldiersLost: number
     outcomeSucceeded: boolean
   }[]
@@ -209,7 +211,11 @@ export function fromPersistedSave(save: PersistedSave, registry: ContentRegistry
       .map((order) => ({ ...order })),
     expeditions: save.expeditions
       .filter((expedition) => registry.conquestTargetsById.has(expedition.targetId))
-      .map((expedition) => ({ ...expedition, appliedBoostSpellIds: [...expedition.appliedBoostSpellIds] })),
+      .map((expedition) => ({
+        ...expedition,
+        appliedBoostSpellIds: [...expedition.appliedBoostSpellIds],
+        outcomePlunder: { ...(expedition.outcomePlunder ?? {}) },
+      })),
     heists: save.heists
       .filter((heist) => registry.thieveryTargetsById.has(heist.targetId))
       .map((heist) => ({ ...heist, appliedBoostSpellIds: [...heist.appliedBoostSpellIds] })),
