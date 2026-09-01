@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -14,6 +15,7 @@ import { useGameStore } from '../../game/store/gameStore'
 import { CardGrid } from '../components/CardGrid'
 
 export function RaceSelectionScreen() {
+  const { t } = useTranslation()
   const registry = useGameStore((store) => store.registry)
   const startNewRun = useGameStore((store) => store.startNewRun)
 
@@ -56,11 +58,14 @@ export function RaceSelectionScreen() {
     if (toChoose === 0) {
       return grantedNames
     }
-    const chosenPart = toChoose === 1 ? 'one circle of your choice' : `${toChoose} circles of your choice`
+    const chosenPart =
+      toChoose === 1
+        ? t('raceSelection.oneCircleOfYourChoice')
+        : t('raceSelection.manyCirclesOfYourChoice', { count: toChoose })
     if (granted.length === 0) {
       return chosenPart.charAt(0).toUpperCase() + chosenPart.slice(1)
     }
-    return `${grantedNames}, plus ${chosenPart}`
+    return t('raceSelection.grantedPlusChosen', { granted: grantedNames, chosen: chosenPart })
   }
 
   return (
@@ -68,15 +73,14 @@ export function RaceSelectionScreen() {
       <Stack sx={{ gap: 1 }}>
         <Typography variant="h1">Hainyah</Typography>
         <Typography variant="body1" color="text.secondary">
-          Hai holds the sun, Yah holds the ledger, and between them they rule everything you can see.
-          You begin with ten empty acres and your own two hands.
+          {t('raceSelection.intro')}
         </Typography>
       </Stack>
 
       <Divider />
 
       <Stack sx={{ gap: 1.5 }}>
-        <Typography variant="h2">Who will you rule?</Typography>
+        <Typography variant="h2">{t('raceSelection.chooseRace')}</Typography>
         <CardGrid minimumColumnWidth={280}>
           {registry.races.map((race) => (
             <Card
@@ -95,7 +99,7 @@ export function RaceSelectionScreen() {
 
                   <Box>
                     <Typography variant="subtitle2" color="success.main">
-                      Strengths
+                      {t('raceSelection.strengths')}
                     </Typography>
                     {race.advantages.map((advantage) => (
                       <Typography key={advantage} variant="body2">
@@ -106,7 +110,7 @@ export function RaceSelectionScreen() {
 
                   <Box>
                     <Typography variant="subtitle2" color="error.main">
-                      Costs
+                      {t('raceSelection.costs')}
                     </Typography>
                     {race.disadvantages.map((disadvantage) => (
                       <Typography key={disadvantage} variant="body2">
@@ -129,18 +133,20 @@ export function RaceSelectionScreen() {
         <Stack sx={{ gap: 1.5 }}>
           <Typography variant="h2">
             {chosenCircleCount === 0
-              ? 'Your circle'
-              : `Choose ${chosenCircleCount === 1 ? 'a circle' : `${chosenCircleCount} circles`}`}
+              ? t('raceSelection.yourCircle')
+              : chosenCircleCount === 1
+                ? t('raceSelection.chooseCircle')
+                : t('raceSelection.chooseCircles', { count: chosenCircleCount })}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Your temples will study only these. The choice cannot be changed later.
+            {t('raceSelection.circleWarning')}
           </Typography>
 
           <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
             {grantedCircleIds.map((circleId) => (
               <Chip
                 key={circleId}
-                label={`${circleName(circleId)} — by right`}
+                label={t('raceSelection.circleByRight', { circleName: circleName(circleId) })}
                 color="secondary"
                 variant="filled"
               />
@@ -174,7 +180,7 @@ export function RaceSelectionScreen() {
           disabled={!isReadyToBegin}
           onClick={() => startNewRun(selectedRaceId!, [...grantedCircleIds, ...selectedCircleIds])}
         >
-          Claim your ten acres
+          {t('raceSelection.begin')}
         </Button>
       </Box>
     </Stack>

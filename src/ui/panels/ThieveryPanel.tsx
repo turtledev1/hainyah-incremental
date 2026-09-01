@@ -8,7 +8,6 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import type { GameState } from '../../game/model/state'
 import type { RealmView, ThieveryTargetView } from '../../game/selectors/realmView'
-import { describeHeistRefusal } from '../../game/systems/thievery'
 import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
@@ -22,6 +21,7 @@ interface ThieveryPanelProps {
 }
 
 function MarkCard({ target }: { readonly target: ThieveryTargetView }) {
+  const { t } = useTranslation()
   const steal = useGameStore((store) => store.steal)
 
   return (
@@ -43,14 +43,16 @@ function MarkCard({ target }: { readonly target: ThieveryTargetView }) {
             .map(([resourceId, amount]) => `${formatNumber(amount)} ${resourceId}`)
             .join(', ')}
         </Typography>
-        <Tooltip title={target.refusal ? describeHeistRefusal(target.refusal) : 'Send them out'}>
+        <Tooltip
+          title={target.refusal ? t(`refusals.heist.${target.refusal}`) : t('actions.sendThemOut')}
+        >
           <span>
             <Button
               variant="contained"
               disabled={Boolean(target.refusal)}
               onClick={() => steal(target.definition.id)}
             >
-              Run the job
+              {t('actions.runTheJob')}
             </Button>
           </span>
         </Tooltip>
@@ -66,7 +68,10 @@ export function ThieveryPanel({ state, view }: ThieveryPanelProps) {
   return (
     <Stack sx={{ gap: 2 }}>
       {state.heists.length > 0 ? (
-        <SectionCard title="Jobs in progress" subtitle="Thieves can miss, and thieves can die.">
+        <SectionCard
+          title={t('panels.thievery.jobsTitle')}
+          subtitle={t('panels.thievery.jobsSubtitle')}
+        >
           <Stack sx={{ gap: 1.25 }}>
             {state.heists.map((heist) => {
               const target = registry.thieveryTargetsById.get(heist.targetId)
@@ -96,7 +101,7 @@ export function ThieveryPanel({ state, view }: ThieveryPanelProps) {
       ) : null}
 
       <SectionCard
-        title="Thievery"
+        title={t('panels.thievery.title')}
         subtitle={t('realm.thievesIdle', {
           count: state.thievesAtHome,
           ceiling: formatPercentage(BALANCE.thievery.maximumSuccessChance),

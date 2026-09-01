@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography'
 import type { UpgradeLineId } from '../../game/model/ids'
 import type { GameState } from '../../game/model/state'
 import type { RealmView, UpgradeView } from '../../game/selectors/realmView'
-import { describeUpgradeRefusal } from '../../game/systems/upgrades'
 import { useGameStore } from '../../game/store/gameStore'
 import { CardGrid } from '../components/CardGrid'
 import { CostList } from '../components/CostList'
@@ -42,7 +41,7 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
               variant="outlined"
             />
           ) : upgrade.purchases > 0 ? (
-            <Chip size="small" color="primary" label="adopted" />
+            <Chip size="small" color="primary" label={t('actions.adopted')} />
           ) : null}
         </Stack>
 
@@ -87,14 +86,18 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
         {isExhausted ? null : <CostList costs={upgrade.cost} state={state} />}
 
         {isExhausted ? null : (
-          <Tooltip title={upgrade.refusal ? describeUpgradeRefusal(upgrade.refusal) : 'Adopt it'}>
+          <Tooltip
+            title={
+              upgrade.refusal ? t(`refusals.upgrade.${upgrade.refusal}`) : t('actions.adoptExplained')
+            }
+          >
             <span>
               <Button
                 variant="contained"
                 disabled={Boolean(upgrade.refusal)}
                 onClick={() => buyUpgrade(upgrade.definition.id)}
               >
-                {isRepeatable && upgrade.purchases > 0 ? 'Again' : 'Adopt'}
+                {t(isRepeatable && upgrade.purchases > 0 ? 'actions.adoptAgain' : 'actions.adopt')}
               </Button>
             </span>
           </Tooltip>
@@ -105,6 +108,7 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
 }
 
 export function UpgradesPanel({ state, view }: UpgradesPanelProps) {
+  const { t } = useTranslation()
   const registry = useGameStore((store) => store.registry)
 
   const upgradesByLine = new Map<UpgradeLineId, UpgradeView[]>()
@@ -120,11 +124,11 @@ export function UpgradesPanel({ state, view }: UpgradesPanelProps) {
   if (upgradesByLine.size === 0) {
     return (
       <SectionCard
-        title="Improvements"
-        subtitle="Nothing yet. Improvements appear as the buildings they refine go up and the materials come in."
+        title={t('panels.improvements.title')}
+        subtitle={t('panels.improvements.emptySubtitle')}
       >
         <Typography variant="body2" color="text.secondary">
-          Raise a building and gather a little, and there will be something here.
+          {t('panels.improvements.emptyBody')}
         </Typography>
       </SectionCard>
     )

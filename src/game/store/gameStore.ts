@@ -17,20 +17,18 @@ import type {
   UpgradeId,
 } from '../model/ids'
 import type { GameState } from '../model/state'
-import { buildAscensionStage, describeAscensionRefusal } from '../systems/ascension'
+import { buildAscensionStage } from '../systems/ascension'
 import {
   checkConstructionRefusal,
   demolishBuilding,
-  describeConstructionRefusal,
-  describeDemolitionRefusal,
   queueBuildings,
 } from '../systems/construction'
 import { gatherByHand } from '../systems/manualGathering'
-import { castSpell, describeCastRefusal } from '../systems/magic'
+import { castSpell } from '../systems/magic'
 import { buildModifierIndexForState } from '../systems/modifiers'
-import { describeHeistRefusal, launchHeist } from '../systems/thievery'
-import { describeUpgradeRefusal, purchaseUpgrade } from '../systems/upgrades'
-import { describeExpeditionRefusal, launchExpedition } from '../systems/warfare'
+import { launchHeist } from '../systems/thievery'
+import { purchaseUpgrade } from '../systems/upgrades'
+import { launchExpedition } from '../systems/warfare'
 import {
   assignWorkers,
   clearWorkers,
@@ -51,6 +49,7 @@ interface GameStoreState {
   phase: GamePhase
   offlineSummary?: OfflineProgressSummary
   victoryAcknowledged: boolean
+  /** A translation key; the interface renders it. */
   notice?: string
 }
 
@@ -172,7 +171,7 @@ export const useGameStore = create<GameStore>((set, get) => {
         const modifiers = buildModifierIndexForState(state, registry)
         const refusalBefore = checkConstructionRefusal(state, registry, modifiers, buildingId)
         if (refusalBefore) {
-          return describeConstructionRefusal(refusalBefore)
+          return `refusals.construction.${refusalBefore}`
         }
         queueBuildings(state, registry, modifiers, buildingId, count)
         return undefined
@@ -182,7 +181,7 @@ export const useGameStore = create<GameStore>((set, get) => {
       runAction((state, registry) => {
         const modifiers = buildModifierIndexForState(state, registry)
         const refusal = demolishBuilding(state, registry, modifiers, buildingId)
-        return refusal ? describeDemolitionRefusal(refusal) : undefined
+        return refusal ? `refusals.demolition.${refusal}` : undefined
       }),
 
     fillWorkers: (buildingId) =>
@@ -236,31 +235,31 @@ export const useGameStore = create<GameStore>((set, get) => {
     cast: (spellId) =>
       runAction((state, registry) => {
         const refusal = castSpell(state, registry, spellId, createRandomNumberGenerator(state))
-        return refusal ? describeCastRefusal(refusal) : undefined
+        return refusal ? `refusals.cast.${refusal}` : undefined
       }),
 
     attack: (targetId, soldiers) =>
       runAction((state, registry) => {
         const refusal = launchExpedition(state, registry, targetId, soldiers)
-        return refusal ? describeExpeditionRefusal(refusal) : undefined
+        return refusal ? `refusals.expedition.${refusal}` : undefined
       }),
 
     steal: (targetId) =>
       runAction((state, registry) => {
         const refusal = launchHeist(state, registry, targetId)
-        return refusal ? describeHeistRefusal(refusal) : undefined
+        return refusal ? `refusals.heist.${refusal}` : undefined
       }),
 
     buyUpgrade: (upgradeId) =>
       runAction((state, registry) => {
         const refusal = purchaseUpgrade(state, registry, upgradeId)
-        return refusal ? describeUpgradeRefusal(refusal) : undefined
+        return refusal ? `refusals.upgrade.${refusal}` : undefined
       }),
 
     advanceAscension: () =>
       runAction((state, registry) => {
         const refusal = buildAscensionStage(state, registry)
-        return refusal ? describeAscensionRefusal(refusal) : undefined
+        return refusal ? `refusals.ascension.${refusal}` : undefined
       }),
 
     exportSave: () => {
@@ -272,11 +271,11 @@ export const useGameStore = create<GameStore>((set, get) => {
       const { registry } = get()
       const loaded = importSaveFromText(encoded, registry)
       if (!loaded) {
-        set({ notice: 'That save could not be read.' })
+        set({ notice: 'settings.importFailed' })
         return false
       }
       writeSave(loaded.state)
-      set({ state: loaded.state, phase: 'playing', notice: 'Save loaded.' })
+      set({ state: loaded.state, phase: 'playing', notice: 'settings.importSucceeded' })
       return true
     },
   }

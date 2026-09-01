@@ -9,16 +9,12 @@ export function nextAscensionStage(
   return registry.ascensionStages[state.completedAscensionStages]
 }
 
-export type AscensionRefusal = 'alreadyAscended' | 'cannotAffordCost'
+export const ASCENSION_REFUSALS = [
+  'alreadyAscended',
+  'cannotAffordCost',
+] as const
 
-export function describeAscensionRefusal(refusal: AscensionRefusal): string {
-  switch (refusal) {
-    case 'alreadyAscended':
-      return 'The Wonder is finished. There is nothing left to build.'
-    case 'cannotAffordCost':
-      return 'The gods are patient, but they are not cheap.'
-  }
-}
+export type AscensionRefusal = (typeof ASCENSION_REFUSALS)[number]
 
 export function checkAscensionRefusal(
   state: GameState,

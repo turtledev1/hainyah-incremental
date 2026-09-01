@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { RESOURCE_IDS } from '../../game/model/ids'
+import { useGameStore } from '../../game/store/gameStore'
 import type { GameState } from '../../game/model/state'
 import type { RealmView } from '../../game/selectors/realmView'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
@@ -47,6 +48,7 @@ function Readout({ label, value, detail, tooltip, emphasis = 'neutral' }: Readou
 
 export function ResourceBar({ state, view }: ResourceBarProps) {
   const { t } = useTranslation()
+  const registry = useGameStore((store) => store.registry)
   const doesNotEat = view.foodConsumptionPerCitizenPerSecond === 0
 
   return (
@@ -65,64 +67,65 @@ export function ResourceBar({ state, view }: ResourceBarProps) {
         return (
           <Readout
             key={resourceId}
-            label={resourceId}
+            label={registry.resourcesById.get(resourceId)?.name ?? resourceId}
             value={formatStockpile(state.resources[resourceId])}
             detail={formatRate(perSecond)}
             emphasis={perSecond > 0 ? 'positive' : perSecond < 0 ? 'negative' : 'neutral'}
             tooltip={
               resourceId === 'food'
                 ? doesNotEat
-                  ? t('realm.doesNotHunger')
-                  : `Produced ${formatRate(view.productionPerSecond.food)}, eaten ${formatNumber(
-                      view.foodConsumptionPerSecond,
-                    )}/s`
-                : `Produced ${formatRate(view.productionPerSecond[resourceId])}`
+                  ? t('bar.doesNotHunger')
+                  : t('bar.foodProduced', {
+                      produced: formatRate(view.productionPerSecond.food),
+                      eaten: formatNumber(view.foodConsumptionPerSecond),
+                    })
+                : t('bar.produced', { produced: formatRate(view.productionPerSecond[resourceId]) })
             }
           />
         )
       })}
 
       <Readout
-        label="citizens"
+        label={t('bar.citizens')}
         value={`${formatNumber(Math.floor(state.population))} / ${formatNumber(
           view.populationCapacity,
         )}`}
         detail={t('realm.idleCitizens', { count: view.idleCitizens })}
         tooltip={
           Number.isFinite(view.secondsUntilNextCitizen)
-            ? `The next citizen arrives in ${formatDuration(view.secondsUntilNextCitizen)}.`
+            ? t('bar.citizensTooltip', { arrival: view.secondsUntilNextCitizen })
             : view.freeHousingSlots <= 0
-              ? 'Every house is full. Build another to make room.'
-              : 'Nobody is on the way — the granary is too low to raise anyone.'
+              ? t('bar.citizensFull')
+              : t('bar.citizensNoFood')
         }
       />
       <Readout
-        label="acres"
+        label={t('bar.acres')}
         value={`${formatNumber(state.acres)}`}
         detail={t('realm.freeAcres', { count: view.freeAcres })}
-        tooltip="Every building takes one acre. Acres come from conquest."
+        tooltip={t('bar.acresTooltip')}
       />
       <Readout
-        label="army"
+        label={t('bar.army')}
         value={`${formatNumber(state.soldiersAtHome)} / ${formatNumber(view.armyCapacity)}`}
         detail={
           view.soldiersAway > 0 ? t('realm.soldiersAway', { count: view.soldiersAway }) : undefined
         }
-        tooltip="Soldiers at home, and the capacity your staffed barracks provide."
+        tooltip={t('bar.armyTooltip')}
       />
       <Readout
-        label="thieves"
+        label={t('bar.thieves')}
         value={`${formatNumber(state.thievesAtHome)} / ${formatNumber(view.thievesCapacity)}`}
         detail={
           view.thievesAway > 0 ? t('realm.thievesOut', { count: view.thievesAway }) : undefined
         }
-        tooltip="Thieves idle at the guild, and the capacity your staffed guilds provide."
+        tooltip={t('bar.thievesTooltip')}
       />
       <Readout
-        label="mana"
+        label={t('bar.mana')}
         value={`${formatStockpile(state.magic.mana)} / ${formatStockpile(view.manaCapacity)}`}
         detail={formatPerHour(view.manaRegenPerSecond)}
-        tooltip="Your mages carry this. Every magic tier they reach deepens the pool and quickens its recovery."
+        tooltip={t('bar.manaTooltip')}
       />
     </Box>
   )

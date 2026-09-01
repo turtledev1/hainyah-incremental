@@ -26,33 +26,17 @@ export function upgradeCost(state: GameState, upgrade: UpgradeDefinition): Resou
   return cost
 }
 
-export type UpgradeRefusal =
-  | 'unknownUpgrade'
-  | 'alreadyAtMaximum'
-  | 'missingPrerequisiteUpgrade'
-  | 'missingBuildings'
-  | 'magicTierTooLow'
-  | 'conquestTierTooLow'
-  | 'cannotAffordCost'
+export const UPGRADE_REFUSALS = [
+  'unknownUpgrade',
+  'alreadyAtMaximum',
+  'missingPrerequisiteUpgrade',
+  'missingBuildings',
+  'magicTierTooLow',
+  'conquestTierTooLow',
+  'cannotAffordCost',
+] as const
 
-export function describeUpgradeRefusal(refusal: UpgradeRefusal): string {
-  switch (refusal) {
-    case 'unknownUpgrade':
-      return 'No such improvement.'
-    case 'alreadyAtMaximum':
-      return 'Already done as many times as it can be.'
-    case 'missingPrerequisiteUpgrade':
-      return 'An earlier improvement in this line is missing.'
-    case 'missingBuildings':
-      return 'You do not have enough of the buildings this improves.'
-    case 'magicTierTooLow':
-      return 'Your circles are not deep enough yet.'
-    case 'conquestTierTooLow':
-      return 'You have not taken a settlement large enough to learn this.'
-    case 'cannotAffordCost':
-      return 'Not enough materials.'
-  }
-}
+export type UpgradeRefusal = (typeof UPGRADE_REFUSALS)[number]
 
 export function checkUpgradeRefusal(
   state: GameState,

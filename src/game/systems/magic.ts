@@ -61,22 +61,15 @@ export function isSpellUnlocked(
   )
 }
 
-export type CastRefusal = 'unknownSpell' | 'circleNotStudied' | 'tierLocked' | 'onCooldown' | 'notEnoughMana'
+export const CAST_REFUSALS = [
+  'unknownSpell',
+  'circleNotStudied',
+  'tierLocked',
+  'onCooldown',
+  'notEnoughMana',
+] as const
 
-export function describeCastRefusal(refusal: CastRefusal): string {
-  switch (refusal) {
-    case 'unknownSpell':
-      return 'No such spell.'
-    case 'circleNotStudied':
-      return 'Your realm has no claim on that circle.'
-    case 'tierLocked':
-      return 'Your temples have not learned this yet.'
-    case 'onCooldown':
-      return 'The circle needs time before it will answer again.'
-    case 'notEnoughMana':
-      return 'Not enough mana.'
-  }
-}
+export type CastRefusal = (typeof CAST_REFUSALS)[number]
 
 export function checkCastRefusal(
   state: GameState,

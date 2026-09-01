@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
@@ -13,6 +14,7 @@ interface GatherPanelProps {
 }
 
 export function GatherPanel({ view, hasAnyBuildings }: GatherPanelProps) {
+  const { t } = useTranslation()
   const registry = useGameStore((store) => store.registry)
   const gather = useGameStore((store) => store.gather)
 
@@ -20,12 +22,8 @@ export function GatherPanel({ view, hasAnyBuildings }: GatherPanelProps) {
 
   return (
     <SectionCard
-      title="Your own hands"
-      subtitle={
-        hasAnyBuildings
-          ? 'Still quicker than nothing, though your buildings have long since overtaken you.'
-          : 'Ten empty acres and nobody on them yet. Everything starts here.'
-      }
+      title={t('panels.gather.title')}
+      subtitle={t(hasAnyBuildings ? 'panels.gather.laterSubtitle' : 'panels.gather.openingSubtitle')}
     >
       <Stack direction="row" sx={{ flexWrap: "wrap", gap: 1 }}>
         {gatherable.map((resourceId) => {

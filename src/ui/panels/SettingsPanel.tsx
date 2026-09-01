@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -15,6 +16,7 @@ import { SectionCard } from '../components/SectionCard'
 import { formatDuration, formatNumber } from '../format'
 
 export function SettingsPanel({ state }: { readonly state: GameState }) {
+  const { t } = useTranslation()
   const exportSave = useGameStore((store) => store.exportSave)
   const importSave = useGameStore((store) => store.importSave)
   const abandonRun = useGameStore((store) => store.abandonRun)
@@ -27,32 +29,52 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
 
   return (
     <Stack sx={{ gap: 2 }}>
-      <SectionCard title="This run" subtitle="Saved to this browser every few seconds.">
+      <SectionCard title={t('settings.runTitle')} subtitle={t('settings.runSubtitle')}>
         <Stack sx={{ display: 'grid',
             gap: 0.5,
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
             fontFamily: NUMERIC_FONT_FAMILY }}>
-          <Typography variant="body2">Played: {formatDuration(state.elapsedSeconds)}</Typography>
-          <Typography variant="body2">Hand-gathers: {formatNumber(statistics.manualGatherClicks)}</Typography>
-          <Typography variant="body2">Buildings raised: {formatNumber(statistics.buildingsConstructed)}</Typography>
-          <Typography variant="body2">Spells cast: {formatNumber(statistics.spellsCast)}</Typography>
           <Typography variant="body2">
-            Battles: {formatNumber(statistics.battlesWon)} won, {formatNumber(statistics.battlesLost)} lost
+            {t('settings.played', { duration: formatDuration(state.elapsedSeconds) })}
           </Typography>
           <Typography variant="body2">
-            Heists: {formatNumber(statistics.heistsSucceeded)} clean, {formatNumber(statistics.heistsFailed)} botched
+            {t('settings.handGathers', { count: statistics.manualGatherClicks })}
           </Typography>
-          <Typography variant="body2">Acres conquered: {formatNumber(statistics.acresConquered)}</Typography>
-          <Typography variant="body2">Soldiers lost: {formatNumber(statistics.soldiersLost)}</Typography>
-          <Typography variant="body2">Starved: {formatNumber(statistics.citizensStarved)}</Typography>
+          <Typography variant="body2">
+            {t('settings.buildingsRaised', { count: statistics.buildingsConstructed })}
+          </Typography>
+          <Typography variant="body2">
+            {t('settings.spellsCast', { count: statistics.spellsCast })}
+          </Typography>
+          <Typography variant="body2">
+            {t('settings.battles', {
+              won: formatNumber(statistics.battlesWon),
+              lost: formatNumber(statistics.battlesLost),
+            })}
+          </Typography>
+          <Typography variant="body2">
+            {t('settings.heists', {
+              clean: formatNumber(statistics.heistsSucceeded),
+              botched: formatNumber(statistics.heistsFailed),
+            })}
+          </Typography>
+          <Typography variant="body2">
+            {t('settings.acresConquered', { count: statistics.acresConquered })}
+          </Typography>
+          <Typography variant="body2">
+            {t('settings.soldiersLost', { count: statistics.soldiersLost })}
+          </Typography>
+          <Typography variant="body2">
+            {t('settings.starved', { count: statistics.citizensStarved })}
+          </Typography>
         </Stack>
       </SectionCard>
 
-      <SectionCard title="Save" subtitle="Copy the text out to move a run between browsers.">
+      <SectionCard title={t('settings.saveTitle')} subtitle={t('settings.saveSubtitle')}>
         <Stack sx={{ gap: 1.5 }}>
           <Stack direction="row" sx={{ gap: 1, alignItems: "flex-start" }}>
             <Button variant="outlined" onClick={() => setExportedSave(exportSave() ?? '')}>
-              Export
+              {t('settings.exportAction')}
             </Button>
             <TextField
               size="small"
@@ -60,7 +82,7 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
               multiline
               maxRows={4}
               value={exportedSave}
-              placeholder="Your exported save will appear here."
+              placeholder={t('settings.exportPlaceholder')}
               slotProps={{ htmlInput: { readOnly: true, style: { fontFamily: NUMERIC_FONT_FAMILY } } }}
             />
           </Stack>
@@ -71,7 +93,7 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
               disabled={saveToImport.trim().length === 0}
               onClick={() => importSave(saveToImport)}
             >
-              Import
+              {t('settings.importAction')}
             </Button>
             <TextField
               size="small"
@@ -80,28 +102,27 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
               maxRows={4}
               value={saveToImport}
               onChange={(event) => setSaveToImport(event.target.value)}
-              placeholder="Paste a save here to replace this run."
+              placeholder={t('settings.importPlaceholder')}
             />
           </Stack>
         </Stack>
       </SectionCard>
 
-      <SectionCard title="Start over" subtitle="Abandons this realm and returns to the choice of race.">
+      <SectionCard title={t('settings.startOverTitle')} subtitle={t('settings.startOverSubtitle')}>
         <Button color="error" variant="outlined" onClick={() => setIsConfirmingReset(true)}>
-          Abandon this run
+          {t('settings.abandonAction')}
         </Button>
       </SectionCard>
 
       <Dialog open={isConfirmingReset} onClose={() => setIsConfirmingReset(false)}>
-        <DialogTitle>Abandon this realm?</DialogTitle>
+        <DialogTitle>{t('settings.abandonTitle')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This deletes the save in this browser. {formatDuration(state.elapsedSeconds)} of progress will be
-            gone, and it cannot be undone.
+            {t('settings.abandonWarning', { duration: formatDuration(state.elapsedSeconds) })}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsConfirmingReset(false)}>Keep playing</Button>
+          <Button onClick={() => setIsConfirmingReset(false)}>{t('settings.keepPlaying')}</Button>
           <Button
             color="error"
             onClick={() => {
@@ -109,7 +130,7 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
               abandonRun()
             }}
           >
-            Abandon it
+            {t('settings.abandonConfirm')}
           </Button>
         </DialogActions>
       </Dialog>

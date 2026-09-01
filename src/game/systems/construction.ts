@@ -38,24 +38,14 @@ export function maximumQueueLength(state: GameState): number {
   return Math.max(BALANCE.construction.baseQueueLength, ...unlockedBulkSteps(state), 0)
 }
 
-export type ConstructionRefusal =
-  | 'unknownBuilding'
-  | 'queueFull'
-  | 'noFreeAcres'
-  | 'cannotAffordCost'
+export const CONSTRUCTION_REFUSALS = [
+  'unknownBuilding',
+  'queueFull',
+  'noFreeAcres',
+  'cannotAffordCost',
+] as const
 
-export function describeConstructionRefusal(refusal: ConstructionRefusal): string {
-  switch (refusal) {
-    case 'unknownBuilding':
-      return 'No such building.'
-    case 'queueFull':
-      return 'Your builders already have all they can handle.'
-    case 'noFreeAcres':
-      return 'No free acre to build on — you will have to take more land.'
-    case 'cannotAffordCost':
-      return 'Not enough materials.'
-  }
-}
+export type ConstructionRefusal = (typeof CONSTRUCTION_REFUSALS)[number]
 
 export function checkConstructionRefusal(
   state: GameState,
@@ -119,16 +109,12 @@ export function queueBuildings(
   return placed
 }
 
-export type DemolitionRefusal = 'unknownBuilding' | 'nothingToDemolish'
+export const DEMOLITION_REFUSALS = [
+  'unknownBuilding',
+  'nothingToDemolish',
+] as const
 
-export function describeDemolitionRefusal(refusal: DemolitionRefusal): string {
-  switch (refusal) {
-    case 'unknownBuilding':
-      return 'No such building.'
-    case 'nothingToDemolish':
-      return 'You have none of those to pull down.'
-  }
-}
+export type DemolitionRefusal = (typeof DEMOLITION_REFUSALS)[number]
 
 /**
  * Half the cost back. Without this, ten acres filled without a barracks is an

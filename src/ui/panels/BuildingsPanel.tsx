@@ -11,7 +11,6 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import type { GameState } from '../../game/model/state'
 import type { BuildingView, RealmView } from '../../game/selectors/realmView'
-import { describeConstructionRefusal } from '../../game/systems/construction'
 import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
@@ -48,7 +47,7 @@ function WorkerControls({
     <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.25 }}>
       <IconButton
         size="small"
-        aria-label={`Remove a worker from ${building.definition.name}`}
+        aria-label={t('actions.removeWorker', { buildingName: building.definition.name })}
         disabled={building.workers === 0}
         onClick={() => unassign(building.definition.id, 1)}
       >
@@ -62,7 +61,7 @@ function WorkerControls({
       </Typography>
       <IconButton
         size="small"
-        aria-label={`Assign a worker to ${building.definition.name}`}
+        aria-label={t('actions.assignWorker', { buildingName: building.definition.name })}
         disabled={nobodyToPlace}
         onClick={() => assign(building.definition.id, 1)}
       >
@@ -141,14 +140,20 @@ function BuildingCard({
 
         <Stack sx={{ gap: 0.75 }}>
           <Stack direction="row" sx={{ gap: 0.5, alignItems: 'center', flexWrap: 'wrap' }}>
-            <Tooltip title={building.refusal ? describeConstructionRefusal(building.refusal) : 'Build one'}>
+            <Tooltip
+              title={
+                building.refusal
+                  ? t(`refusals.construction.${building.refusal}`)
+                  : t('actions.buildOne')
+              }
+            >
               <span>
                 <Button
                   variant="contained"
                   disabled={Boolean(building.refusal)}
                   onClick={() => build(building.definition.id)}
                 >
-                  Build
+                  {t('actions.build')}
                 </Button>
               </span>
             </Tooltip>
@@ -169,7 +174,7 @@ function BuildingCard({
           <WorkerControls building={building} idleCitizens={idleCitizens} />
         </Stack>
 
-        <Tooltip title="Pulls one down, freeing its acre and returning half its cost.">
+        <Tooltip title={t('actions.razeExplained')}>
           <Button
             variant="text"
             color="error"
@@ -179,7 +184,7 @@ function BuildingCard({
             }}
             onClick={() => demolish(building.definition.id)}
           >
-            Raze one
+            {t('actions.razeOne')}
           </Button>
         </Tooltip>
       </CardContent>
@@ -194,7 +199,7 @@ export function BuildingsPanel({ state, view }: BuildingsPanelProps) {
 
   return (
     <SectionCard
-      title="Buildings"
+      title={t('panels.buildings.title')}
       subtitle={t('realm.acresInUse', { used: view.occupiedAcres, total: state.acres })}
     >
       <Stack sx={{ gap: 0.5, minHeight: 34 }}>

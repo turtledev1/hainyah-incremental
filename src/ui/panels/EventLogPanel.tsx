@@ -22,12 +22,12 @@ export function EventLogPanel({ state }: { readonly state: GameState }) {
   const mostRecentFirst = [...state.eventLog].reverse()
 
   return (
-    <SectionCard title="Chronicle" subtitle="What has happened, most recent first.">
+    <SectionCard title={t('panels.chronicle.title')} subtitle={t('panels.chronicle.subtitle')}>
       <Box sx={{ maxHeight: 420, overflowY: 'auto', pr: 0.5 }}>
         <Stack sx={{ gap: 0.75 }}>
           {mostRecentFirst.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
-              Nothing has happened yet. Gather something.
+              {t('panels.chronicle.empty')}
             </Typography>
           ) : (
             mostRecentFirst.map((event) => (

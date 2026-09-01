@@ -74,7 +74,7 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
 
   return (
     <SectionCard
-      title="Your people"
+      title={t('panels.people.title')}
       subtitle={
         view.foodConsumptionPerCitizenPerSecond === 0
           ? t('realm.doesNotHunger')
@@ -84,7 +84,7 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
       <Stack direction="row" sx={{ flexWrap: "wrap", gap: 3 }}>
         <Stack sx={{ gap: 0.25, minWidth: 190 }}>
           <Typography variant="subtitle2" color="text.secondary">
-            Idle citizens
+            {t('panels.people.idleCitizens')}
           </Typography>
           <Typography variant="h3">{formatNumber(view.idleCitizens)}</Typography>
           <Typography variant="caption" color="text.secondary">
@@ -99,7 +99,10 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
 
         <Stack sx={{ gap: 0.75 }}>
           <Typography variant="subtitle2" color="text.secondary">
-            Soldiers ({formatNumber(state.soldiersAtHome)} home, {formatNumber(view.armyCapacity)} capacity)
+            {t('panels.people.soldiers', {
+              home: formatNumber(state.soldiersAtHome),
+              capacity: formatNumber(view.armyCapacity),
+            })}
           </Typography>
           {soldierBlock ? (
             <Typography variant="caption" color="warning.main" sx={{ maxWidth: 260 }}>
@@ -107,10 +110,10 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
             </Typography>
           ) : null}
           <Stack direction="row" sx={{ gap: 0.75 }}>
-            <Tooltip title={soldierBlock ?? 'Takes an idle citizen and gives them a spear.'}>
+            <Tooltip title={soldierBlock ?? t('actions.recruitSoldierExplained')}>
               <span>
                 <Button variant="outlined" disabled={Boolean(soldierBlock)} onClick={() => recruitSoldiers(1)}>
-                  Recruit 1
+                  {t('actions.recruitOne')}
                 </Button>
               </span>
             </Tooltip>
@@ -119,21 +122,24 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
               disabled={Boolean(soldierBlock)}
               onClick={() => recruitSoldiers(BULK_RECRUIT_COUNT)}
             >
-              Recruit {BULK_RECRUIT_COUNT}
+              {t('actions.recruitMany', { count: BULK_RECRUIT_COUNT })}
             </Button>
             <Button
               variant="text"
               disabled={state.soldiersAtHome < 1}
               onClick={() => dismissSoldiers(BULK_RECRUIT_COUNT)}
             >
-              Dismiss {BULK_RECRUIT_COUNT}
+              {t('actions.dismissMany', { count: BULK_RECRUIT_COUNT })}
             </Button>
           </Stack>
         </Stack>
 
         <Stack sx={{ gap: 0.75 }}>
           <Typography variant="subtitle2" color="text.secondary">
-            Thieves ({formatNumber(state.thievesAtHome)} home, {formatNumber(view.thievesCapacity)} capacity)
+            {t('panels.people.thieves', {
+              home: formatNumber(state.thievesAtHome),
+              capacity: formatNumber(view.thievesCapacity),
+            })}
           </Typography>
           {thiefBlock ? (
             <Typography variant="caption" color="warning.main" sx={{ maxWidth: 260 }}>
@@ -141,10 +147,10 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
             </Typography>
           ) : null}
           <Stack direction="row" sx={{ gap: 0.75 }}>
-            <Tooltip title={thiefBlock ?? 'Takes an idle citizen into the guild.'}>
+            <Tooltip title={thiefBlock ?? t('actions.recruitThiefExplained')}>
               <span>
                 <Button variant="outlined" disabled={Boolean(thiefBlock)} onClick={() => recruitThieves(1)}>
-                  Recruit 1
+                  {t('actions.recruitOne')}
                 </Button>
               </span>
             </Tooltip>
@@ -153,14 +159,14 @@ export function PopulationPanel({ state, view }: PopulationPanelProps) {
               disabled={Boolean(thiefBlock)}
               onClick={() => recruitThieves(BULK_RECRUIT_COUNT)}
             >
-              Recruit {BULK_RECRUIT_COUNT}
+              {t('actions.recruitMany', { count: BULK_RECRUIT_COUNT })}
             </Button>
             <Button
               variant="text"
               disabled={state.thievesAtHome < 1}
               onClick={() => dismissThieves(BULK_RECRUIT_COUNT)}
             >
-              Dismiss {BULK_RECRUIT_COUNT}
+              {t('actions.dismissMany', { count: BULK_RECRUIT_COUNT })}
             </Button>
           </Stack>
         </Stack>

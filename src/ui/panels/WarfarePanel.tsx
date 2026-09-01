@@ -11,7 +11,6 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import type { GameState } from '../../game/model/state'
 import type { ConquestTargetView, RealmView } from '../../game/selectors/realmView'
-import { describeExpeditionRefusal } from '../../game/systems/warfare'
 import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
@@ -82,7 +81,7 @@ function TargetCard({
           <TextField
             size="small"
             type="number"
-            label="soldiers"
+            label={t('panels.conquest.soldiersField')}
             value={requestedSoldiers}
             onChange={(event) => setRequestedSoldiers(Number(event.target.value))}
             sx={{ width: 110 }}
@@ -96,9 +95,9 @@ function TargetCard({
         <Tooltip
           title={
             target.isExhausted
-              ? 'There is nothing left there to take.'
+              ? t('refusals.expedition.targetExhausted')
               : refusal && requestedSoldiers === target.definition.requiredSoldiers
-                ? describeExpeditionRefusal(refusal)
+                ? t(`refusals.expedition.${refusal}`)
                 : t('realm.requiresSoldiers', { count: target.definition.requiredSoldiers })
           }
         >
@@ -108,7 +107,7 @@ function TargetCard({
               disabled={!canSend}
               onClick={() => attack(target.definition.id, requestedSoldiers)}
             >
-              March
+              {t('actions.march')}
             </Button>
           </span>
         </Tooltip>
@@ -124,7 +123,10 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
   return (
     <Stack sx={{ gap: 2 }}>
       {state.expeditions.length > 0 ? (
-        <SectionCard title="On campaign" subtitle="Armies march, fight when they arrive, then walk home.">
+        <SectionCard
+          title={t('panels.conquest.campaignTitle')}
+          subtitle={t('panels.conquest.campaignSubtitle')}
+        >
           <Stack sx={{ gap: 1.25 }}>
             {state.expeditions.map((expedition) => {
               const target = registry.conquestTargetsById.get(expedition.targetId)
@@ -163,8 +165,8 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
       ) : null}
 
       <SectionCard
-        title="Conquest"
-        subtitle="Acres come from taking them. Larger places cost more soldiers and more time."
+        title={t('panels.conquest.title')}
+        subtitle={t('panels.conquest.subtitle')}
       >
         <CardGrid minimumColumnWidth={280}>
           {view.conquestTargets.map((target) => (

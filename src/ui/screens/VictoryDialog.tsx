@@ -19,16 +19,18 @@ export function VictoryDialog({ state }: { readonly state: GameState }) {
 
   return (
     <Dialog open maxWidth="sm" fullWidth>
-      <DialogTitle>The Wonder stands</DialogTitle>
+      <DialogTitle>{t('victory.title')}</DialogTitle>
       <DialogContent>
         <Stack sx={{ gap: 1.5 }}>
           <Typography variant="body1">
-            The last stone is set. Hai and Yah stop arguing long enough to look down at what the{' '}
-            {registry.racesById.get(state.raceId)?.name.toLowerCase()} have built, and the world is
-            yours.
+            {t('victory.body', {
+              raceName: registry.racesById.get(state.raceId)?.name.toLowerCase() ?? '',
+            })}
           </Typography>
           <Stack sx={{ fontFamily: NUMERIC_FONT_FAMILY, gap: 0.25 }}>
-            <Typography variant="body2">Time taken: {formatDuration(state.elapsedSeconds)}</Typography>
+            <Typography variant="body2">
+              {t('victory.timeTaken', { duration: formatDuration(state.elapsedSeconds) })}
+            </Typography>
             <Typography variant="body2">{t('victory.acres', { count: state.acres })}</Typography>
             <Typography variant="body2">
               {t('victory.citizens', { count: Math.floor(state.population) })}
@@ -40,21 +42,21 @@ export function VictoryDialog({ state }: { readonly state: GameState }) {
               })}
             </Typography>
             <Typography variant="body2">
-              Heists: {formatNumber(state.statistics.heistsSucceeded)} clean
+              {t('victory.heistsClean', { count: state.statistics.heistsSucceeded })}
             </Typography>
             <Typography variant="body2">
-              Spells cast: {formatNumber(state.statistics.spellsCast)}
+              {t('victory.spellsCast', { count: state.statistics.spellsCast })}
             </Typography>
             <Typography variant="body2">
-              Buildings raised: {formatNumber(state.statistics.buildingsConstructed)}
+              {t('victory.buildingsRaised', { count: state.statistics.buildingsConstructed })}
             </Typography>
           </Stack>
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={acknowledgeVictory}>Keep playing</Button>
+        <Button onClick={acknowledgeVictory}>{t('victory.keepPlaying')}</Button>
         <Button variant="contained" onClick={abandonRun}>
-          Begin again as another people
+          {t('victory.beginAgain')}
         </Button>
       </DialogActions>
     </Dialog>

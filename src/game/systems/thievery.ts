@@ -13,16 +13,12 @@ import {
 } from './modifiers'
 import { addResources, emitEvent } from './stateHelpers'
 
-export type HeistRefusal = 'unknownTarget' | 'notEnoughThievesAtHome'
+export const HEIST_REFUSALS = [
+  'unknownTarget',
+  'notEnoughThievesAtHome',
+] as const
 
-export function describeHeistRefusal(refusal: HeistRefusal): string {
-  switch (refusal) {
-    case 'unknownTarget':
-      return 'No such mark.'
-    case 'notEnoughThievesAtHome':
-      return 'Not enough thieves idle to run it.'
-  }
-}
+export type HeistRefusal = (typeof HEIST_REFUSALS)[number]
 
 export function checkHeistRefusal(
   state: GameState,

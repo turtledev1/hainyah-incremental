@@ -9,7 +9,6 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import type { GameState } from '../../game/model/state'
 import type { RealmView, SpellView } from '../../game/selectors/realmView'
-import { describeCastRefusal } from '../../game/systems/magic'
 import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
@@ -106,14 +105,14 @@ function SpellCard({ spell }: { readonly spell: SpellView }) {
           />
         ) : null}
 
-        <Tooltip title={spell.refusal ? describeCastRefusal(spell.refusal) : 'Cast it'}>
+        <Tooltip title={spell.refusal ? t(`refusals.cast.${spell.refusal}`) : t('actions.castExplained')}>
           <span>
             <Button
               variant="contained"
               disabled={Boolean(spell.refusal)}
               onClick={() => cast(spell.definition.id)}
             >
-              {isOnCooldown ? formatDuration(spell.cooldownRemainingSeconds) : 'Cast'}
+              {isOnCooldown ? formatDuration(spell.cooldownRemainingSeconds) : t('actions.cast')}
             </Button>
           </span>
         </Tooltip>
@@ -130,8 +129,8 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
   return (
     <Stack sx={{ gap: 2 }}>
       <SectionCard
-        title="The circles"
-        subtitle={`Temples grant ${formatRate(view.magicExperiencePerSecond)} experience, split across your circles.`}
+        title={t('panels.circles.title')}
+        subtitle={t('panels.circles.subtitle', { rate: formatRate(view.magicExperiencePerSecond) })}
       >
         <Stack sx={{ gap: 1.5 }}>
           {view.circles.map((circle) => {
@@ -185,7 +184,7 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
       </SectionCard>
 
       <SectionCard
-        title="Spells"
+        title={t('panels.spells.title')}
         subtitle={t('realm.manaSource', {
           pool: `${formatStockpile(state.magic.mana)}/${formatStockpile(view.manaCapacity)}`,
           rate: formatPerHour(view.manaRegenPerSecond),

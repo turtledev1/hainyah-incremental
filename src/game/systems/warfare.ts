@@ -30,24 +30,14 @@ export function isTargetExhausted(
   return timesConquered(state, targetId) >= target.conquestLimit
 }
 
-export type ExpeditionRefusal =
-  | 'unknownTarget'
-  | 'targetExhausted'
-  | 'notEnoughSoldiersAtHome'
-  | 'belowRequiredForce'
+export const EXPEDITION_REFUSALS = [
+  'unknownTarget',
+  'targetExhausted',
+  'notEnoughSoldiersAtHome',
+  'belowRequiredForce',
+] as const
 
-export function describeExpeditionRefusal(refusal: ExpeditionRefusal): string {
-  switch (refusal) {
-    case 'unknownTarget':
-      return 'No such place.'
-    case 'targetExhausted':
-      return 'There is nothing left there to take.'
-    case 'notEnoughSoldiersAtHome':
-      return 'You do not have that many soldiers at home.'
-    case 'belowRequiredForce':
-      return 'Too few soldiers to be worth the march.'
-  }
-}
+export type ExpeditionRefusal = (typeof EXPEDITION_REFUSALS)[number]
 
 export function checkExpeditionRefusal(
   state: GameState,

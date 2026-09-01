@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import CssBaseline from '@mui/material/CssBaseline'
 import Snackbar from '@mui/material/Snackbar'
 import { ThemeProvider } from '@mui/material/styles'
@@ -10,6 +11,7 @@ import { RaceSelectionScreen } from './ui/screens/RaceSelectionScreen'
 import { VictoryDialog } from './ui/screens/VictoryDialog'
 
 export function App() {
+  const { t } = useTranslation()
   useGameEngine()
 
   const state = useGameStore((store) => store.state)
@@ -28,7 +30,7 @@ export function App() {
         open={Boolean(notice)}
         onClose={clearNotice}
         autoHideDuration={2600}
-        message={notice}
+        message={notice ? t(notice) : undefined}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
     </ThemeProvider>

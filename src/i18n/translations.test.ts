@@ -1,6 +1,12 @@
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { ASCENSION_REFUSALS } from '../game/systems/ascension'
+import { CONSTRUCTION_REFUSALS, DEMOLITION_REFUSALS } from '../game/systems/construction'
+import { CAST_REFUSALS } from '../game/systems/magic'
+import { HEIST_REFUSALS } from '../game/systems/thievery'
+import { UPGRADE_REFUSALS } from '../game/systems/upgrades'
+import { EXPEDITION_REFUSALS } from '../game/systems/warfare'
 import { i18n } from './index'
 
 function sourceFilesUnder(directory: string): string[] {
@@ -9,7 +15,8 @@ function sourceFilesUnder(directory: string): string[] {
     if (entry.isDirectory()) {
       return sourceFilesUnder(path)
     }
-    return entry.name.endsWith('.ts') && !entry.name.endsWith('.test.ts') ? [path] : []
+    const isSource = /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name)
+    return isSource ? [path] : []
   })
 }
 
@@ -72,5 +79,58 @@ describe('translations', () => {
     expect(i18n.t('chronicle.tideYields', { amount: 12_500 })).toBe(
       'Tide of Plenty yields 12.5k food.',
     )
+  })
+})
+
+describe('refusals', () => {
+  const everyRefusal = [
+    ['construction', CONSTRUCTION_REFUSALS],
+    ['demolition', DEMOLITION_REFUSALS],
+    ['upgrade', UPGRADE_REFUSALS],
+    ['cast', CAST_REFUSALS],
+    ['expedition', EXPEDITION_REFUSALS],
+    ['heist', HEIST_REFUSALS],
+    ['ascension', ASCENSION_REFUSALS],
+  ] as const
+
+  /** The systems return a reason code; the interface has to have words for all of them. */
+  it('has a message for every reason a system can refuse', () => {
+    const missing = everyRefusal.flatMap(([domain, refusals]) =>
+      refusals
+        .map((refusal) => `refusals.${domain}.${refusal}`)
+        .filter((key) => i18n.t(key) === key),
+    )
+
+    expect(missing).toEqual([])
+  })
+
+  it('covers every domain that can refuse the player', () => {
+    expect(everyRefusal.flatMap(([, refusals]) => refusals).length).toBeGreaterThan(20)
+  })
+})
+
+describe('the interface copy', () => {
+  const usedKeys = () => {
+    const keys = new Set<string>()
+    for (const file of sourceFilesUnder('src/ui')) {
+      for (const match of readFileSync(file, 'utf8').matchAll(/\bt\(\s*'([a-z][A-Za-z.]+)'/g)) {
+        keys.add(match[1]!)
+      }
+    }
+    return [...keys].sort()
+  }
+
+  it('has a translation for every key the interface asks for', () => {
+    const missing = usedKeys().filter((key) => {
+      const singular = i18n.t(key, { count: 1 })
+      const plural = i18n.t(key, { count: 2 })
+      return singular === key || plural === key
+    })
+
+    expect(missing).toEqual([])
+  })
+
+  it('is asking for a substantial number of them, so the scan is meaningful', () => {
+    expect(usedKeys().length).toBeGreaterThan(60)
   })
 })
