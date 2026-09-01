@@ -7,7 +7,7 @@ import { CAST_REFUSALS } from '../game/systems/magic'
 import { HEIST_REFUSALS } from '../game/systems/thievery'
 import { UPGRADE_REFUSALS } from '../game/systems/upgrades'
 import { EXPEDITION_REFUSALS } from '../game/systems/warfare'
-import { i18n } from './index'
+import { availableTranslations, FALLBACK_LANGUAGE, i18n } from './index'
 import { contentKeys } from './contentKeys'
 import { CONTENT_REGISTRY } from '../game/content'
 
@@ -100,6 +100,66 @@ describe('translations', () => {
       'Tide of Plenty yields 12.5k food.',
     )
   })
+})
+
+describe('every language', () => {
+  /** Keys like `fire.sunlight` hold their own dots, so a path is a list, not a string. */
+  const leafPaths = (value: unknown, prefix: readonly string[] = []): readonly string[][] => {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      return [[...prefix]]
+    }
+    return Object.entries(value).flatMap(([key, nested]) => leafPaths(nested, [...prefix, key]))
+  }
+
+  const readAt = (bundle: object, path: readonly string[]): unknown =>
+    path.reduce<unknown>((value, key) => (value as Record<string, unknown>)?.[key], bundle)
+
+  const english = leafPaths(availableTranslations.en.translation)
+  const asText = (path: readonly string[]): string => path.join(' › ')
+
+  for (const [language, bundle] of Object.entries(availableTranslations)) {
+    if (language === FALLBACK_LANGUAGE) {
+      continue
+    }
+
+    it(`says everything English says, in ${language}`, () => {
+      const missing = english
+        .filter((path) => readAt(bundle.translation, path) === undefined)
+        .map(asText)
+
+      expect(missing).toEqual([])
+    })
+
+    it(`says nothing English does not, in ${language}`, () => {
+      const extra = leafPaths(bundle.translation)
+        .filter((path) => readAt(availableTranslations.en.translation, path) === undefined)
+        .map(asText)
+
+      expect(extra).toEqual([])
+    })
+
+    it(`leaves no English sentence sitting in ${language}`, () => {
+      /** A word or two can be the same in both languages; a sentence cannot. */
+      const isSentence = (source: string): boolean =>
+        source
+          .replace(/\{\{[^}]*\}\}|\$t\([^)]*\)/g, ' ')
+          .split(/[^\p{L}’-]+/u)
+          .filter((word) => word.length > 0).length >= 3
+
+      const untranslated = english
+        .filter((path) => {
+          const source = readAt(availableTranslations.en.translation, path)
+          return (
+            typeof source === 'string' &&
+            isSentence(source) &&
+            readAt(bundle.translation, path) === source
+          )
+        })
+        .map(asText)
+
+      expect(untranslated).toEqual([])
+    })
+  }
 })
 
 describe('content prose', () => {

@@ -1,6 +1,5 @@
 import { EN_CONTENT } from './enContent'
 
-/** Interface copy and the chronicle; content prose is in `enContent.ts`. */
 export const englishTranslations = {
   content: EN_CONTENT,
   chronicle: {
@@ -237,6 +236,8 @@ export const englishTranslations = {
       'This deletes the save in this browser. {{duration}} of progress will be gone, and it cannot be undone.',
     keepPlaying: 'Keep playing',
     abandonConfirm: 'Abandon it',
+    languageTitle: 'Language',
+    languageSubtitle: 'Changes the whole game, including the chronicle already written.',
   },
 
   raceSelection: {

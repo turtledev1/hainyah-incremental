@@ -42,7 +42,7 @@ function MarkCard({ target }: { readonly target: ThieveryTargetView }) {
           })}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          {t('panels.thievery.takes', { loot: formatAmounts(target.definition.loot) })}
+          {t('panels.thievery.takes', { loot: formatAmounts(target.definition.loot, t) })}
         </Typography>
         <Tooltip
           title={target.refusal ? t(`refusals.heist.${target.refusal}`) : t('actions.sendThemOut')}

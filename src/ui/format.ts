@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next'
+import { contentKeys } from '../i18n/contentKeys'
 import type { ResourceAmounts, ResourceId } from '../game/model/ids'
 
 /** Stops at trillions: past that a made-up suffix is less legible than an exponent. */
@@ -72,8 +74,11 @@ export function amountEntries(amounts: ResourceAmounts): readonly [ResourceId, n
     .map(([resourceId, amount]) => [resourceId as ResourceId, amount ?? 0])
 }
 
-export function formatAmounts(amounts: ResourceAmounts): string {
+export function formatAmounts(amounts: ResourceAmounts, translate: TFunction): string {
   return amountEntries(amounts)
-    .map(([resourceId, amount]) => `${formatNumber(amount)} ${resourceId}`)
+    .map(
+      ([resourceId, amount]) =>
+        `${formatNumber(amount)} ${translate(contentKeys.resourceName(resourceId))}`,
+    )
     .join(', ')
 }

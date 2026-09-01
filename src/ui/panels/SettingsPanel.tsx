@@ -14,6 +14,7 @@ import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { SectionCard } from '../components/SectionCard'
 import { formatDuration, formatNumber } from '../format'
+import { i18n, languageNames, rememberLanguage, type LanguageCode } from '../../i18n'
 
 export function SettingsPanel({ state }: { readonly state: GameState }) {
   const { t } = useTranslation()
@@ -67,6 +68,20 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
           <Typography variant="body2">
             {t('settings.starved', { count: statistics.citizensStarved })}
           </Typography>
+        </Stack>
+      </SectionCard>
+
+      <SectionCard title={t('settings.languageTitle')} subtitle={t('settings.languageSubtitle')}>
+        <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
+          {Object.entries(languageNames).map(([code, name]) => (
+            <Button
+              key={code}
+              variant={i18n.language === code ? 'contained' : 'outlined'}
+              onClick={() => rememberLanguage(code as LanguageCode)}
+            >
+              {name}
+            </Button>
+          ))}
         </Stack>
       </SectionCard>
 

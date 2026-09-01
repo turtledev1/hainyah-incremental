@@ -2,19 +2,47 @@ import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { formatDuration, formatNumber } from '../ui/format'
 import { englishTranslations } from './locales/en'
+import { frenchTranslations } from './locales/fr'
 
 export const FALLBACK_LANGUAGE = 'en'
+const LANGUAGE_STORAGE_KEY = 'hainyah:language:v1'
 
 /** Adding a language is one file plus one entry here. */
 export const availableTranslations = {
   en: { translation: englishTranslations },
+  fr: { translation: frenchTranslations },
+}
+
+export type LanguageCode = keyof typeof availableTranslations
+
+export const languageNames: Record<LanguageCode, string> = {
+  en: 'English',
+  fr: 'Français',
+}
+
+function isLanguageCode(candidate: string | null): candidate is LanguageCode {
+  return candidate !== null && candidate in availableTranslations
+}
+
+function preferredLanguage(): LanguageCode {
+  const stored = globalThis.localStorage?.getItem(LANGUAGE_STORAGE_KEY) ?? null
+  if (isLanguageCode(stored)) {
+    return stored
+  }
+  const fromBrowser = globalThis.navigator?.language?.slice(0, 2) ?? null
+  return isLanguageCode(fromBrowser) ? fromBrowser : FALLBACK_LANGUAGE
+}
+
+export function rememberLanguage(language: LanguageCode): void {
+  globalThis.localStorage?.setItem(LANGUAGE_STORAGE_KEY, language)
+  void i18n.changeLanguage(language)
 }
 
 export const i18n = i18next.use(initReactI18next)
 
 void i18n.init({
   resources: availableTranslations,
-  lng: FALLBACK_LANGUAGE,
+  lng: preferredLanguage(),
   fallbackLng: FALLBACK_LANGUAGE,
   interpolation: { escapeValue: false },
 })

@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import type { ResourceAmounts } from '../../game/model/ids'
 import type { GameState } from '../../game/model/state'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { amountEntries, formatNumber } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface CostListProps {
   readonly costs: ResourceAmounts
@@ -12,6 +14,7 @@ interface CostListProps {
 
 /** Costs the realm cannot currently meet are shown in the error colour. */
 export function CostList({ costs, state }: CostListProps) {
+  const { t } = useTranslation()
   const entries = amountEntries(costs)
   if (entries.length === 0) {
     return null
@@ -22,7 +25,7 @@ export function CostList({ costs, state }: CostListProps) {
       {entries.map(([resourceId, amount]) => (
         <Typography key={resourceId} variant="caption" sx={{ fontFamily: NUMERIC_FONT_FAMILY,
             color: state.resources[resourceId] >= amount ? 'text.secondary' : 'error.main' }}>
-          {formatNumber(amount)} {resourceId}
+          {formatNumber(amount)} {t(contentKeys.resourceName(resourceId))}
         </Typography>
       ))}
     </Stack>

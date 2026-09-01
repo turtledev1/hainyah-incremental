@@ -76,7 +76,7 @@ function TargetCard({
         </Typography>
 
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          {t('panels.conquest.plunder', { loot: formatAmounts(target.definition.plunder) })}
+          {t('panels.conquest.plunder', { loot: formatAmounts(target.definition.plunder, t) })}
         </Typography>
 
         <Stack direction="row" sx={{ gap: 1, alignItems: "center" }}>
@@ -171,7 +171,7 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
                     >
                       {t('panels.conquest.carryingHome', {
                         acres: formatNumber(expedition.outcomeAcresGained),
-                        loot: formatAmounts(expedition.outcomePlunder),
+                        loot: formatAmounts(expedition.outcomePlunder, t),
                       })}
                     </Typography>
                   ) : null}

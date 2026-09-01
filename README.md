@@ -81,4 +81,4 @@ first five minutes and then in one-minute buckets. A frame gap over two seconds 
 throttled or sleeping tab) goes through the same path.
 
 **i18n.** Every word the game shows lives in `src/i18n/locales`, so adding a language is
-a translation rather than a code change.
+a translation rather than a code change. Pick one under Settings.
