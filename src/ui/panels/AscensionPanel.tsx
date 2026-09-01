@@ -24,7 +24,7 @@ export function AscensionPanel({ state, view }: AscensionPanelProps) {
   return (
     <Stack sx={{ gap: 2 }}>
       <SectionCard
-        title="Temple of Hai and Yah"
+        title="The Wonder of Hai and Yah"
         subtitle="Eight stages, paid for in materials alone. Finish it and the run is over."
       >
         <Stack sx={{ gap: 0.5 }}>
@@ -57,7 +57,7 @@ export function AscensionPanel({ state, view }: AscensionPanelProps) {
           </Stack>
         ) : (
           <Typography variant="body2" color="primary">
-            The temple stands. Hai and Yah are waiting.
+            The Wonder stands. Hai and Yah are waiting.
           </Typography>
         )}
       </SectionCard>

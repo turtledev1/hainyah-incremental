@@ -46,7 +46,7 @@ export const englishTranslations = {
       'The job on {{targetName}} goes wrong and {{count}} thieves do not return.',
 
     stageComplete: '{{stageName}} is complete.',
-    templeComplete: 'The Temple of Hai and Yah stands. You are expected.',
+    wonderComplete: 'The Wonder of Hai and Yah stands. You are expected.',
 
     spellTakesHold: '{{spellName}} takes hold.',
     spellFades: '{{spellName}} fades.',
@@ -74,6 +74,16 @@ export const englishTranslations = {
     raiseThrallSilent: 'Nothing answers — no recent dead, or no barracks to hold them.',
     raiseThrallCalls_one: 'Raise Thrall calls up {{count}} soldier from the field.',
     raiseThrallCalls_other: 'Raise Thrall calls up {{count}} soldiers from the field.',
+  },
+
+  tabs: {
+    realm: 'Realm',
+    improvements: 'Improvements',
+    magic: 'Magic',
+    conquest: 'Conquest',
+    thievery: 'Thievery',
+    wonder: 'Wonder',
+    settings: 'Settings',
   },
 
   buildings: {

@@ -19,7 +19,7 @@ export function VictoryDialog({ state }: { readonly state: GameState }) {
 
   return (
     <Dialog open maxWidth="sm" fullWidth>
-      <DialogTitle>The temple stands</DialogTitle>
+      <DialogTitle>The Wonder stands</DialogTitle>
       <DialogContent>
         <Stack sx={{ gap: 1.5 }}>
           <Typography variant="body1">

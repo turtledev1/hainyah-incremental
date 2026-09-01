@@ -14,7 +14,7 @@ export type AscensionRefusal = 'alreadyAscended' | 'cannotAffordCost'
 export function describeAscensionRefusal(refusal: AscensionRefusal): string {
   switch (refusal) {
     case 'alreadyAscended':
-      return 'The temple is finished. There is nothing left to build.'
+      return 'The Wonder is finished. There is nothing left to build.'
     case 'cannotAffordCost':
       return 'The gods are patient, but they are not cheap.'
   }
@@ -50,7 +50,7 @@ export function buildAscensionStage(
 
   if (state.completedAscensionStages >= registry.ascensionStages.length) {
     state.hasAscended = true
-    emitEvent(state, 'ascension', 'chronicle.templeComplete')
+    emitEvent(state, 'ascension', 'chronicle.wonderComplete')
   }
   return undefined
 }

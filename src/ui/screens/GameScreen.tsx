@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
@@ -19,13 +20,14 @@ import { ThieveryPanel } from '../panels/ThieveryPanel'
 import { UpgradesPanel } from '../panels/UpgradesPanel'
 import { WarfarePanel } from '../panels/WarfarePanel'
 import { formatDuration } from '../format'
-
-type TabKey = 'realm' | 'improvements' | 'magic' | 'conquest' | 'thievery' | 'temple' | 'settings'
+import { tabToShow, unlockedTabs, type TabKey } from '../tabs'
 
 export function GameScreen({ state }: { readonly state: GameState }) {
+  const { t } = useTranslation()
   const registry = useGameStore((store) => store.registry)
   const view = useRealmView(state)
-  const [activeTab, setActiveTab] = useState<TabKey>('realm')
+  const [requestedTab, setRequestedTab] = useState<TabKey>('realm')
+  const activeTab = tabToShow(requestedTab, state, view)
 
   const race = registry.racesById.get(state.raceId)
 
@@ -47,17 +49,13 @@ export function GameScreen({ state }: { readonly state: GameState }) {
         <Stack sx={{ minWidth: 0, gap: 2 }}>
           <Tabs
             value={activeTab}
-            onChange={(_event, nextTab: TabKey) => setActiveTab(nextTab)}
+            onChange={(_event, nextTab: TabKey) => setRequestedTab(nextTab)}
             variant="scrollable"
             allowScrollButtonsMobile
           >
-            <Tab value="realm" label="Realm" />
-            <Tab value="improvements" label="Improvements" />
-            <Tab value="magic" label="Magic" />
-            <Tab value="conquest" label="Conquest" />
-            <Tab value="thievery" label="Thievery" />
-            <Tab value="temple" label="Temple" />
-            <Tab value="settings" label="Settings" />
+            {unlockedTabs(state, view).map((tab) => (
+              <Tab key={tab.key} value={tab.key} label={t(tab.labelKey)} />
+            ))}
           </Tabs>
 
           {activeTab === 'realm' ? (
@@ -74,7 +72,7 @@ export function GameScreen({ state }: { readonly state: GameState }) {
           {activeTab === 'magic' ? <MagicPanel state={state} view={view} /> : null}
           {activeTab === 'conquest' ? <WarfarePanel state={state} view={view} /> : null}
           {activeTab === 'thievery' ? <ThieveryPanel state={state} view={view} /> : null}
-          {activeTab === 'temple' ? <AscensionPanel state={state} view={view} /> : null}
+          {activeTab === 'wonder' ? <AscensionPanel state={state} view={view} /> : null}
           {activeTab === 'settings' ? <SettingsPanel state={state} /> : null}
         </Stack>
 

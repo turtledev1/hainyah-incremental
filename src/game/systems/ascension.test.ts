@@ -4,7 +4,7 @@ import { buildAscensionStage, checkAscensionRefusal, nextAscensionStage } from '
 
 const firstStage = testRegistry.ascensionStages[0]!
 
-describe('the Temple of Hai and Yah', () => {
+describe('the Wonder of Hai and Yah', () => {
   it('offers the first stage to a realm that has built nothing', () => {
     const state = createRealm()
 
@@ -56,7 +56,7 @@ describe('the Temple of Hai and Yah', () => {
     expect(state.eventLog.some((event) => event.kind === 'ascension')).toBe(true)
   })
 
-  it('has nothing left to sell once the temple stands', () => {
+  it('has nothing left to sell once the Wonder stands', () => {
     const state = createRealm()
     state.completedAscensionStages = testRegistry.ascensionStages.length
 

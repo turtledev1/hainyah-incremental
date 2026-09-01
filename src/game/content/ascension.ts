@@ -1,8 +1,6 @@
 import type { AscensionStageDefinition } from '../model/content'
 
-/**
- * This curve sets the length of a whole run; `scripts/simulateRun.ts` measures it.
- */
+/** This curve sets the length of a whole run; `npm run simulate` measures it. */
 export const ASCENSION_STAGE_DEFINITIONS: readonly AscensionStageDefinition[] = [
   {
     index: 1,
