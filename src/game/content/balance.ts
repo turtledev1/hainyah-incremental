@@ -22,10 +22,10 @@ export const BALANCE = {
      * most of a cooldown, and the pool refills slowly.
      */
     baseManaCapacity: 20,
-    baseManaRegenPerSecond: 0.002,
+    baseManaRegenPerSecond: 0.004,
     /** A mage's pool and their recovery come from what they have learned, not from buildings. */
     manaCapacityPerCircleTier: 170,
-    manaRegenPerCircleTierPerSecond: 0.006,
+    manaRegenPerCircleTierPerSecond: 0.008,
     manaCostByTier: [25, 50, 100, 175, 300, 500],
     /**
      * The decision a session turns on: the same mana buys one burst now, or two
@@ -40,7 +40,7 @@ export const BALANCE = {
     instantCooldownSeconds: 60 * 60,
     /** Transmute is a utility for a shortage, so it comes round sooner. */
     transmuteCooldownSeconds: 30 * 60,
-    tierExperienceThresholds: [100, 400, 1_200, 4_000, 12_000, 40_000],
+    tierExperienceThresholds: [100, 600, 2_500, 10_000, 50_000, 250_000],
   },
 
   warfare: {

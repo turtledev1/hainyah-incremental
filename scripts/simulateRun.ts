@@ -20,7 +20,11 @@ import { buildAscensionStage, checkAscensionRefusal } from '../src/game/systems/
 import { demolishBuilding, queueBuilding } from '../src/game/systems/construction'
 import { computeFoodConsumptionPerSecond } from '../src/game/systems/food'
 import { freeAcres } from '../src/game/systems/land'
-import { castSpell, checkCastRefusal } from '../src/game/systems/magic'
+import {
+  castSpell,
+  checkCastRefusal,
+  highestTierUnlockedInAnyCircle,
+} from '../src/game/systems/magic'
 import { gatherByHand } from '../src/game/systems/manualGathering'
 import { buildModifierIndexForState } from '../src/game/systems/modifiers'
 import { computeProductionPerSecond } from '../src/game/systems/production'
@@ -333,6 +337,7 @@ function simulate(
 
   let exportedSave: string | undefined
   const stageCompletionSeconds: number[] = []
+  const magicTierSeconds: number[] = []
   const dailySnapshots: DailySnapshot[] = []
   const maximumSeconds = maximumDays * 24 * 60 * 60
   let nextDecisionAtSeconds = 0
@@ -363,6 +368,10 @@ function simulate(
       stagesRecorded += 1
     }
 
+    while (highestTierUnlockedInAnyCircle(state, registry) > magicTierSeconds.length) {
+      magicTierSeconds.push(state.elapsedSeconds)
+    }
+
     if (exportAtHours > 0 && exportedSave === undefined && state.elapsedSeconds >= exportAtHours * 3600) {
       exportedSave = exportSaveToText(state)
     }
@@ -381,7 +390,13 @@ function simulate(
     }
   }
 
-  return { state, stageCompletionSeconds, dailySnapshots, exportedSave: exportedSave ?? exportSaveToText(state) }
+  return {
+    state,
+    stageCompletionSeconds,
+    magicTierSeconds,
+    dailySnapshots,
+    exportedSave: exportedSave ?? exportSaveToText(state),
+  }
 }
 
 function formatHours(seconds: number): string {
@@ -408,7 +423,7 @@ console.log(`Offline credit cap: ${formatHours(BALANCE.offline.maximumCreditedSe
 
 const exportAtHours = Number(process.env.SIMULATE_EXPORT_AT_HOURS ?? 0)
 
-const { state, stageCompletionSeconds, dailySnapshots, exportedSave } = simulate(
+const { state, stageCompletionSeconds, magicTierSeconds, dailySnapshots, exportedSave } = simulate(
   raceArgument,
   chosenCircles,
   maximumDays,
@@ -446,6 +461,16 @@ registry.ascensionStages.forEach((stage, index) => {
     }`,
   )
 })
+
+console.log('\nMagic tiers unlocked')
+console.log(
+  `  ${
+    magicTierSeconds.length === 0
+      ? 'none'
+      : magicTierSeconds.map((seconds, index) => `t${index + 1} ${formatHours(seconds)}`).join('  ')
+  }`,
+)
+console.log(`  spells cast: ${state.statistics.spellsCast}`)
 
 console.log('')
 if (state.hasAscended) {

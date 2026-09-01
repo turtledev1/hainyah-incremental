@@ -26,7 +26,7 @@ describe('circle experience', () => {
 
   it('unlocks tiers as the experience thresholds are passed', () => {
     const state = createRealm()
-    state.magic.experience.fire = 1_200
+    state.magic.experience.fire = BALANCE.magic.tierExperienceThresholds[2]!
 
     expect(tiersUnlockedInCircle(state, testRegistry, 'fire')).toBe(3)
   })
@@ -185,7 +185,7 @@ describe('casting', () => {
 
   it('runs an instant effect immediately — Sacrifice trades citizens for goods', () => {
     const state = createRealm({ circleIds: ['dark'], population: 50, buildings: { house: 20 } })
-    state.magic.experience.dark = 1_200
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[2]!
     state.magic.mana = 500
 
     expect(castOn(state, 'dark.sacrifice')).toBeUndefined()
@@ -199,7 +199,7 @@ describe('casting', () => {
       circleIds: ['dark'],
       resources: { wood: 10_000, stone: 100, food: 5_000, gold: 3_000 },
     })
-    state.magic.experience.dark = 400
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[1]!
     state.magic.mana = 500
 
     castOn(state, 'dark.transmute')
@@ -213,14 +213,14 @@ describe('casting', () => {
       circleIds: ['dark'],
       resources: { wood: 10_000, stone: 0, food: 5_000, gold: 3_000 },
     })
-    shallowRealm.magic.experience.dark = 400
+    shallowRealm.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[1]!
     shallowRealm.magic.mana = 500
 
     const deepRealm = createRealm({
       circleIds: ['dark'],
       resources: { wood: 10_000, stone: 0, food: 5_000, gold: 3_000 },
     })
-    deepRealm.magic.experience.dark = 40_000
+    deepRealm.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[5]!
     deepRealm.magic.mana = 500
 
     castOn(shallowRealm, 'dark.transmute')
@@ -232,7 +232,7 @@ describe('casting', () => {
 
   it('refuses to raise thralls when nobody has died recently', () => {
     const state = createRealm({ circleIds: ['dark'], buildings: { barracks: 2 }, workers: { barracks: 4 }, population: 20 })
-    state.magic.experience.dark = 4_000
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[3]!
     state.magic.mana = 500
 
     castOn(state, 'dark.raiseThrall')

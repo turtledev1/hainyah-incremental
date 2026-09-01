@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
 import { advanceGame } from '../engine/tick'
 import type { GameState } from '../model/state'
-import { checkExpeditionRefusal, launchExpedition } from './warfare'
+import { checkExpeditionRefusal, computeLegSeconds, launchExpedition } from './warfare'
 
 const HAMLET = testRegistry.conquestTargetsById.get('hamlet')!
 
@@ -55,7 +55,32 @@ describe('sending an army', () => {
   })
 })
 
+describe('estimating the journey', () => {
+  it('quotes a dwarf a longer leg than the map promises, both ways', () => {
+    const dwarfRealm = createRealm({ raceId: 'dwarf' })
+
+    expect(computeLegSeconds(dwarfRealm, testRegistry, 'hamlet')).toBeGreaterThan(
+      HAMLET.travelSeconds,
+    )
+  })
+
+  it('quotes a human the plain distance', () => {
+    expect(computeLegSeconds(createRealm(), testRegistry, 'hamlet')).toBe(HAMLET.travelSeconds)
+  })
+})
+
 describe('resolving a battle', () => {
+  it('gives the walk home the same length as the march out', () => {
+    const state = armedRealm(60, { raceId: 'dwarf' })
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+    const marchOut = state.expeditions[0]!.totalPhaseSeconds
+
+    const afterBattle = advanceGame(state, marchOut + 1, testRegistry)
+
+    expect(marchOut).toBeGreaterThan(HAMLET.travelSeconds)
+    expect(afterBattle.expeditions[0]!.totalPhaseSeconds).toBe(marchOut)
+  })
+
   it('wins the battle when the force is overwhelming', () => {
     const state = armedRealm(60)
     launchExpedition(state, testRegistry, 'hamlet', 60)
@@ -75,7 +100,7 @@ describe('resolving a battle', () => {
     expect(afterBattle.acres).toBe(acresBefore)
     expect(afterBattle.expeditions[0]!.outcomeAcresGained).toBe(HAMLET.acresGained)
 
-    const afterReturn = advanceGame(afterBattle, HAMLET.returnSeconds + 1, testRegistry)
+    const afterReturn = advanceGame(afterBattle, HAMLET.travelSeconds + 1, testRegistry)
     expect(afterReturn.acres).toBe(acresBefore + HAMLET.acresGained)
     expect(afterReturn.statistics.acresConquered).toBe(HAMLET.acresGained)
   })
@@ -87,7 +112,7 @@ describe('resolving a battle', () => {
     const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
     expect(afterBattle.resources.gold).toBe(0)
 
-    const afterReturn = advanceGame(afterBattle, HAMLET.returnSeconds + 1, testRegistry)
+    const afterReturn = advanceGame(afterBattle, HAMLET.travelSeconds + 1, testRegistry)
     expect(afterReturn.resources.gold).toBeGreaterThan(0)
   })
 
@@ -107,7 +132,7 @@ describe('resolving a battle', () => {
 
     const goldAfterTheWholeCampaign = (state: GameState): number => {
       const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
-      return advanceGame(afterBattle, HAMLET.returnSeconds + 1, testRegistry).resources.gold
+      return advanceGame(afterBattle, HAMLET.travelSeconds + 1, testRegistry).resources.gold
     }
 
     expect(withBoost.magic.activeBuffs).toHaveLength(1)
@@ -138,7 +163,7 @@ describe('resolving a battle', () => {
 
     const afterReturn = advanceGame(
       state,
-      HAMLET.travelSeconds + HAMLET.returnSeconds + 2,
+      HAMLET.travelSeconds + HAMLET.travelSeconds + 2,
       testRegistry,
     )
 

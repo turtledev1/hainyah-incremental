@@ -12,7 +12,6 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
     acresGained: 3,
     plunder: { food: 60, wood: 40, stone: 20, gold: 15 },
     travelSeconds: 60,
-    returnSeconds: 60,
     conquestLimit: 60,
   },
   {
@@ -25,7 +24,6 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
     acresGained: 8,
     plunder: { food: 300, wood: 220, stone: 140, gold: 120 },
     travelSeconds: 150,
-    returnSeconds: 150,
     conquestLimit: 60,
   },
   {
@@ -38,7 +36,6 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
     acresGained: 22,
     plunder: { food: 1_800, wood: 1_500, stone: 1_200, gold: 1_400 },
     travelSeconds: 360,
-    returnSeconds: 360,
     conquestLimit: 50,
   },
   {
@@ -51,7 +48,6 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
     acresGained: 60,
     plunder: { food: 12_000, wood: 11_000, stone: 10_000, gold: 14_000 },
     travelSeconds: 900,
-    returnSeconds: 900,
     conquestLimit: 40,
   },
   {
@@ -64,7 +60,6 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
     acresGained: 160,
     plunder: { food: 90_000, wood: 85_000, stone: 80_000, gold: 120_000 },
     travelSeconds: 1_800,
-    returnSeconds: 1_800,
     conquestLimit: 24,
   },
   {
@@ -78,7 +73,6 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
     acresGained: 400,
     plunder: { food: 600_000, wood: 600_000, stone: 600_000, gold: 900_000 },
     travelSeconds: 3_600,
-    returnSeconds: 3_600,
     conquestLimit: 8,
   },
 ]

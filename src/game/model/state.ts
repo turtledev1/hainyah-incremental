@@ -61,7 +61,7 @@ export interface Expedition {
   soldiers: number
   phase: ExpeditionPhase
   secondsRemaining: number
-  readonly totalPhaseSeconds: number
+  totalPhaseSeconds: number
   /** Spell ids, so a save never stores balance numbers a later version contradicts. */
   readonly appliedBoostSpellIds: readonly SpellId[]
   outcomeAcresGained: number

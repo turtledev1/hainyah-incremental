@@ -89,6 +89,6 @@ export const BUILDING_DEFINITIONS: readonly BuildingDefinition[] = [
     baseConstructionSeconds: 26,
     workerSlotsPerBuilding: 2,
     workerRoleName: 'priests',
-    effects: [{ kind: 'generateMagicExperience', experiencePerWorkerPerSecond: 0.6 }],
+    effects: [{ kind: 'generateMagicExperience', experiencePerWorkerPerSecond: 0.03 }],
   },
 ]

@@ -14,6 +14,7 @@ import { CardGrid } from '../components/CardGrid'
 import { CostList } from '../components/CostList'
 import { SectionCard } from '../components/SectionCard'
 import { stackModifiers, summariseModifiers } from '../modifierLabels'
+import { describeUnmetRequirements } from '../upgradeLabels'
 
 interface UpgradesPanelProps {
   readonly state: GameState
@@ -26,6 +27,7 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
   const buyUpgrade = useGameStore((store) => store.buyUpgrade)
   const isRepeatable = upgrade.maximumPurchases > 1
   const isExhausted = upgrade.purchases >= upgrade.maximumPurchases
+  const unmetRequirements = describeUnmetRequirements(upgrade.definition, state, registry, t)
 
   return (
     <Card sx={{ opacity: isExhausted ? 0.65 : 1 }}>
@@ -80,6 +82,20 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
                 })}
               </Typography>
             ) : null}
+          </Stack>
+        ) : null}
+
+        {unmetRequirements.length > 0 ? (
+          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+            {unmetRequirements.map((requirement) => (
+              <Chip
+                key={requirement}
+                size="small"
+                variant="outlined"
+                color="warning"
+                label={requirement}
+              />
+            ))}
           </Stack>
         ) : null}
 

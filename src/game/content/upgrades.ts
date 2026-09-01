@@ -225,7 +225,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     modifiers: [
       ...allProductionModifiers(1.15),
       { target: 'warfare.travelSpeed', operation: 'multiply', value: 1.15 },
-      { target: 'warfare.returnSpeed', operation: 'multiply', value: 1.15 },
     ],
   },
   {
@@ -242,7 +241,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     modifiers: [
       ...allProductionModifiers(1.2),
       { target: 'warfare.travelSpeed', operation: 'multiply', value: 1.25 },
-      { target: 'warfare.returnSpeed', operation: 'multiply', value: 1.25 },
       { target: 'thievery.speed', operation: 'multiply', value: 1.25 },
     ],
   },

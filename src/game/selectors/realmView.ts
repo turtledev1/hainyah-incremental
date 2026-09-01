@@ -64,6 +64,7 @@ import {
 import {
   checkExpeditionRefusal,
   computeAttackPowerEstimate,
+  computeLegSeconds,
   computeTargetDefenseEstimate,
   isTargetExhausted,
   timesConquered,
@@ -110,6 +111,7 @@ export interface ConquestTargetView {
   readonly isExhausted: boolean
   readonly estimatedAttackPower: number
   readonly estimatedDefense: number
+  readonly estimatedLegSeconds: number
   readonly refusalAtRequiredForce?: ExpeditionRefusal
 }
 
@@ -238,24 +240,27 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
     ]
   })
 
-  const conquestTargets: ConquestTargetView[] = registry.conquestTargets.map((definition) => ({
-    definition,
-    timesConquered: timesConquered(state, definition.id),
-    isExhausted: isTargetExhausted(state, registry, definition.id),
-    estimatedAttackPower: computeAttackPowerEstimate(
-      state,
-      registry,
-      definition.requiredSoldiers,
-      true,
-    ),
-    estimatedDefense: computeTargetDefenseEstimate(state, registry, definition.id, true),
-    refusalAtRequiredForce: checkExpeditionRefusal(
-      state,
-      registry,
-      definition.id,
-      definition.requiredSoldiers,
-    ),
-  }))
+  const conquestTargets: ConquestTargetView[] = registry.conquestTargets.map((definition) => {
+    return {
+      definition,
+      timesConquered: timesConquered(state, definition.id),
+      isExhausted: isTargetExhausted(state, registry, definition.id),
+      estimatedAttackPower: computeAttackPowerEstimate(
+        state,
+        registry,
+        definition.requiredSoldiers,
+        true,
+      ),
+      estimatedDefense: computeTargetDefenseEstimate(state, registry, definition.id, true),
+      estimatedLegSeconds: computeLegSeconds(state, registry, definition.id),
+      refusalAtRequiredForce: checkExpeditionRefusal(
+        state,
+        registry,
+        definition.id,
+        definition.requiredSoldiers,
+      ),
+    }
+  })
 
   const thieveryTargets: ThieveryTargetView[] = registry.thieveryTargets.map((definition) => ({
     definition,

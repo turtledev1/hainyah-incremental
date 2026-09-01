@@ -70,7 +70,7 @@ function TargetCard({
             garrison: t('realm.targetGarrison', {
               strength: formatNumber(target.estimatedDefense),
             }),
-            travel: formatDuration(target.definition.travelSeconds),
+            travel: formatDuration(target.estimatedLegSeconds),
           })}
         </Typography>
 

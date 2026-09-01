@@ -184,12 +184,13 @@ function resolveBattle(
     )
   }
 
-  const returnSeconds = safeDivide(
-    target.returnSeconds,
-    resolveMultiplier(index, 'warfare.returnSpeed'),
+  const walkHomeSeconds = safeDivide(
+    target.travelSeconds,
+    resolveMultiplier(index, 'warfare.travelSpeed'),
   )
   expedition.phase = 'returning'
-  expedition.secondsRemaining = returnSeconds
+  expedition.secondsRemaining = walkHomeSeconds
+  expedition.totalPhaseSeconds = walkHomeSeconds
 }
 
 export const advanceExpeditions = ({ state, registry, deltaSeconds, random }: TickContext): void => {
@@ -256,6 +257,19 @@ export function computeAttackPowerEstimate(
     ...pendingExpeditionModifiers,
   ])
   return soldiers * BALANCE.warfare.powerPerSoldier * resolveMultiplier(index, 'warfare.attackPower')
+}
+
+export function computeLegSeconds(
+  state: GameState,
+  registry: ContentRegistry,
+  targetId: ConquestTargetId,
+): number {
+  const target = registry.conquestTargetsById.get(targetId)
+  if (!target) {
+    return 0
+  }
+  const index = buildModifierIndex(collectActiveModifiers(state, registry))
+  return safeDivide(target.travelSeconds, resolveMultiplier(index, 'warfare.travelSpeed'))
 }
 
 export function computeTargetDefenseEstimate(

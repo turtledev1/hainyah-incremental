@@ -19,7 +19,6 @@ export type ModifierTarget =
   | 'warfare.attackPower'
   | 'warfare.casualtyRate'
   | 'warfare.travelSpeed'
-  | 'warfare.returnSpeed'
   | 'warfare.targetDefense'
   | 'warfare.plunder'
 

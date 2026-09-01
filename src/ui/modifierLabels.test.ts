@@ -49,7 +49,6 @@ describe('telling the player what an upgrade changes', () => {
 
     expect(described[0]).toBe('All production +15%')
     expect(described).toContain('March speed +15%')
-    expect(described).toContain('Speed home +15%')
   })
 
   it('has a readable label for every modifier any upgrade uses', () => {
@@ -138,11 +137,7 @@ describe('what a spell tells the player it does', () => {
   })
 
   it('lists each effect of a spell that does several things', () => {
-    expect(effectsOf('air.tailwind')).toEqual([
-      'March speed +80%',
-      'Speed home +80%',
-      'Thief speed +80%',
-    ])
+    expect(effectsOf('air.tailwind')).toEqual(['March speed +80%', 'Thief speed +80%'])
   })
 
   it('collapses a spell that lifts all production into one line', () => {

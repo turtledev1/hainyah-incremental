@@ -162,7 +162,6 @@ export interface ConquestTargetDefinition {
   readonly acresGained: number
   readonly plunder: ResourceAmounts
   readonly travelSeconds: number
-  readonly returnSeconds: number
   /** Times this target can be conquered; the world only holds so many cities. */
   readonly conquestLimit: number
 }

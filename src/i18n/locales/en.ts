@@ -21,11 +21,11 @@ export const englishTranslations = {
     marchBegan_other:
       '{{count}} soldiers march on {{targetName}}, arriving in {{arrivalSeconds, duration}}.',
     victoryWithoutLosses:
-      '{{targetName}} falls without a single loss. The army starts home with {{acres}} acres.',
+      '{{targetName}} falls, not a single soldier lost. Its {{acres}} acres are yours once the army is back.',
     victoryWithLosses_one:
-      '{{targetName}} falls, though {{count}} soldier does not come back. The rest start home with {{acres}} acres.',
+      '{{targetName}} falls and {{count}} soldier does not come back. Its {{acres}} acres are yours once the army is home.',
     victoryWithLosses_other:
-      '{{targetName}} falls, though {{count}} soldiers do not come back. The rest start home with {{acres}} acres.',
+      '{{targetName}} falls and {{count}} soldiers do not come back. Its {{acres}} acres are yours once the army is home.',
     defeatWithoutLosses: 'The assault on {{targetName}} falters, though nobody falls.',
     defeatWithLosses_one:
       'The assault on {{targetName}} falters, and {{count}} soldier does not come back.',
@@ -312,7 +312,6 @@ export const englishTranslations = {
     'warfare.attackPower': 'Attack power',
     'warfare.casualtyRate': 'Battle casualties',
     'warfare.travelSpeed': 'March speed',
-    'warfare.returnSpeed': 'Speed home',
     'warfare.targetDefense': 'Enemy defence',
     'warfare.plunder': 'Plunder taken',
   },
@@ -376,6 +375,10 @@ export const englishTranslations = {
     thievesAtWork_other: '{{count}} thieves at {{targetName}}',
     timesTaken: '{{count}}/{{limit}} taken',
     targetGarrison: 'garrison {{strength}}',
+    requiresUpgrade: 'Needs {{upgradeName}}',
+    requiresBuildings: 'Needs {{required}} × {{buildingName}} — you have {{owned}}',
+    requiresMagicTier: 'Needs a circle at tier {{tier}}',
+    requiresConquest: 'Needs {{targetName}} taken',
     requiresSoldiers_one: 'Needs at least {{count}} soldier',
     requiresSoldiers_other: 'Needs at least {{count}} soldiers',
   },

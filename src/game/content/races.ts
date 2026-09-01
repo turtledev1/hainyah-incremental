@@ -34,7 +34,7 @@ export const RACE_DEFINITIONS: readonly RaceDefinition[] = [
     ],
     disadvantages: [
       'Farms yield 15% less food',
-      'Armies march slowly: 20% longer travel',
+      'Armies march slowly: 25% longer to reach a target',
       'Only the Fire or Earth Circle will have them',
     ],
     magicCircleAccess: {

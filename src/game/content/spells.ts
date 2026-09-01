@@ -179,7 +179,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
       durationSeconds: BALANCE.magic.sustainedDurationSeconds,
       modifiers: [
         { target: 'warfare.travelSpeed', operation: 'multiply', value: 1.8 },
-        { target: 'warfare.returnSpeed', operation: 'multiply', value: 1.8 },
         { target: 'thievery.speed', operation: 'multiply', value: 1.8 },
       ],
     },
@@ -233,7 +232,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
       consumeOn: 'expedition',
       modifiers: [
         { target: 'warfare.travelSpeed', operation: 'multiply', value: 2 },
-        { target: 'warfare.returnSpeed', operation: 'multiply', value: 2 },
         { target: 'warfare.targetDefense', operation: 'multiply', value: 0.75 },
       ],
     },
@@ -624,14 +622,17 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     tier: 6,
     name: 'Pact of Hai and Yah',
     description:
-      'Both gods attend your temples: magical experience +120%.',
+      'Both gods march with every army you send: attack +80%, and three losses in four are spared.',
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
       kind: 'buff',
       shape: 'sustained',
       durationSeconds: BALANCE.magic.sustainedDurationSeconds,
-      modifiers: [{ target: 'magic.experienceGain', operation: 'multiply', value: 2.2 }],
+      modifiers: [
+        { target: 'warfare.attackPower', operation: 'multiply', value: 1.8 },
+        { target: 'warfare.casualtyRate', operation: 'multiply', value: 0.25 },
+      ],
     },
   },
 ]

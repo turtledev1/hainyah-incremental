@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
+import { BALANCE } from '../content/balance'
 import { capacityOf } from './capacity'
 import { buildModifierIndexForState, resolveMultiplier } from './modifiers'
 import {
@@ -47,7 +48,7 @@ describe('upgrade requirements', () => {
 
     expect(checkUpgradeRefusal(state, testRegistry, 'mining.blastingPowder')).toBe('magicTierTooLow')
 
-    state.magic.experience.fire = 500
+    state.magic.experience.fire = BALANCE.magic.tierExperienceThresholds[1]!
 
     expect(checkUpgradeRefusal(state, testRegistry, 'mining.blastingPowder')).toBeUndefined()
   })
@@ -61,7 +62,7 @@ describe('upgrade requirements', () => {
     })
     undeadRealm.purchasedUpgrades['mining.ironPicks'] = 1
     undeadRealm.purchasedUpgrades['mining.steelPicks'] = 1
-    undeadRealm.magic.experience.dark = 500
+    undeadRealm.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[1]!
 
     expect(checkUpgradeRefusal(undeadRealm, testRegistry, 'mining.blastingPowder')).toBeUndefined()
   })
@@ -206,7 +207,7 @@ describe('which improvements are listed', () => {
 
     expect(isUpgradeWithinReach(state, testRegistry, powder)).toBe(false)
 
-    state.magic.experience.fire = 500
+    state.magic.experience.fire = BALANCE.magic.tierExperienceThresholds[1]!
 
     expect(isUpgradeWithinReach(state, testRegistry, powder)).toBe(true)
   })
