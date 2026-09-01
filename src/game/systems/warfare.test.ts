@@ -1,0 +1,211 @@
+import { describe, expect, it } from 'vitest'
+import { createRealm, testRegistry } from '../../test/realmFixtures'
+import { advanceGame } from '../engine/tick'
+import type { GameState } from '../model/state'
+import { checkExpeditionRefusal, launchExpedition } from './warfare'
+
+const HAMLET = testRegistry.conquestTargetsById.get('hamlet')!
+
+/** Enough barracks and drill-masters to hold the force, so nothing gets disbanded mid-test. */
+function armedRealm(soldiers: number, overrides: Partial<Parameters<typeof createRealm>[0]> = {}): GameState {
+  const barracks = Math.max(1, Math.ceil(soldiers / 12))
+  return createRealm({
+    acres: 10_000,
+    population: soldiers + barracks * 2 + 5,
+    soldiersAtHome: soldiers,
+    buildings: { barracks, house: soldiers + 50 },
+    workers: { barracks: barracks * 2 },
+    resources: { food: 100_000_000 },
+    ...overrides,
+  })
+}
+
+describe('sending an army', () => {
+  it('refuses a force smaller than the target demands', () => {
+    const state = armedRealm(HAMLET.requiredSoldiers - 1)
+
+    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', HAMLET.requiredSoldiers - 1)).toBe(
+      'belowRequiredForce',
+    )
+  })
+
+  it('refuses to send soldiers the realm does not have at home', () => {
+    const state = armedRealm(HAMLET.requiredSoldiers)
+
+    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', 500)).toBe(
+      'notEnoughSoldiersAtHome',
+    )
+  })
+
+  it('refuses a target that has already been taken as many times as it exists', () => {
+    const state = armedRealm(50)
+    state.defeatedConquestTargets.hamlet = HAMLET.conquestLimit
+
+    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', 50)).toBe('targetExhausted')
+  })
+
+  it('marches the soldiers out of the realm while they are away', () => {
+    const state = armedRealm(20)
+
+    expect(launchExpedition(state, testRegistry, 'hamlet', 20)).toBeUndefined()
+
+    expect(state.soldiersAtHome).toBe(0)
+    expect(state.expeditions).toHaveLength(1)
+    expect(state.expeditions[0]!.phase).toBe('travelling')
+  })
+})
+
+describe('resolving a battle', () => {
+  it('takes the acres when the force is overwhelming', () => {
+    const state = armedRealm(60)
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+
+    const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
+
+    expect(afterBattle.statistics.battlesWon).toBe(1)
+    expect(afterBattle.acres).toBe(state.acres + HAMLET.acresGained)
+    expect(afterBattle.expeditions[0]!.phase).toBe('returning')
+  })
+
+  it('collects plunder from a won battle', () => {
+    const state = armedRealm(60, { resources: { food: 0 } })
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+
+    const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
+
+    expect(afterBattle.resources.gold).toBeGreaterThan(0)
+  })
+
+  it('fails and takes no acres when the defences far outmatch the force sent', () => {
+    const barelyEnoughToMarch = testRegistry.conquestTargetsById.get('capital')!.requiredSoldiers
+    const state = armedRealm(barelyEnoughToMarch)
+    launchExpedition(state, testRegistry, 'capital', barelyEnoughToMarch)
+    const acresBefore = state.acres
+
+    const afterBattle = advanceGame(
+      state,
+      testRegistry.conquestTargetsById.get('capital')!.travelSeconds + 1,
+      testRegistry,
+    )
+
+    expect(afterBattle.statistics.battlesLost).toBe(1)
+    expect(afterBattle.acres).toBe(acresBefore)
+  })
+
+  it('brings the survivors home after the return journey', () => {
+    const state = armedRealm(60)
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+
+    const afterReturn = advanceGame(
+      state,
+      HAMLET.travelSeconds + HAMLET.returnSeconds + 2,
+      testRegistry,
+    )
+
+    expect(afterReturn.expeditions).toHaveLength(0)
+    expect(afterReturn.soldiersAtHome).toBeGreaterThan(0)
+  })
+
+  it('costs a defeated army more soldiers than a victorious one', () => {
+    const winningRealm = armedRealm(60)
+    launchExpedition(winningRealm, testRegistry, 'hamlet', 60)
+    const losingRealm = armedRealm(30)
+    losingRealm.rngCursor = winningRealm.rngCursor
+    launchExpedition(losingRealm, testRegistry, 'village', 30)
+
+    const wonBattle = advanceGame(winningRealm, HAMLET.travelSeconds + 1, testRegistry)
+    const lostBattle = advanceGame(
+      losingRealm,
+      testRegistry.conquestTargetsById.get('village')!.travelSeconds + 1,
+      testRegistry,
+    )
+
+    expect(lostBattle.statistics.soldiersLost).toBeGreaterThan(wonBattle.statistics.soldiersLost)
+  })
+
+  it('never kills an undead soldier, though the assault can still fail', () => {
+    const doomedForce = testRegistry.conquestTargetsById.get('capital')!.requiredSoldiers
+    const state = armedRealm(doomedForce, { raceId: 'undead', circleIds: ['dark'] })
+    launchExpedition(state, testRegistry, 'capital', doomedForce)
+
+    const afterBattle = advanceGame(
+      state,
+      testRegistry.conquestTargetsById.get('capital')!.travelSeconds + 1,
+      testRegistry,
+    )
+
+    expect(afterBattle.statistics.battlesLost).toBe(1)
+    expect(afterBattle.statistics.soldiersLost).toBe(0)
+    expect(afterBattle.expeditions[0]!.soldiers).toBe(doomedForce)
+  })
+
+  it('spends a pending boost on the expedition that launches next', () => {
+    const state = armedRealm(60, { circleIds: ['dark'] })
+    state.magic.pendingBoosts.push({
+      spellId: 'dark.blight',
+      label: 'Blight',
+      consumeOn: 'expedition',
+      modifiers: [{ target: 'warfare.targetDefense', operation: 'multiply', value: 0.8 }],
+    })
+
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+
+    expect(state.magic.pendingBoosts).toHaveLength(0)
+    expect(state.expeditions[0]!.appliedBoostSpellIds).toEqual(['dark.blight'])
+  })
+
+  it('records the last battle losses so resurrection spells have something to work with', () => {
+    const state = armedRealm(30)
+    launchExpedition(state, testRegistry, 'village', 30)
+
+    const afterBattle = advanceGame(
+      state,
+      testRegistry.conquestTargetsById.get('village')!.travelSeconds + 1,
+      testRegistry,
+    )
+
+    expect(afterBattle.lastBattleSoldiersLost).toBe(afterBattle.statistics.soldiersLost)
+  })
+})
+
+describe('what protects an army', () => {
+  /** Casualties are one axis now; a second "defence" knob only obscured it. */
+  it('reduces casualties through one modifier and no other', () => {
+    const doomed = armedRealm(30)
+    launchExpedition(doomed, testRegistry, 'village', 30)
+
+    const shielded = armedRealm(30)
+    shielded.rngCursor = doomed.rngCursor
+    shielded.magic.activeBuffs.push({
+      spellId: 'earth.bulwark',
+      label: 'Bulwark',
+      remainingSeconds: 600,
+      modifiers: [{ target: 'warfare.casualtyRate', operation: 'multiply', value: 0.05 }],
+    })
+    launchExpedition(shielded, testRegistry, 'village', 30)
+
+    const travel = testRegistry.conquestTargetsById.get('village')!.travelSeconds + 1
+    const withoutBulwark = advanceGame(doomed, travel, testRegistry).statistics.soldiersLost
+    const withBulwark = advanceGame(shielded, travel, testRegistry).statistics.soldiersLost
+
+    expect(withoutBulwark).toBeGreaterThan(0)
+    expect(withBulwark).toBeLessThan(withoutBulwark)
+  })
+
+  it('does not change whether the battle is won, only what it costs', () => {
+    const target = testRegistry.conquestTargetsById.get('capital')!
+    const force = target.requiredSoldiers
+    const shielded = armedRealm(force)
+    shielded.magic.activeBuffs.push({
+      spellId: 'earth.bulwark',
+      label: 'Bulwark',
+      remainingSeconds: 600,
+      modifiers: [{ target: 'warfare.casualtyRate', operation: 'multiply', value: 0.05 }],
+    })
+    launchExpedition(shielded, testRegistry, 'capital', force)
+
+    const resolved = advanceGame(shielded, target.travelSeconds + 1, testRegistry)
+
+    expect(resolved.statistics.battlesLost).toBe(1)
+  })
+})
