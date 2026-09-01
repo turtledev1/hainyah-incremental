@@ -60,7 +60,6 @@ describe('the odds of a job', () => {
     state.purchasedUpgrades['thievery.guildNetwork'] = 1
     state.magic.activeBuffs.push({
       spellId: 'air.whisperingWinds',
-      label: 'Whispering Winds',
       remainingSeconds: 60,
       modifiers: [{ target: 'thievery.successChance', operation: 'multiply', value: 2 }],
     })
@@ -142,7 +141,6 @@ describe('resolving a job', () => {
     const state = guildRealm(20)
     state.magic.pendingBoosts.push({
       spellId: 'air.whisperingWinds',
-      label: 'Whispering Winds',
       consumeOn: 'heist',
       modifiers: [{ target: 'thievery.successChance', operation: 'multiply', value: 1.5 }],
     })

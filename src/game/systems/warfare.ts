@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import { BALANCE } from '../content/balance'
 import type { ContentRegistry } from '../model/content'
 import type { ConquestTargetId, ResourceAmounts, ResourceId } from '../model/ids'
@@ -99,7 +100,7 @@ export function launchExpedition(
   })
   emitEvent(state, 'warfare', 'chronicle.marchBegan', {
     count: soldiers,
-    targetName: target.name,
+    targetKey: contentKeys.conquestTargetName(target.id),
     arrivalSeconds: travelSeconds,
   })
   return undefined
@@ -172,7 +173,11 @@ function resolveBattle(
       state,
       'warfare',
       soldiersLost > 0 ? 'chronicle.victoryWithLosses' : 'chronicle.victoryWithoutLosses',
-      { count: soldiersLost, targetName: target.name, acres: target.acresGained },
+      {
+        count: soldiersLost,
+        targetKey: contentKeys.conquestTargetName(target.id),
+        acres: target.acresGained,
+      },
     )
   } else {
     state.statistics.battlesLost += 1
@@ -180,7 +185,7 @@ function resolveBattle(
       state,
       'warfare',
       soldiersLost > 0 ? 'chronicle.defeatWithLosses' : 'chronicle.defeatWithoutLosses',
-      { count: soldiersLost, targetName: target.name },
+      { count: soldiersLost, targetKey: contentKeys.conquestTargetName(target.id) },
     )
   }
 
@@ -232,7 +237,7 @@ export const advanceExpeditions = ({ state, registry, deltaSeconds, random }: Ti
         {
           count: expedition.soldiers,
           acres: expedition.outcomeAcresGained,
-          targetName: registry.conquestTargetsById.get(expedition.targetId)?.name ?? '',
+          targetKey: contentKeys.conquestTargetName(expedition.targetId),
         },
       )
     } else if (expedition.soldiers > 0) {

@@ -10,6 +10,7 @@ import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CostList } from '../components/CostList'
 import { SectionCard } from '../components/SectionCard'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface AscensionPanelProps {
   readonly state: GameState
@@ -42,16 +43,16 @@ export function AscensionPanel({ state, view }: AscensionPanelProps) {
         {nextStage ? (
           <Stack sx={{ gap: 1 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              {t('panels.wonder.nextStage', { stageName: nextStage.name })}
+              {t('panels.wonder.nextStage', { stageName: t(contentKeys.ascensionStageName(nextStage.index)) })}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {nextStage.flavor}
+              {t(contentKeys.ascensionStageFlavor(nextStage.index))}
             </Typography>
             <CostList costs={nextStage.costs} state={state} />
             <Tooltip title={refusal ? t(`refusals.ascension.${refusal}`) : t('actions.build')}>
               <span>
                 <Button variant="contained" disabled={Boolean(refusal)} onClick={advanceAscension}>
-                  {t('panels.wonder.buildStage', { stageName: nextStage.name })}
+                  {t('panels.wonder.buildStage', { stageName: t(contentKeys.ascensionStageName(nextStage.index)) })}
                 </Button>
               </span>
             </Tooltip>
@@ -68,7 +69,7 @@ export function AscensionPanel({ state, view }: AscensionPanelProps) {
           {registry.ascensionStages.map((stage) => (
             <Stack key={stage.index} direction="row" sx={{ opacity: stage.index <= completedStages ? 1 : 0.55, justifyContent: "space-between", alignItems: "baseline", gap: 2 }}>
               <Typography variant="body2">
-                {stage.index}. {stage.name}
+                {stage.index}. {t(contentKeys.ascensionStageName(stage.index))}
               </Typography>
               {stage.index <= completedStages ? (
                 <Typography variant="caption" color="success.main">

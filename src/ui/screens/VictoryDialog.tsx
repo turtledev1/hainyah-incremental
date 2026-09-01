@@ -10,6 +10,7 @@ import type { GameState } from '../../game/model/state'
 import { useGameStore } from '../../game/store/gameStore'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { formatDuration, formatNumber } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 export function VictoryDialog({ state }: { readonly state: GameState }) {
   const { t } = useTranslation()
@@ -24,7 +25,7 @@ export function VictoryDialog({ state }: { readonly state: GameState }) {
         <Stack sx={{ gap: 1.5 }}>
           <Typography variant="body1">
             {t('victory.body', {
-              raceName: registry.racesById.get(state.raceId)?.name.toLowerCase() ?? '',
+              raceName: t(contentKeys.raceName(state.raceId)),
             })}
           </Typography>
           <Stack sx={{ fontFamily: NUMERIC_FONT_FAMILY, gap: 0.25 }}>

@@ -8,6 +8,8 @@ import { HEIST_REFUSALS } from '../game/systems/thievery'
 import { UPGRADE_REFUSALS } from '../game/systems/upgrades'
 import { EXPEDITION_REFUSALS } from '../game/systems/warfare'
 import { i18n } from './index'
+import { contentKeys } from './contentKeys'
+import { CONTENT_REGISTRY } from '../game/content'
 
 function sourceFilesUnder(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -63,22 +65,108 @@ describe('translations', () => {
     expect(i18n.t('chronicle.thievesDeserted', { count: 3 })).toContain('thieves leave')
   })
 
-  it('interpolates content names that stay in the content files', () => {
-    expect(i18n.t('chronicle.buildingFinished', { buildingName: 'Lumber Camp' })).toBe(
-      'Lumber Camp finished.',
-    )
+  it('resolves the content name an event carries as a key', () => {
+    expect(
+      i18n.t('chronicle.buildingFinished', { buildingKey: contentKeys.buildingName('lumberCamp') }),
+    ).toBe('Lumber Camp finished.')
   })
 
   it('formats a duration through the shared formatter rather than in a system', () => {
     expect(
-      i18n.t('chronicle.marchBegan', { count: 12, targetName: 'Walled Town', arrivalSeconds: 90 }),
+      i18n.t('chronicle.marchBegan', {
+        count: 12,
+        targetKey: contentKeys.conquestTargetName('town'),
+        arrivalSeconds: 90,
+      }),
     ).toBe('12 soldiers march on Walled Town, arriving in 1m 30s.')
+  })
+
+  it('re-reads an event already in the log when the language changes', async () => {
+    i18n.addResourceBundle('cy', 'translation', {
+      chronicle: { buildingFinished: '$t({{buildingKey}}) wedi ei orffen.' },
+      content: { buildings: { lumberCamp: { name: 'Gwersyll Coed' } } },
+    })
+    const storedValues = { buildingKey: contentKeys.buildingName('lumberCamp') }
+
+    await i18n.changeLanguage('cy')
+    expect(i18n.t('chronicle.buildingFinished', storedValues)).toBe('Gwersyll Coed wedi ei orffen.')
+
+    await i18n.changeLanguage('en')
+    expect(i18n.t('chronicle.buildingFinished', storedValues)).toBe('Lumber Camp finished.')
   })
 
   it('formats large numbers compactly inside a message', () => {
     expect(i18n.t('chronicle.tideYields', { amount: 12_500 })).toBe(
       'Tide of Plenty yields 12.5k food.',
     )
+  })
+})
+
+describe('content prose', () => {
+  const resolves = (key: string): boolean => i18n.t(key) !== key
+
+  it('has a name and a flavour for everything the registry defines', () => {
+    const missing: string[] = []
+    const check = (...keys: string[]) => missing.push(...keys.filter((key) => !resolves(key)))
+
+    for (const resource of CONTENT_REGISTRY.resources) {
+      check(contentKeys.resourceName(resource.id), contentKeys.resourceFlavor(resource.id))
+      if (resource.manualGather) {
+        check(contentKeys.gatherAction(resource.id))
+      }
+    }
+    for (const race of CONTENT_REGISTRY.races) {
+      check(
+        contentKeys.raceName(race.id),
+        contentKeys.raceTagline(race.id),
+        contentKeys.raceAdvantages(race.id),
+        contentKeys.raceDisadvantages(race.id),
+      )
+    }
+    for (const building of CONTENT_REGISTRY.buildings) {
+      check(contentKeys.buildingName(building.id), contentKeys.buildingFlavor(building.id))
+    }
+    for (const circle of CONTENT_REGISTRY.magicCircles) {
+      check(contentKeys.circleName(circle.id), contentKeys.circleFlavor(circle.id))
+    }
+    for (const spell of CONTENT_REGISTRY.spells) {
+      check(contentKeys.spellName(spell.id), contentKeys.spellDescription(spell.id))
+    }
+    for (const line of CONTENT_REGISTRY.upgradeLines) {
+      check(contentKeys.upgradeLineName(line.id), contentKeys.upgradeLineFlavor(line.id))
+    }
+    for (const upgrade of CONTENT_REGISTRY.upgrades) {
+      check(contentKeys.upgradeName(upgrade.id), contentKeys.upgradeFlavor(upgrade.id))
+    }
+    for (const target of CONTENT_REGISTRY.conquestTargets) {
+      check(
+        contentKeys.conquestTargetName(target.id),
+        contentKeys.conquestTargetFlavor(target.id),
+      )
+    }
+    for (const target of CONTENT_REGISTRY.thieveryTargets) {
+      check(
+        contentKeys.thieveryTargetName(target.id),
+        contentKeys.thieveryTargetFlavor(target.id),
+      )
+    }
+    for (const stage of CONTENT_REGISTRY.ascensionStages) {
+      check(
+        contentKeys.ascensionStageName(stage.index),
+        contentKeys.ascensionStageFlavor(stage.index),
+      )
+    }
+
+    expect(missing).toEqual([])
+  })
+
+  it('gives a worker role both numbers wherever it gives one', () => {
+    for (const building of CONTENT_REGISTRY.buildings) {
+      const plural = resolves(contentKeys.buildingWorkerRole(building.id))
+      const singular = resolves(contentKeys.buildingWorkerRoleSingular(building.id))
+
+      expect(singular).toBe(plural)
+    }
   })
 })
 

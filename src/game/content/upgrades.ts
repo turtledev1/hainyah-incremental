@@ -3,19 +3,19 @@ import { RESOURCE_IDS } from '../model/ids'
 import type { Modifier } from '../model/modifiers'
 
 export const UPGRADE_LINE_DEFINITIONS: readonly UpgradeLineDefinition[] = [
-  { id: 'housing', name: 'Housing', flavor: 'Better walls hold more people in the same acre.' },
-  { id: 'farming', name: 'Farming', flavor: 'Tools and technique between you and famine.' },
-  { id: 'woodcutting', name: 'Woodcutting', flavor: 'Sharper steel, fewer strokes.' },
-  { id: 'quarrying', name: 'Quarrying', flavor: 'Splitting rock is a craft, not a labour.' },
-  { id: 'mining', name: 'Mining', flavor: 'Deeper shafts, richer seams.' },
-  { id: 'preservation', name: 'Preservation', flavor: 'Food that keeps is food you did not lose.' },
-  { id: 'logistics', name: 'Logistics', flavor: 'Roads make every other improvement worth more.' },
-  { id: 'military', name: 'Military', flavor: 'Drill, discipline and engines of war.' },
-  { id: 'thievery', name: 'Thievery', flavor: 'The quiet trade, practised properly.' },
-  { id: 'arcana', name: 'Arcana', flavor: 'Instruments and libraries for the circles.' },
-  { id: 'gathering', name: 'Gathering', flavor: 'Your own two hands, better used.' },
-  { id: 'fortification', name: 'Fortification', flavor: 'Endless small reinforcements. Repeatable.' },
-  { id: 'bribery', name: 'Bribery', flavor: 'Coin in the right palm, again and again. Repeatable.' },
+  { id: 'housing' },
+  { id: 'farming' },
+  { id: 'woodcutting' },
+  { id: 'quarrying' },
+  { id: 'mining' },
+  { id: 'preservation' },
+  { id: 'logistics' },
+  { id: 'military' },
+  { id: 'thievery' },
+  { id: 'arcana' },
+  { id: 'gathering' },
+  { id: 'fortification' },
+  { id: 'bribery' },
 ]
 
 const allProductionModifiers = (multiplier: number): readonly Modifier[] =>
@@ -29,8 +29,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'housing.timberFrames',
     lineId: 'housing',
-    name: 'Timber Frames',
-    flavor: 'A proper frame instead of lashed poles. Housing capacity +40%.',
     costs: { wood: 400, stone: 120 },
     requires: { buildingCounts: { house: 3 } },
     modifiers: [{ target: 'capacity.population', operation: 'multiply', value: 1.4 }],
@@ -38,8 +36,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'housing.stoneHouses',
     lineId: 'housing',
-    name: 'Stone Houses',
-    flavor: 'Cut stone, two storeys, a real roof. Housing capacity +60%.',
     costs: { wood: 2_500, stone: 4_000, gold: 800 },
     requires: { upgradeIds: ['housing.timberFrames'], buildingCounts: { house: 8 } },
     modifiers: [{ target: 'capacity.population', operation: 'multiply', value: 1.6 }],
@@ -47,8 +43,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'housing.manorHalls',
     lineId: 'housing',
-    name: 'Manor Halls',
-    flavor: 'Long halls that sleep whole families. Housing capacity +80%.',
     costs: { wood: 40_000, stone: 60_000, gold: 20_000 },
     requires: {
       upgradeIds: ['housing.stoneHouses'],
@@ -61,8 +55,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'farming.ironPlows',
     lineId: 'farming',
-    name: 'Iron Plows',
-    flavor: 'Iron cuts the sod the wooden share only bruised. Farms +30%.',
     costs: { wood: 300, gold: 150 },
     requires: { buildingCounts: { farm: 2 } },
     modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.3 }],
@@ -70,8 +62,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'farming.cropRotation',
     lineId: 'farming',
-    name: 'Crop Rotation',
-    flavor: 'Rest a field and it pays you back. Farms +40%.',
     costs: { wood: 2_000, food: 3_000, gold: 1_200 },
     requires: { upgradeIds: ['farming.ironPlows'], buildingCounts: { farm: 5 } },
     modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.4 }],
@@ -79,8 +69,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'farming.aqueducts',
     lineId: 'farming',
-    name: 'Aqueducts',
-    flavor: 'Water arrives whether or not it rains. Farms +50%.',
     costs: { stone: 45_000, wood: 20_000, gold: 15_000 },
     requires: { upgradeIds: ['farming.cropRotation'], buildingCounts: { farm: 12 } },
     modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.5 }],
@@ -89,8 +77,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'woodcutting.bronzeAxes',
     lineId: 'woodcutting',
-    name: 'Bronze Axes',
-    flavor: 'Cast heads that keep an edge. Lumber camps +30%.',
     costs: { wood: 250, gold: 120 },
     requires: { buildingCounts: { lumberCamp: 2 } },
     modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 1.3 }],
@@ -98,8 +84,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'woodcutting.steelAxes',
     lineId: 'woodcutting',
-    name: 'Steel Axes',
-    flavor: 'Half the strokes, twice the trees. Lumber camps +40%.',
     costs: { wood: 1_800, stone: 900, gold: 1_400 },
     requires: { upgradeIds: ['woodcutting.bronzeAxes'], buildingCounts: { lumberCamp: 5 } },
     modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 1.4 }],
@@ -107,8 +91,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'woodcutting.whipsaws',
     lineId: 'woodcutting',
-    name: 'Whipsaws',
-    flavor: 'Two-man saws and a felling yard that never stops. Lumber camps +50%.',
     costs: { wood: 30_000, stone: 18_000, gold: 22_000 },
     requires: { upgradeIds: ['woodcutting.steelAxes'], buildingCounts: { lumberCamp: 12 } },
     modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 1.5 }],
@@ -117,8 +99,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'quarrying.ironChisels',
     lineId: 'quarrying',
-    name: 'Iron Chisels',
-    flavor: 'Stone splits where you mark it. Quarries +30%.',
     costs: { wood: 200, gold: 180 },
     requires: { buildingCounts: { quarry: 2 } },
     modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 1.3 }],
@@ -126,8 +106,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'quarrying.wedgeAndFeather',
     lineId: 'quarrying',
-    name: 'Wedge & Feather',
-    flavor: 'A trick of iron that opens a face cleanly. Quarries +40%.',
     costs: { wood: 1_500, stone: 1_200, gold: 1_500 },
     requires: { upgradeIds: ['quarrying.ironChisels'], buildingCounts: { quarry: 5 } },
     modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 1.4 }],
@@ -135,8 +113,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'quarrying.cranes',
     lineId: 'quarrying',
-    name: 'Treadwheel Cranes',
-    flavor: 'Blocks leave the pit as fast as they are cut. Quarries +50%.',
     costs: { wood: 35_000, stone: 25_000, gold: 20_000 },
     requires: { upgradeIds: ['quarrying.wedgeAndFeather'], buildingCounts: { quarry: 12 } },
     modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 1.5 }],
@@ -145,8 +121,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'mining.ironPicks',
     lineId: 'mining',
-    name: 'Iron Picks',
-    flavor: 'Iron bites where bronze glances. Mines +30%.',
     costs: { wood: 400, stone: 300, gold: 200 },
     requires: { buildingCounts: { mine: 2 } },
     modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 1.3 }],
@@ -154,8 +128,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'mining.steelPicks',
     lineId: 'mining',
-    name: 'Steel Picks',
-    flavor: 'Tempered heads and a smith to keep them. Mines +40%.',
     costs: { wood: 2_500, stone: 2_500, gold: 2_000 },
     requires: { upgradeIds: ['mining.ironPicks'], buildingCounts: { mine: 5 } },
     modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 1.4 }],
@@ -163,8 +135,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'mining.blastingPowder',
     lineId: 'mining',
-    name: 'Blasting Powder',
-    flavor: 'A charge does in a heartbeat what a shift could not. Mines +60%.',
     costs: { wood: 40_000, stone: 40_000, gold: 35_000 },
     requires: {
       upgradeIds: ['mining.steelPicks'],
@@ -177,8 +147,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'preservation.rootCellars',
     lineId: 'preservation',
-    name: 'Root Cellars',
-    flavor: 'Cold earth keeps a harvest honest. Your people eat 10% less.',
     costs: { wood: 350, stone: 350 },
     requires: { buildingCounts: { farm: 3 } },
     modifiers: [{ target: 'consumption.food', operation: 'multiply', value: 0.9 }],
@@ -186,8 +154,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'preservation.granaries',
     lineId: 'preservation',
-    name: 'Granaries',
-    flavor: 'Raised floors, tight lids, no vermin. Your people eat a further 15% less.',
     costs: { wood: 3_000, stone: 3_000, gold: 1_000 },
     requires: { upgradeIds: ['preservation.rootCellars'], buildingCounts: { farm: 8 } },
     modifiers: [{ target: 'consumption.food', operation: 'multiply', value: 0.85 }],
@@ -195,8 +161,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'preservation.coldVaults',
     lineId: 'preservation',
-    name: 'Cold Vaults',
-    flavor: 'Ice cut in winter, kept all year. Your people eat a further 20% less.',
     costs: { stone: 50_000, wood: 25_000, gold: 25_000 },
     requires: {
       upgradeIds: ['preservation.granaries'],
@@ -209,8 +173,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'logistics.handcarts',
     lineId: 'logistics',
-    name: 'Handcarts',
-    flavor: 'Nobody should carry what a wheel can. All production +10%.',
     costs: { wood: 600, gold: 300 },
     requires: { buildingCounts: { house: 5 } },
     modifiers: allProductionModifiers(1.1),
@@ -218,8 +180,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'logistics.wagons',
     lineId: 'logistics',
-    name: 'Wagons',
-    flavor: 'Draught teams and axles. All production +15%, marches 15% faster.',
     costs: { wood: 5_000, stone: 2_000, gold: 3_500 },
     requires: { upgradeIds: ['logistics.handcarts'], buildingCounts: { house: 12 } },
     modifiers: [
@@ -230,8 +190,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'logistics.pavedRoads',
     lineId: 'logistics',
-    name: 'Paved Roads',
-    flavor: 'Stone under every wheel in the realm. All production +20%, marches 25% faster.',
     costs: { stone: 80_000, wood: 40_000, gold: 40_000 },
     requires: {
       upgradeIds: ['logistics.wagons'],
@@ -248,8 +206,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'military.drillYards',
     lineId: 'military',
-    name: 'Drill Yards',
-    flavor: 'Soldiers who have done it before. Attack power +25%.',
     costs: { wood: 800, stone: 400, gold: 500 },
     requires: { buildingCounts: { barracks: 1 } },
     modifiers: [{ target: 'warfare.attackPower', operation: 'multiply', value: 1.25 }],
@@ -257,8 +213,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'military.standingArmy',
     lineId: 'military',
-    name: 'Standing Army',
-    flavor: 'Paid, housed, always ready. Attack power +35%, army capacity +20%.',
     costs: { wood: 6_000, stone: 3_000, gold: 6_000 },
     requires: {
       upgradeIds: ['military.drillYards'],
@@ -273,8 +227,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'military.siegeEngines',
     lineId: 'military',
-    name: 'Siege Engines',
-    flavor: 'Walls stop being an argument. Attack power +60%, casualties −20%.',
     costs: { wood: 70_000, stone: 50_000, gold: 60_000 },
     requires: {
       upgradeIds: ['military.standingArmy'],
@@ -290,8 +242,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'thievery.lockpicks',
     lineId: 'thievery',
-    name: 'Lockpicks',
-    flavor: 'A set of picks and someone taught to use them. Heist success +20%.',
     costs: { wood: 400, gold: 600 },
     requires: { buildingCounts: { thievesGuild: 1 } },
     modifiers: [{ target: 'thievery.successChance', operation: 'multiply', value: 1.2 }],
@@ -299,8 +249,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'thievery.smokeBombs',
     lineId: 'thievery',
-    name: 'Smoke Bombs',
-    flavor: 'An exit is worth more than an entrance. Casualties −30%, loot +25%.',
     costs: { wood: 3_000, stone: 1_500, gold: 5_000 },
     requires: { upgradeIds: ['thievery.lockpicks'], buildingCounts: { thievesGuild: 3 } },
     modifiers: [
@@ -311,8 +259,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'thievery.guildNetwork',
     lineId: 'thievery',
-    name: 'Guild Network',
-    flavor: 'Eyes in every city you have not taken yet. Success +25%, loot +60%.',
     costs: { wood: 40_000, stone: 25_000, gold: 70_000 },
     requires: {
       upgradeIds: ['thievery.smokeBombs'],
@@ -328,8 +274,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'arcana.scriptoria',
     lineId: 'arcana',
-    name: 'Scriptoria',
-    flavor: 'Someone finally wrote it down. Magical experience +30%.',
     costs: { wood: 900, stone: 600, gold: 700 },
     requires: { buildingCounts: { temple: 1 } },
     modifiers: [{ target: 'magic.experienceGain', operation: 'multiply', value: 1.3 }],
@@ -337,8 +281,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'arcana.astrolabes',
     lineId: 'arcana',
-    name: 'Astrolabes',
-    flavor: 'Hai and Yah measured against the stars. Experience +40%, mana pool +50%.',
     costs: { wood: 5_000, stone: 4_000, gold: 6_000 },
     requires: { upgradeIds: ['arcana.scriptoria'], buildingCounts: { temple: 3 } },
     modifiers: [
@@ -350,8 +292,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'arcana.leyLines',
     lineId: 'arcana',
-    name: 'Ley Lines',
-    flavor: 'The circles no longer wait on your temples. Experience +60%, mana pool doubled.',
     costs: { wood: 50_000, stone: 50_000, gold: 60_000 },
     requires: {
       upgradeIds: ['arcana.astrolabes'],
@@ -368,8 +308,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'gathering.callousedHands',
     lineId: 'gathering',
-    name: 'Calloused Hands',
-    flavor: 'You have done this a while now. Hand-gathering doubled.',
     costs: { wood: 40, stone: 20 },
     requires: {},
     modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 2 }],
@@ -377,8 +315,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'gathering.practisedHands',
     lineId: 'gathering',
-    name: 'Practised Hands',
-    flavor: 'Fewer wasted motions. Hand-gathering tripled again.',
     costs: { wood: 500, stone: 400, gold: 100 },
     requires: { upgradeIds: ['gathering.callousedHands'] },
     modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 3 }],
@@ -386,8 +322,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'gathering.masterGatherers',
     lineId: 'gathering',
-    name: 'Master Gatherers',
-    flavor: 'A crew that follows where you point. Hand-gathering ten times over.',
     costs: { wood: 8_000, stone: 6_000, gold: 4_000 },
     requires: { upgradeIds: ['gathering.practisedHands'], buildingCounts: { house: 10 } },
     modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 10 }],
@@ -396,8 +330,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'fortification.reinforceWalls',
     lineId: 'fortification',
-    name: 'Reinforce Walls',
-    flavor: 'Another course of stone, another few soldiers home. Casualties −4% each time.',
     costs: { stone: 6_000, wood: 3_000, gold: 2_000 },
     requires: { buildingCounts: { barracks: 2 } },
     modifiers: [{ target: 'warfare.casualtyRate', operation: 'multiply', value: 0.96 }],
@@ -406,8 +338,6 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
   {
     id: 'bribery.guildBribes',
     lineId: 'bribery',
-    name: 'Guild Bribes',
-    flavor: 'Coin in the right palm. Heist success +3% each time, though no job is ever certain.',
     costs: { gold: 9_000 },
     requires: { buildingCounts: { thievesGuild: 2 } },
     modifiers: [{ target: 'thievery.successChance', operation: 'multiply', value: 1.03 }],

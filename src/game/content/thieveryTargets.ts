@@ -4,9 +4,7 @@ import type { ThieveryTargetDefinition } from '../model/content'
 export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = [
   {
     id: 'granary',
-    name: 'Neighbouring Granary',
     tier: 1,
-    flavor: 'A sleepy watchman and a great deal of grain.',
     requiredThieves: 1,
     baseSuccessChance: 0.8,
     baseCasualtyRate: 0.08,
@@ -15,9 +13,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
   },
   {
     id: 'timberYard',
-    name: 'Timber Yard',
     tier: 1,
-    flavor: 'Stacked planks nobody has counted this week.',
     requiredThieves: 2,
     baseSuccessChance: 0.72,
     baseCasualtyRate: 0.1,
@@ -26,9 +22,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
   },
   {
     id: 'masonsCompound',
-    name: "Mason's Compound",
     tier: 2,
-    flavor: 'Dressed stone, a dog, and a foreman who sleeps badly.',
     requiredThieves: 4,
     baseSuccessChance: 0.62,
     baseCasualtyRate: 0.14,
@@ -37,9 +31,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
   },
   {
     id: 'countingHouse',
-    name: 'Counting House',
     tier: 3,
-    flavor: 'Ledgers, a strongbox, and two guards who take turns being awake.',
     requiredThieves: 8,
     baseSuccessChance: 0.5,
     baseCasualtyRate: 0.2,
@@ -48,9 +40,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
   },
   {
     id: 'templeTreasury',
-    name: 'Temple Treasury',
     tier: 4,
-    flavor: 'Somebody else’s gods, guarded by people who mean it.',
     requiredThieves: 18,
     baseSuccessChance: 0.4,
     baseCasualtyRate: 0.28,
@@ -59,9 +49,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
   },
   {
     id: 'royalVault',
-    name: 'Royal Vault',
     tier: 5,
-    flavor: 'The kind of job the guild tells stories about, mostly about the funerals.',
     requiredThieves: 45,
     baseSuccessChance: 0.32,
     baseCasualtyRate: 0.35,

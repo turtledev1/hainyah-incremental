@@ -80,8 +80,5 @@ files.
 first five minutes and then in one-minute buckets. A frame gap over two seconds (a
 throttled or sleeping tab) goes through the same path.
 
-**i18n.** Chronicle events are stored as a translation key plus values, not as
-sentences, so switching language re-renders past events too. Adding a locale is one
-file in `src/i18n/locales` and one entry in `src/i18n/index.ts`. Tests fail if a key
-the UI asks for is missing. Content prose (race, spell and building descriptions)
-stays in `content/` since it's game data, not UI chrome.
+**i18n.** Every word the game shows lives in `src/i18n/locales`, so adding a language is
+a translation rather than a code change.

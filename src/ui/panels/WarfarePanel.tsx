@@ -16,6 +16,7 @@ import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
 import { SectionCard } from '../components/SectionCard'
 import { formatAmounts, formatDuration, formatNumber } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface WarfarePanelProps {
   readonly state: GameState
@@ -48,7 +49,7 @@ function TargetCard({
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.9 }}>
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 1 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            {target.definition.name}
+            {t(contentKeys.conquestTargetName(target.definition.id))}
           </Typography>
           <Chip
             size="small"
@@ -61,7 +62,7 @@ function TargetCard({
         </Stack>
 
         <Typography variant="body2" color="text.secondary">
-          {target.definition.flavor}
+          {t(contentKeys.conquestTargetFlavor(target.definition.id))}
         </Typography>
 
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
@@ -145,7 +146,11 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
                           expedition.phase === 'travelling'
                             ? 'realm.marchingOn'
                             : 'realm.returningFrom',
-                          { targetName: target?.name ?? t('realm.somewhere') },
+                          {
+                            targetName: t(
+                              contentKeys.conquestTargetName(expedition.targetId),
+                            ),
+                          },
                         ),
                       })}
                     </Typography>

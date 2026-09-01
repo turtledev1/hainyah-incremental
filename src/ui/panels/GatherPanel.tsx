@@ -7,6 +7,7 @@ import type { RealmView } from '../../game/selectors/realmView'
 import { useGameStore } from '../../game/store/gameStore'
 import { SectionCard } from '../components/SectionCard'
 import { formatNumber } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface GatherPanelProps {
   readonly view: RealmView
@@ -27,7 +28,6 @@ export function GatherPanel({ view, hasAnyBuildings }: GatherPanelProps) {
     >
       <Stack direction="row" sx={{ flexWrap: "wrap", gap: 1 }}>
         {gatherable.map((resourceId) => {
-          const resource = registry.resourcesById.get(resourceId)
           const amount = view.manualGatherAmounts[resourceId] ?? 0
           return (
             <Button
@@ -36,7 +36,7 @@ export function GatherPanel({ view, hasAnyBuildings }: GatherPanelProps) {
               onClick={() => gather(resourceId)}
               sx={{ minWidth: 150, justifyContent: 'space-between' }}
             >
-              <span>{resource?.manualGather?.actionLabel ?? resourceId}</span>
+              <span>{t(contentKeys.gatherAction(resourceId))}</span>
               <Typography component="span" variant="caption" sx={{ ml: 1, opacity: 0.75 }}>
                 +{formatNumber(amount)}
               </Typography>

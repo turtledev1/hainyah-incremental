@@ -121,7 +121,6 @@ describe('resolving a battle', () => {
     const withBoost = armedRealm(60, { resources: { food: 0 } })
     withBoost.magic.activeBuffs.push({
       spellId: soulHarvest.id,
-      label: soulHarvest.name,
       remainingSeconds: HAMLET.travelSeconds + 2,
       modifiers: soulHarvest.effect.kind === 'buff' ? soulHarvest.effect.modifiers : [],
     })
@@ -208,7 +207,6 @@ describe('resolving a battle', () => {
     const state = armedRealm(60, { circleIds: ['dark'] })
     state.magic.pendingBoosts.push({
       spellId: 'dark.blight',
-      label: 'Blight',
       consumeOn: 'expedition',
       modifiers: [{ target: 'warfare.targetDefense', operation: 'multiply', value: 0.8 }],
     })
@@ -243,7 +241,6 @@ describe('what protects an army', () => {
     shielded.rngCursor = doomed.rngCursor
     shielded.magic.activeBuffs.push({
       spellId: 'earth.bulwark',
-      label: 'Bulwark',
       remainingSeconds: 600,
       modifiers: [{ target: 'warfare.casualtyRate', operation: 'multiply', value: 0.05 }],
     })
@@ -263,7 +260,6 @@ describe('what protects an army', () => {
     const shielded = armedRealm(force)
     shielded.magic.activeBuffs.push({
       spellId: 'earth.bulwark',
-      label: 'Bulwark',
       remainingSeconds: 600,
       modifiers: [{ target: 'warfare.casualtyRate', operation: 'multiply', value: 0.05 }],
     })

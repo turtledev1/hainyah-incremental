@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import type { AscensionStageDefinition, ContentRegistry } from '../model/content'
 import type { GameState } from '../model/state'
 import { canAfford, emitEvent, payCosts } from './stateHelpers'
@@ -42,7 +43,9 @@ export function buildAscensionStage(
 
   payCosts(state, stage.costs)
   state.completedAscensionStages += 1
-  emitEvent(state, 'ascension', 'chronicle.stageComplete', { stageName: stage.name })
+  emitEvent(state, 'ascension', 'chronicle.stageComplete', {
+    stageKey: contentKeys.ascensionStageName(stage.index),
+  })
 
   if (state.completedAscensionStages >= registry.ascensionStages.length) {
     state.hasAscended = true

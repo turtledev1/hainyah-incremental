@@ -183,7 +183,6 @@ export function fromPersistedSave(save: PersistedSave, registry: ContentRegistry
         return [
           {
             spellId: spell.id,
-            label: spell.name,
             remainingSeconds: buff.remainingSeconds,
             modifiers: spell.effect.modifiers,
           },
@@ -197,7 +196,6 @@ export function fromPersistedSave(save: PersistedSave, registry: ContentRegistry
         return [
           {
             spellId: spell.id,
-            label: spell.name,
             consumeOn: spell.effect.consumeOn,
             modifiers: spell.effect.modifiers,
           },

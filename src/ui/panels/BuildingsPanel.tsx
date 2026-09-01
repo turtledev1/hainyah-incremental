@@ -18,6 +18,7 @@ import { CostList } from '../components/CostList'
 import { SectionCard } from '../components/SectionCard'
 import { describeWorkerContribution, workerRole } from '../buildingLabels'
 import { formatNumber } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface BuildingsPanelProps {
   readonly state: GameState
@@ -47,7 +48,9 @@ function WorkerControls({
     <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.25 }}>
       <IconButton
         size="small"
-        aria-label={t('actions.removeWorker', { buildingName: building.definition.name })}
+        aria-label={t('actions.removeWorker', {
+          buildingName: t(contentKeys.buildingName(building.definition.id)),
+        })}
         disabled={building.workers === 0}
         onClick={() => unassign(building.definition.id, 1)}
       >
@@ -61,7 +64,9 @@ function WorkerControls({
       </Typography>
       <IconButton
         size="small"
-        aria-label={t('actions.assignWorker', { buildingName: building.definition.name })}
+        aria-label={t('actions.assignWorker', {
+          buildingName: t(contentKeys.buildingName(building.definition.id)),
+        })}
         disabled={nobodyToPlace}
         onClick={() => assign(building.definition.id, 1)}
       >
@@ -116,13 +121,13 @@ function BuildingCard({
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline" }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            {building.definition.name}
+            {t(contentKeys.buildingName(building.definition.id))}
           </Typography>
           <Typography sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>{formatNumber(building.count)}</Typography>
         </Stack>
 
         <Typography variant="body2" color="text.secondary">
-          {building.definition.flavor}
+          {t(contentKeys.buildingFlavor(building.definition.id))}
         </Typography>
 
         {describeWorkerContribution(
@@ -205,7 +210,9 @@ export function BuildingsPanel({ state, view }: BuildingsPanelProps) {
       <Stack sx={{ gap: 0.5, minHeight: 34 }}>
         <Typography variant="caption" color="text.secondary">
           {inProgress
-            ? `Building ${registry.buildingsById.get(inProgress.buildingId)?.name}${
+            ? `${t('realm.underConstruction', {
+                buildingName: t(contentKeys.buildingName(inProgress.buildingId)),
+              })}${
                 state.constructionQueue.length > 1
                   ? ` ${t('realm.queuedBehind', { count: state.constructionQueue.length - 1 })}`
                   : ''

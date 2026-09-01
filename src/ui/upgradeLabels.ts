@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { contentKeys } from '../i18n/contentKeys'
 import type { ContentRegistry, UpgradeDefinition } from '../game/model/content'
 import type { BuildingId } from '../game/model/ids'
 import type { GameState } from '../game/model/state'
@@ -17,7 +18,7 @@ export function describeUnmetRequirements(
     if (purchaseCount(state, prerequisiteId) <= 0) {
       unmet.push(
         translate('realm.requiresUpgrade', {
-          upgradeName: registry.upgradesById.get(prerequisiteId)?.name ?? prerequisiteId,
+          upgradeName: translate(contentKeys.upgradeName(prerequisiteId)),
         }),
       )
     }
@@ -30,7 +31,7 @@ export function describeUnmetRequirements(
         translate('realm.requiresBuildings', {
           required: requiredCount ?? 0,
           owned,
-          buildingName: registry.buildingsById.get(buildingId as BuildingId)?.name ?? buildingId,
+          buildingName: translate(contentKeys.buildingName(buildingId as BuildingId)),
         }),
       )
     }
@@ -54,7 +55,9 @@ export function describeUnmetRequirements(
     )
     unmet.push(
       translate('realm.requiresConquest', {
-        targetName: target?.name ?? translate('realm.somewhere'),
+        targetName: target
+          ? translate(contentKeys.conquestTargetName(target.id))
+          : translate('realm.somewhere'),
       }),
     )
   }

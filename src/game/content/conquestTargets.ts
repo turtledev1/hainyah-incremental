@@ -4,9 +4,7 @@ import type { ConquestTargetDefinition } from '../model/content'
 export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = [
   {
     id: 'hamlet',
-    name: 'Outlying Hamlet',
     tier: 1,
-    flavor: 'Eleven families and a fence. They will not hold.',
     requiredSoldiers: 6,
     defenseStrength: 6,
     acresGained: 3,
@@ -16,9 +14,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   },
   {
     id: 'village',
-    name: 'Riverside Village',
     tier: 2,
-    flavor: 'A mill, a shrine, and men who have fought off raiders before.',
     requiredSoldiers: 25,
     defenseStrength: 34,
     acresGained: 8,
@@ -28,9 +24,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   },
   {
     id: 'town',
-    name: 'Walled Town',
     tier: 3,
-    flavor: 'A ditch, a gate and a garrison that is paid on time.',
     requiredSoldiers: 90,
     defenseStrength: 145,
     acresGained: 22,
@@ -40,9 +34,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   },
   {
     id: 'city',
-    name: 'Free City',
     tier: 4,
-    flavor: 'Towers, a standing watch, and a council that will not treat with you.',
     requiredSoldiers: 320,
     defenseStrength: 640,
     acresGained: 60,
@@ -52,9 +44,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   },
   {
     id: 'capital',
-    name: 'Rival Capital',
     tier: 5,
-    flavor: 'A throne that has never been taken. Its army is professional.',
     requiredSoldiers: 1_100,
     defenseStrength: 2_600,
     acresGained: 160,
@@ -64,10 +54,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   },
   {
     id: 'twinThrones',
-    name: 'The Twin Thrones',
     tier: 6,
-    flavor:
-      'The seat where Hai and Yah are said to argue. Whoever holds it holds the world’s last free acres.',
     requiredSoldiers: 4_000,
     defenseStrength: 11_000,
     acresGained: 400,

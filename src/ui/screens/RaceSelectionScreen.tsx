@@ -13,6 +13,7 @@ import type { RaceDefinition } from '../../game/model/content'
 import type { MagicCircleId, RaceId } from '../../game/model/ids'
 import { useGameStore } from '../../game/store/gameStore'
 import { CardGrid } from '../components/CardGrid'
+import { contentKeys } from '../../i18n/contentKeys'
 
 export function RaceSelectionScreen() {
   const { t } = useTranslation()
@@ -49,8 +50,10 @@ export function RaceSelectionScreen() {
     setSelectedCircleIds([])
   }
 
-  const circleName = (circleId: MagicCircleId): string =>
-    registry.magicCirclesById.get(circleId)?.name ?? circleId
+  const bulletsFor = (key: string): readonly string[] =>
+    t(key, { returnObjects: true }) as readonly string[]
+
+  const circleName = (circleId: MagicCircleId): string => t(contentKeys.circleName(circleId))
 
   function describeCircleAccess(race: RaceDefinition): string {
     const { grantedCircleIds: granted, chosenCircleCount: toChoose } = race.magicCircleAccess
@@ -92,16 +95,16 @@ export function RaceSelectionScreen() {
             >
               <CardActionArea onClick={() => selectRace(race.id)} sx={{ height: '100%' }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Typography variant="h3">{race.name}</Typography>
+                  <Typography variant="h3">{t(contentKeys.raceName(race.id))}</Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ fontStyle: "italic" }}>
-                    {race.tagline}
+                    {t(contentKeys.raceTagline(race.id))}
                   </Typography>
 
                   <Box>
                     <Typography variant="subtitle2" color="success.main">
                       {t('raceSelection.strengths')}
                     </Typography>
-                    {race.advantages.map((advantage) => (
+                    {bulletsFor(contentKeys.raceAdvantages(race.id)).map((advantage) => (
                       <Typography key={advantage} variant="body2">
                         • {advantage}
                       </Typography>
@@ -112,7 +115,7 @@ export function RaceSelectionScreen() {
                     <Typography variant="subtitle2" color="error.main">
                       {t('raceSelection.costs')}
                     </Typography>
-                    {race.disadvantages.map((disadvantage) => (
+                    {bulletsFor(contentKeys.raceDisadvantages(race.id)).map((disadvantage) => (
                       <Typography key={disadvantage} variant="body2">
                         • {disadvantage}
                       </Typography>
@@ -167,7 +170,7 @@ export function RaceSelectionScreen() {
 
           {[...grantedCircleIds, ...selectedCircleIds].map((circleId) => (
             <Typography key={circleId} variant="body2" color="text.secondary">
-              {registry.magicCirclesById.get(circleId)?.flavor}
+              {t(contentKeys.circleFlavor(circleId))}
             </Typography>
           ))}
         </Stack>

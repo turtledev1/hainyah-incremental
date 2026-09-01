@@ -70,7 +70,7 @@ export function OfflineSummaryDialog({ summary }: { readonly summary: OfflinePro
       </DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={dismissOfflineSummary}>
-          Carry on
+          {t('offline.carryOn')}
         </Button>
       </DialogActions>
     </Dialog>

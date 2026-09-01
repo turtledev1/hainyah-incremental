@@ -15,6 +15,7 @@ import { CostList } from '../components/CostList'
 import { SectionCard } from '../components/SectionCard'
 import { stackModifiers, summariseModifiers } from '../modifierLabels'
 import { describeUnmetRequirements } from '../upgradeLabels'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface UpgradesPanelProps {
   readonly state: GameState
@@ -34,7 +35,7 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 1 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            {upgrade.definition.name}
+            {t(contentKeys.upgradeName(upgrade.definition.id))}
           </Typography>
           {isRepeatable ? (
             <Chip
@@ -48,7 +49,7 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
         </Stack>
 
         <Typography variant="body2" color="text.secondary">
-          {upgrade.definition.flavor}
+          {t(contentKeys.upgradeFlavor(upgrade.definition.id))}
         </Typography>
 
         <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.5 }}>
@@ -158,7 +159,11 @@ export function UpgradesPanel({ state, view }: UpgradesPanelProps) {
           return null
         }
         return (
-          <SectionCard key={line.id} title={line.name} subtitle={line.flavor}>
+          <SectionCard
+            key={line.id}
+            title={t(contentKeys.upgradeLineName(line.id))}
+            subtitle={t(contentKeys.upgradeLineFlavor(line.id))}
+          >
             <CardGrid minimumColumnWidth={240}>
               {upgrades.map((upgrade) => (
                 <UpgradeCard key={upgrade.definition.id} upgrade={upgrade} state={state} />

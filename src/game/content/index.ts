@@ -78,7 +78,7 @@ function assertRegistryIsConsistent(registry: ContentRegistry): void {
 
   registry.ascensionStages.forEach((stage, position) => {
     if (stage.index !== position + 1) {
-      throw new Error(`Ascension stage ${stage.name} is out of order at position ${position + 1}`)
+      throw new Error(`Ascension stage ${stage.index} is out of order at position ${position + 1}`)
     }
   })
 }

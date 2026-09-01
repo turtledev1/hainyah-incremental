@@ -34,7 +34,6 @@ export interface GameEvent {
 
 export interface ActiveBuff {
   readonly spellId: SpellId
-  readonly label: string
   remainingSeconds: number
   readonly modifiers: readonly Modifier[]
 }
@@ -42,7 +41,6 @@ export interface ActiveBuff {
 /** A one-shot modifier bundle spent by the next expedition or heist that launches. */
 export interface PendingBoost {
   readonly spellId: SpellId
-  readonly label: string
   readonly consumeOn: 'expedition' | 'heist'
   readonly modifiers: readonly Modifier[]
 }

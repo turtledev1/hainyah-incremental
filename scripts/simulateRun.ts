@@ -39,6 +39,7 @@ import {
   launchExpedition,
 } from '../src/game/systems/warfare'
 import { assignWorkers, recruitSoldiers, recruitThieves } from '../src/game/systems/workforce'
+import { englishTranslations } from '../src/i18n/locales/en'
 
 const registry = CONTENT_REGISTRY
 
@@ -456,7 +457,7 @@ console.log('\nAscension stages')
 registry.ascensionStages.forEach((stage, index) => {
   const completedAt = stageCompletionSeconds[index]
   console.log(
-    `  ${stage.index}. ${stage.name.padEnd(18)} ${
+    `  ${stage.index}. ${englishTranslations.content.ascensionStages[`stage${stage.index}` as keyof typeof englishTranslations.content.ascensionStages].name.padEnd(18)} ${
       completedAt === undefined ? 'not reached' : formatHours(completedAt)
     }`,
   )

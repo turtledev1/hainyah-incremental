@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import { BALANCE } from '../content/balance'
 import type { ContentRegistry } from '../model/content'
 import type { BuildingId, ResourceAmounts, ResourceId } from '../model/ids'
@@ -146,7 +147,7 @@ export function demolishBuilding(
   }
 
   emitEvent(state, 'construction', 'chronicle.buildingRazed', {
-    buildingName: building.name.toLowerCase(),
+    buildingKey: contentKeys.buildingName(buildingId),
   })
   return undefined
 }
@@ -171,7 +172,7 @@ export const advanceConstruction = ({
     state.statistics.buildingsConstructed += 1
     const building = registry.buildingsById.get(completed.buildingId)
     emitEvent(state, 'construction', 'chronicle.buildingFinished', {
-      buildingName: building?.name ?? completed.buildingId,
+      buildingKey: contentKeys.buildingName(completed.buildingId),
     })
 
     const overflow = -completed.secondsRemaining

@@ -54,7 +54,6 @@ describe('the modifier pipeline', () => {
     state.purchasedUpgrades['mining.ironPicks'] = 1
     state.magic.activeBuffs.push({
       spellId: 'earth.veinsOfOre',
-      label: 'Veins of Ore',
       remainingSeconds: 30,
       modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 1.35 }],
     })

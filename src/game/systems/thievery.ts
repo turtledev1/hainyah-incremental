@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import { BALANCE } from '../content/balance'
 import type { ContentRegistry } from '../model/content'
 import type { ResourceAmounts, ResourceId, ThieveryTargetId } from '../model/ids'
@@ -85,7 +86,7 @@ export function launchHeist(
   })
   emitEvent(state, 'thievery', 'chronicle.heistBegan', {
     count: target.requiredThieves,
-    targetName: target.name,
+    targetKey: contentKeys.thieveryTargetName(target.id),
   })
   return undefined
 }
@@ -143,7 +144,7 @@ function resolveHeist(
       state,
       'thievery',
       thievesLost > 0 ? 'chronicle.heistCleanWithLosses' : 'chronicle.heistCleanWithoutLosses',
-      { count: thievesLost, targetName: target.name },
+      { count: thievesLost, targetKey: contentKeys.thieveryTargetName(target.id) },
     )
   } else {
     state.statistics.heistsFailed += 1
@@ -151,7 +152,7 @@ function resolveHeist(
       state,
       'thievery',
       thievesLost > 0 ? 'chronicle.heistBotchedWithLosses' : 'chronicle.heistBotchedWithoutLosses',
-      { count: thievesLost, targetName: target.name },
+      { count: thievesLost, targetKey: contentKeys.thieveryTargetName(target.id) },
     )
   }
 }

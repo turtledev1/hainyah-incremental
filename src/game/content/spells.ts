@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import type { SpellDefinition, SpellEffectContext } from '../model/content'
 import type { ResourceId } from '../model/ids'
 import { RESOURCE_IDS } from '../model/ids'
@@ -44,9 +45,6 @@ const FIRE_SPELLS: readonly SpellDefinition[] = [
     id: 'fire.sunlight',
     circleId: 'fire',
     tier: 1,
-    name: 'Sunlight',
-    description:
-      'Hai leans closer, and the farms yield 60% more.',
     manaCost: manaCostForTier(1),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -60,9 +58,6 @@ const FIRE_SPELLS: readonly SpellDefinition[] = [
     id: 'fire.forgeFire',
     circleId: 'fire',
     tier: 2,
-    name: 'Forge Fire',
-    description:
-      'Smelters run white-hot, and the mines yield 70% more.',
     manaCost: manaCostForTier(2),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -76,9 +71,6 @@ const FIRE_SPELLS: readonly SpellDefinition[] = [
     id: 'fire.immolate',
     circleId: 'fire',
     tier: 3,
-    name: 'Immolate',
-    description:
-      'Your soldiers go in burning. Attack power trebles while it lasts — send them now.',
     manaCost: burstManaCostForTier(3),
     cooldownSeconds: BALANCE.magic.burstCooldownSeconds,
     effect: {
@@ -92,9 +84,6 @@ const FIRE_SPELLS: readonly SpellDefinition[] = [
     id: 'fire.wildfire',
     circleId: 'fire',
     tier: 4,
-    name: 'Wildfire',
-    description:
-      'Sets the next target’s fields alight before you arrive: its defence −40%.',
     manaCost: manaCostForTier(4),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -107,9 +96,6 @@ const FIRE_SPELLS: readonly SpellDefinition[] = [
     id: 'fire.solarZenith',
     circleId: 'fire',
     tier: 5,
-    name: 'Solar Zenith',
-    description:
-      'A noon that will not end. Farms and mines both yield 120% more.',
     manaCost: manaCostForTier(5),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -126,8 +112,6 @@ const FIRE_SPELLS: readonly SpellDefinition[] = [
     id: 'fire.phoenixPyre',
     circleId: 'fire',
     tier: 6,
-    name: 'Phoenix Pyre',
-    description: 'Half of those who fell in your last battle walk out of the ashes.',
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -152,9 +136,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
     id: 'air.windmill',
     circleId: 'air',
     tier: 1,
-    name: 'Windmill',
-    description:
-      'A steady wind on the sails, and the farms yield 60% more.',
     manaCost: manaCostForTier(1),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -168,9 +149,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
     id: 'air.tailwind',
     circleId: 'air',
     tier: 2,
-    name: 'Tailwind',
-    description:
-      'Armies and thieves move 80% faster.',
     manaCost: manaCostForTier(2),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -187,9 +165,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
     id: 'air.haste',
     circleId: 'air',
     tier: 3,
-    name: 'Haste',
-    description:
-      'Every hand moves quicker: all production +50%.',
     manaCost: manaCostForTier(3),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -207,9 +182,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
     id: 'air.whisperingWinds',
     circleId: 'air',
     tier: 4,
-    name: 'Whispering Winds',
-    description:
-      'The wind tells your thieves where the guards are: the next heist is twice as likely to succeed.',
     manaCost: manaCostForTier(4),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -222,9 +194,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
     id: 'air.stormFront',
     circleId: 'air',
     tier: 5,
-    name: 'Storm Front',
-    description:
-      'One army rides the storm: double march speed and −25% enemy defence.',
     manaCost: manaCostForTier(5),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -240,9 +209,6 @@ const AIR_SPELLS: readonly SpellDefinition[] = [
     id: 'air.timelessGale',
     circleId: 'air',
     tier: 6,
-    name: 'Timeless Gale',
-    description:
-      'The wind holds its breath: all production doubled.',
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -263,9 +229,6 @@ const WATER_SPELLS: readonly SpellDefinition[] = [
     id: 'water.irrigation',
     circleId: 'water',
     tier: 1,
-    name: 'Irrigation',
-    description:
-      'Channels run full, and the farms yield 70% more.',
     manaCost: manaCostForTier(1),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -279,8 +242,6 @@ const WATER_SPELLS: readonly SpellDefinition[] = [
     id: 'water.cleansingRain',
     circleId: 'water',
     tier: 2,
-    name: 'Cleansing Rain',
-    description: 'Sickness washes out of the streets and the empty houses fill.',
     manaCost: manaCostForTier(2),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -307,9 +268,6 @@ const WATER_SPELLS: readonly SpellDefinition[] = [
     id: 'water.deepWell',
     circleId: 'water',
     tier: 3,
-    name: 'Deep Well',
-    description:
-      'Food +45%, and the houses hold a quarter more.',
     manaCost: manaCostForTier(3),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -326,8 +284,6 @@ const WATER_SPELLS: readonly SpellDefinition[] = [
     id: 'water.tideOfPlenty',
     circleId: 'water',
     tier: 4,
-    name: 'Tide of Plenty',
-    description: 'The granary floods with fish: stored food doubles, up to a limit.',
     manaCost: manaCostForTier(4),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -348,9 +304,6 @@ const WATER_SPELLS: readonly SpellDefinition[] = [
     id: 'water.mistVeil',
     circleId: 'water',
     tier: 5,
-    name: 'Mist Veil',
-    description:
-      'Your next heist runs under fog: casualties −85%.',
     manaCost: manaCostForTier(5),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -363,9 +316,6 @@ const WATER_SPELLS: readonly SpellDefinition[] = [
     id: 'water.wellspring',
     circleId: 'water',
     tier: 6,
-    name: 'Wellspring',
-    description:
-      'A spring that does not fail: farms doubled.',
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -382,9 +332,6 @@ const EARTH_SPELLS: readonly SpellDefinition[] = [
     id: 'earth.stoneshaping',
     circleId: 'earth',
     tier: 1,
-    name: 'Stoneshaping',
-    description:
-      'The face splits where you ask it to: quarries +70%.',
     manaCost: manaCostForTier(1),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -398,9 +345,6 @@ const EARTH_SPELLS: readonly SpellDefinition[] = [
     id: 'earth.veinsOfOre',
     circleId: 'earth',
     tier: 2,
-    name: 'Veins of Ore',
-    description:
-      'Gold shows itself in the rock: mines +70%.',
     manaCost: manaCostForTier(2),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -414,9 +358,6 @@ const EARTH_SPELLS: readonly SpellDefinition[] = [
     id: 'earth.bulwark',
     circleId: 'earth',
     tier: 3,
-    name: 'Bulwark',
-    description:
-      'Stone closes over your ranks: they lose almost nobody. March while it holds.',
     manaCost: burstManaCostForTier(3),
     cooldownSeconds: BALANCE.magic.burstCooldownSeconds,
     effect: {
@@ -430,9 +371,6 @@ const EARTH_SPELLS: readonly SpellDefinition[] = [
     id: 'earth.terraform',
     circleId: 'earth',
     tier: 4,
-    name: 'Terraform',
-    description:
-      'Raises one new acre out of the sea, paid for in stone and wood that rise with every acre you already hold.',
     manaCost: manaCostForTier(4),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -459,9 +397,6 @@ const EARTH_SPELLS: readonly SpellDefinition[] = [
     id: 'earth.livingStone',
     circleId: 'earth',
     tier: 5,
-    name: 'Living Stone',
-    description:
-      'The walls raise themselves — six times the pace, for ten minutes.',
     manaCost: burstManaCostForTier(5),
     cooldownSeconds: BALANCE.magic.burstCooldownSeconds,
     effect: {
@@ -475,9 +410,6 @@ const EARTH_SPELLS: readonly SpellDefinition[] = [
     id: 'earth.mountainsHeart',
     circleId: 'earth',
     tier: 6,
-    name: "Mountain's Heart",
-    description:
-      'Quarries and mines both yield 120% more.',
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {
@@ -497,9 +429,6 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     id: 'dark.blight',
     circleId: 'dark',
     tier: 1,
-    name: 'Blight',
-    description:
-      'Rot in their stores before the first spear is thrown: the next target’s defence −35%.',
     manaCost: manaCostForTier(1),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -512,9 +441,6 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     id: 'dark.transmute',
     circleId: 'dark',
     tier: 2,
-    name: 'Transmute',
-    description:
-      'Yah keeps a ledger: a tenth of your largest store becomes the resource you have least of. A deeper circle loses less in the trade, and at the deepest it gains.',
     manaCost: manaCostForTier(2),
     cooldownSeconds: BALANCE.magic.transmuteCooldownSeconds,
     effect: {
@@ -537,9 +463,9 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
         context.state.magic.transmutationsPerformed += 1
         context.emit('magic', 'chronicle.transmuted', {
           taken: Math.floor(amountTaken),
-          source: context.registry.resourcesById.get(source)?.name ?? source,
+          source: contentKeys.resourceName(source),
           gained: Math.floor(amountTaken * efficiency),
-          destination: context.registry.resourcesById.get(destination)?.name ?? destination,
+          destination: contentKeys.resourceName(destination),
         })
       },
     },
@@ -548,9 +474,6 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     id: 'dark.sacrifice',
     circleId: 'dark',
     tier: 3,
-    name: 'Sacrifice',
-    description:
-      'A tenth of your people are given to Yah, and what they were worth comes back as goods.',
     manaCost: manaCostForTier(3),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -576,8 +499,6 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     id: 'dark.raiseThrall',
     circleId: 'dark',
     tier: 4,
-    name: 'Raise Thrall',
-    description: 'Your last battle’s dead stand up again as soldiers, and they need no house.',
     manaCost: manaCostForTier(4),
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
@@ -604,9 +525,6 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     id: 'dark.soulHarvest',
     circleId: 'dark',
     tier: 5,
-    name: 'Soul Harvest',
-    description:
-      'Every enemy who falls pays for it: plunder is worth six times as much.',
     manaCost: burstManaCostForTier(5),
     cooldownSeconds: BALANCE.magic.burstCooldownSeconds,
     effect: {
@@ -620,9 +538,6 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     id: 'dark.pactOfHaiAndYah',
     circleId: 'dark',
     tier: 6,
-    name: 'Pact of Hai and Yah',
-    description:
-      'Both gods march with every army you send: attack +80%, and three losses in four are spared.',
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
     effect: {

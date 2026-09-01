@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { contentKeys } from '../i18n/contentKeys'
 import type { ContentRegistry } from '../game/model/content'
 import type { BuildingId, CapacityId, ResourceId } from '../game/model/ids'
 import type { Modifier, ModifierTarget } from '../game/model/modifiers'
@@ -13,16 +14,19 @@ export function describeModifierTarget(
 
   if (subject !== undefined) {
     if (group === 'production') {
-      const resource = registry.resourcesById.get(subject as ResourceId)
-      return translate('modifiers.allProduction', { resourceName: resource?.name ?? subject })
+      return translate('modifiers.allProduction', {
+        resourceName: translate(contentKeys.resourceName(subject as ResourceId)),
+      })
     }
     if (group === 'consumption') {
-      const resource = registry.resourcesById.get(subject as ResourceId)
-      return translate('modifiers.consumption', { resourceName: resource?.name ?? subject })
+      return translate('modifiers.consumption', {
+        resourceName: translate(contentKeys.resourceName(subject as ResourceId)),
+      })
     }
     if (group === 'buildingOutput') {
-      const building = registry.buildingsById.get(subject as BuildingId)
-      return translate('modifiers.buildingOutput', { buildingName: building?.name ?? subject })
+      return translate('modifiers.buildingOutput', {
+        buildingName: translate(contentKeys.buildingName(subject as BuildingId)),
+      })
     }
     if (group === 'capacity') {
       return translate(`modifiers.capacity.${subject as CapacityId}`)

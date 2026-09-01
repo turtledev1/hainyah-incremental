@@ -1,13 +1,13 @@
-/**
- * Interface copy and the chronicle. Content prose stays in `game/content` — that is
- * game data a designer edits, not chrome a translator edits.
- */
+import { EN_CONTENT } from './enContent'
+
+/** Interface copy and the chronicle; content prose is in `enContent.ts`. */
 export const englishTranslations = {
+  content: EN_CONTENT,
   chronicle: {
-    buildingFinished: '{{buildingName}} finished.',
-    buildingRazed: 'A {{buildingName}} is pulled down.',
-    upgradeAdopted: '{{upgradeName}} adopted across the realm.',
-    upgradeAvailable: '{{upgradeName}} is within your realm’s reach.',
+    buildingFinished: '$t({{buildingKey}}) finished.',
+    buildingRazed: 'A $t({{buildingKey}}) is pulled down.',
+    upgradeAdopted: '$t({{upgradeKey}}) adopted across the realm.',
+    upgradeAvailable: '$t({{upgradeKey}}) is within your realm’s reach.',
 
     famine_one: 'Famine takes {{count}} citizen.',
     famine_other: 'Famine takes {{count}} citizens.',
@@ -17,47 +17,47 @@ export const englishTranslations = {
     thievesDeserted_other: '{{count}} thieves leave the guild.',
 
     marchBegan_one:
-      '{{count}} soldier marches on {{targetName}}, arriving in {{arrivalSeconds, duration}}.',
+      '{{count}} soldier marches on $t({{targetKey}}), arriving in {{arrivalSeconds, duration}}.',
     marchBegan_other:
-      '{{count}} soldiers march on {{targetName}}, arriving in {{arrivalSeconds, duration}}.',
+      '{{count}} soldiers march on $t({{targetKey}}), arriving in {{arrivalSeconds, duration}}.',
     victoryWithoutLosses:
-      '{{targetName}} falls, not a single soldier lost. Its {{acres}} acres are yours once the army is back.',
+      '$t({{targetKey}}) falls, not a single soldier lost. Its {{acres}} acres are yours once the army is back.',
     victoryWithLosses_one:
-      '{{targetName}} falls and {{count}} soldier does not come back. Its {{acres}} acres are yours once the army is home.',
+      '$t({{targetKey}}) falls and {{count}} soldier does not come back. Its {{acres}} acres are yours once the army is home.',
     victoryWithLosses_other:
-      '{{targetName}} falls and {{count}} soldiers do not come back. Its {{acres}} acres are yours once the army is home.',
-    defeatWithoutLosses: 'The assault on {{targetName}} falters, though nobody falls.',
+      '$t({{targetKey}}) falls and {{count}} soldiers do not come back. Its {{acres}} acres are yours once the army is home.',
+    defeatWithoutLosses: 'The assault on $t({{targetKey}}) falters, though nobody falls.',
     defeatWithLosses_one:
-      'The assault on {{targetName}} falters, and {{count}} soldier does not come back.',
+      'The assault on $t({{targetKey}}) falters, and {{count}} soldier does not come back.',
     defeatWithLosses_other:
-      'The assault on {{targetName}} falters, and {{count}} soldiers do not come back.',
+      'The assault on $t({{targetKey}}) falters, and {{count}} soldiers do not come back.',
     spoilsArrived_one:
       '{{count}} soldier is home, and {{acres}} acres and the plunder are yours.',
     spoilsArrived_other:
       '{{count}} soldiers are home, and {{acres}} acres and the plunder are yours.',
     spoilsArrivedWithoutSurvivors:
-      'Nobody came back from {{targetName}}, but its {{acres}} acres and its plunder are yours.',
+      'Nobody came back from $t({{targetKey}}), but its {{acres}} acres and its plunder are yours.',
     soldiersHome_one: '{{count}} soldier is home again.',
     soldiersHome_other: '{{count}} soldiers are home again.',
 
-    heistBegan_one: '{{count}} thief slips out towards {{targetName}}.',
-    heistBegan_other: '{{count}} thieves slip out towards {{targetName}}.',
-    heistCleanWithoutLosses: '{{targetName}} robbed clean, and everyone gets out.',
-    heistCleanWithLosses_one: '{{targetName}} robbed clean, but {{count}} thief is lost.',
-    heistCleanWithLosses_other: '{{targetName}} robbed clean, but {{count}} thieves are lost.',
-    heistBotchedWithoutLosses: 'The job on {{targetName}} goes wrong, but everyone gets out.',
+    heistBegan_one: '{{count}} thief slips out towards $t({{targetKey}}).',
+    heistBegan_other: '{{count}} thieves slip out towards $t({{targetKey}}).',
+    heistCleanWithoutLosses: '$t({{targetKey}}) robbed clean, and everyone gets out.',
+    heistCleanWithLosses_one: '$t({{targetKey}}) robbed clean, but {{count}} thief is lost.',
+    heistCleanWithLosses_other: '$t({{targetKey}}) robbed clean, but {{count}} thieves are lost.',
+    heistBotchedWithoutLosses: 'The job on $t({{targetKey}}) goes wrong, but everyone gets out.',
     heistBotchedWithLosses_one:
-      'The job on {{targetName}} goes wrong and {{count}} thief does not return.',
+      'The job on $t({{targetKey}}) goes wrong and {{count}} thief does not return.',
     heistBotchedWithLosses_other:
-      'The job on {{targetName}} goes wrong and {{count}} thieves do not return.',
+      'The job on $t({{targetKey}}) goes wrong and {{count}} thieves do not return.',
 
-    stageComplete: '{{stageName}} is complete.',
+    stageComplete: '$t({{stageKey}}) is complete.',
     wonderComplete: 'The Wonder of Hai and Yah stands. You are expected.',
 
-    spellTakesHold: '{{spellName}} takes hold.',
-    spellFades: '{{spellName}} fades.',
-    boostAwaitsAttack: '{{spellName}} waits on your next attack.',
-    boostAwaitsHeist: '{{spellName}} waits on your next heist.',
+    spellTakesHold: '$t({{spellKey}}) takes hold.',
+    spellFades: '$t({{spellKey}}) fades.',
+    boostAwaitsAttack: '$t({{spellKey}}) waits on your next attack.',
+    boostAwaitsHeist: '$t({{spellKey}}) waits on your next heist.',
 
     phoenixPyreCold: 'The pyre burns cold — no recent dead to call back.',
     phoenixPyreReturns_one: 'Phoenix Pyre returns {{count}} soldier from the ash.',
@@ -73,7 +73,7 @@ export const englishTranslations = {
     ledgerBalanced: 'The ledger is already balanced — nothing to trade.',
     ledgerEmpty: 'There is nothing in the ledger to trade.',
     transmuted:
-      'Transmute turns {{taken, compactNumber}} {{source}} into {{gained, compactNumber}} {{destination}}.',
+      'Transmute turns {{taken, compactNumber}} $t({{source}}) into {{gained, compactNumber}} $t({{destination}}).',
     sacrificeRefused: 'Yah is offered nothing, and gives nothing.',
     sacrificed_one: 'Sacrifice gives up {{count}} citizen for a mound of goods.',
     sacrificed_other: 'Sacrifice gives up {{count}} citizens for a mound of goods.',
@@ -268,6 +268,7 @@ export const englishTranslations = {
 
   buildings: {
     genericWorkers: 'workers',
+    genericWorker: 'worker',
     producesPerWorker: '{{rate}} {{resourceName}} for each of its {{role}}',
     teachesMagic: 'Its {{role}} study, and the circles answer',
     roomPerWorker: {
@@ -327,6 +328,14 @@ export const englishTranslations = {
     thievesOut_other: '{{count}} out',
     acresInUse: '{{used}} of {{total}} acres in use. Each building takes one acre.',
     nothingUnderConstruction: 'Nobody is building anything.',
+    underConstruction: 'Building {{buildingName}}',
+    runHeadline: '{{raceName}} · {{played}} played · {{circles}}',
+    spellTier: 'tier {{tier}}',
+    circleProgress: 'tier {{tier}} · {{experience}} / {{threshold}}',
+    circleMastered: 'tier {{tier}} · mastered',
+    buffRunning: '{{spellName}} · {{remaining}}',
+    boostAwaitsAttack: '{{spellName}} · next attack',
+    boostAwaitsHeist: '{{spellName}} · next heist',
     buildMany: '×{{count}}',
     buildManyExplained:
       'Places up to {{count}} orders, stopping when the materials or the free acres run out.',
@@ -396,6 +405,7 @@ export const englishTranslations = {
     battlesFought_other: '{{count}} battles fought',
     jobsRun_one: '{{count}} job run',
     jobsRun_other: '{{count}} jobs run',
+    carryOn: 'Carry on',
     acresGained_one: '{{count}} acre',
     acresGained_other: '{{count}} acres',
   },
@@ -422,7 +432,7 @@ export const englishTranslations = {
   victory: {
     title: 'The Wonder stands',
     body:
-      'The last stone is set. Hai and Yah stop arguing long enough to look down at what the {{raceName}} have built, and the world is yours.',
+      'The last stone is set. Hai and Yah stop arguing long enough to look down at what {{raceName}} have built, and the world is yours.',
     timeTaken: 'Time taken: {{duration}}',
     heistsClean: 'Heists: {{count}} clean',
     spellsCast: 'Spells cast: {{count}}',

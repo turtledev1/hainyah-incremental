@@ -21,6 +21,7 @@ import { UpgradesPanel } from '../panels/UpgradesPanel'
 import { WarfarePanel } from '../panels/WarfarePanel'
 import { formatDuration } from '../format'
 import { tabToShow, unlockedTabs, type TabKey } from '../tabs'
+import { contentKeys } from '../../i18n/contentKeys'
 
 export function GameScreen({ state }: { readonly state: GameState }) {
   const { t } = useTranslation()
@@ -38,8 +39,13 @@ export function GameScreen({ state }: { readonly state: GameState }) {
           Hainyah
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {race?.name} · {formatDuration(state.elapsedSeconds)} played ·{' '}
-          {view.circles.map((circle) => circle.definition.name).join(' & ')}
+          {t('realm.runHeadline', {
+            raceName: t(contentKeys.raceName(state.raceId)),
+            played: formatDuration(state.elapsedSeconds),
+            circles: view.circles
+              .map((circle) => t(contentKeys.circleName(circle.definition.id)))
+              .join(' & '),
+          })}
         </Typography>
       </Stack>
 

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { CONTENT_REGISTRY } from '../game/content'
 import { i18n } from '../i18n'
 import { describeModifierEffect, stackModifiers, summariseModifiers } from './modifierLabels'
+import { contentKeys } from '../i18n/contentKeys'
 
 const translate = i18n.t.bind(i18n)
 
@@ -161,7 +162,7 @@ describe('what a spell tells the player it does', () => {
       if (spell.effect.kind !== 'instant') {
         continue
       }
-      expect(spell.description.length).toBeGreaterThan(30)
+      expect(translate(contentKeys.spellDescription(spell.id)).length).toBeGreaterThan(30)
     }
   })
 })

@@ -9,6 +9,7 @@ import type { GameState } from '../../game/model/state'
 import type { RealmView } from '../../game/selectors/realmView'
 import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { formatDuration, formatNumber, formatPerHour, formatRate, formatStockpile } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface ResourceBarProps {
   readonly state: GameState
@@ -67,7 +68,7 @@ export function ResourceBar({ state, view }: ResourceBarProps) {
         return (
           <Readout
             key={resourceId}
-            label={registry.resourcesById.get(resourceId)?.name ?? resourceId}
+            label={t(contentKeys.resourceName(resourceId))}
             value={formatStockpile(state.resources[resourceId])}
             detail={formatRate(perSecond)}
             emphasis={perSecond > 0 ? 'positive' : perSecond < 0 ? 'negative' : 'neutral'}

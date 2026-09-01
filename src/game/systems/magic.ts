@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import { BALANCE } from '../content/balance'
 import type { ContentRegistry, SpellDefinition } from '../model/content'
 import type { MagicCircleId, SpellId } from '../model/ids'
@@ -119,12 +120,13 @@ export function castSpell(
       } else {
         state.magic.activeBuffs.push({
           spellId,
-          label: spell.name,
           remainingSeconds: spell.effect.durationSeconds,
           modifiers: spell.effect.modifiers,
         })
       }
-      emitEvent(state, 'magic', 'chronicle.spellTakesHold', { spellName: spell.name })
+      emitEvent(state, 'magic', 'chronicle.spellTakesHold', {
+        spellKey: contentKeys.spellName(spellId),
+      })
       break
     }
     case 'pendingBoost': {
@@ -133,7 +135,6 @@ export function castSpell(
       )
       state.magic.pendingBoosts.push({
         spellId,
-        label: spell.name,
         consumeOn: spell.effect.consumeOn,
         modifiers: spell.effect.modifiers,
       })
@@ -143,7 +144,7 @@ export function castSpell(
         spell.effect.consumeOn === 'expedition'
           ? 'chronicle.boostAwaitsAttack'
           : 'chronicle.boostAwaitsHeist',
-        { spellName: spell.name },
+        { spellKey: contentKeys.spellName(spellId) },
       )
       break
     }
@@ -242,7 +243,9 @@ export const advanceMagic = ({
   if (expired.length > 0) {
     state.magic.activeBuffs = state.magic.activeBuffs.filter((buff) => buff.remainingSeconds > 0)
     for (const buff of expired) {
-      emitEvent(state, 'magic', 'chronicle.spellFades', { spellName: buff.label })
+      emitEvent(state, 'magic', 'chronicle.spellFades', {
+        spellKey: contentKeys.spellName(buff.spellId),
+      })
     }
   }
 

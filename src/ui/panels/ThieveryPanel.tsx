@@ -14,6 +14,7 @@ import { CardGrid } from '../components/CardGrid'
 import { SectionCard } from '../components/SectionCard'
 import { BALANCE } from '../../game/content/balance'
 import { formatAmounts, formatDuration, formatPercentage } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface ThieveryPanelProps {
   readonly state: GameState
@@ -28,10 +29,10 @@ function MarkCard({ target }: { readonly target: ThieveryTargetView }) {
     <Card>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {target.definition.name}
+          {t(contentKeys.thieveryTargetName(target.definition.id))}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {target.definition.flavor}
+          {t(contentKeys.thieveryTargetFlavor(target.definition.id))}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
           {t('panels.thievery.targetSummary', {
@@ -81,7 +82,9 @@ export function ThieveryPanel({ state, view }: ThieveryPanelProps) {
                     <Typography variant="body2">
                       {t('realm.thievesAtWork', {
                         count: heist.thieves,
-                        targetName: target?.name ?? t('realm.somewhere'),
+                        targetName: target
+                          ? t(contentKeys.thieveryTargetName(target.id))
+                          : t('realm.somewhere'),
                       })}
                     </Typography>
                     <Typography variant="caption" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>

@@ -21,13 +21,11 @@ function playedRealm() {
   state.magic.mana = 33
   state.magic.activeBuffs.push({
     spellId: 'water.irrigation',
-    label: 'Irrigation',
     remainingSeconds: 45,
     modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.4 }],
   })
   state.magic.pendingBoosts.push({
     spellId: 'dark.blight',
-    label: 'Blight',
     consumeOn: 'expedition',
     modifiers: [{ target: 'warfare.targetDefense', operation: 'multiply', value: 0.8 }],
   })

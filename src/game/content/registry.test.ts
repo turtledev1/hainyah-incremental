@@ -4,6 +4,7 @@ import { BALANCE } from './balance'
 import { RESOURCE_IDS } from '../model/ids'
 import { buildModifierIndexForState, resolveMultiplier } from '../systems/modifiers'
 import { createRealm } from '../../test/realmFixtures'
+import { englishTranslations } from '../../i18n/locales/en'
 
 describe('the content registry', () => {
   it('assembles without tripping any of its own consistency checks', () => {
@@ -117,8 +118,9 @@ describe('each playable race', () => {
 
   it('states a cost for every strength, so no race is strictly better', () => {
     for (const race of testRegistry.races) {
-      expect(race.advantages.length).toBeGreaterThan(0)
-      expect(race.disadvantages.length).toBeGreaterThan(0)
+      const copy = englishTranslations.content.races[race.id]
+      expect(copy.advantages.length).toBeGreaterThan(0)
+      expect(copy.disadvantages.length).toBeGreaterThan(0)
     }
   })
 })

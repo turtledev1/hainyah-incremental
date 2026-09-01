@@ -1,3 +1,4 @@
+import { contentKeys } from '../../i18n/contentKeys'
 import { BALANCE } from '../content/balance'
 import type { ContentRegistry, UpgradeDefinition } from '../model/content'
 import type { BuildingId, ResourceAmounts, ResourceId, UpgradeId } from '../model/ids'
@@ -92,7 +93,9 @@ export function purchaseUpgrade(
 
   payCosts(state, upgradeCost(state, upgrade))
   state.purchasedUpgrades[upgradeId] = purchaseCount(state, upgradeId) + 1
-  emitEvent(state, 'construction', 'chronicle.upgradeAdopted', { upgradeName: upgrade.name })
+  emitEvent(state, 'construction', 'chronicle.upgradeAdopted', {
+    upgradeKey: contentKeys.upgradeName(upgrade.id),
+  })
   return undefined
 }
 
@@ -154,6 +157,8 @@ export const revealUpgrades = ({
       continue
     }
     state.revealedUpgradeIds.push(upgrade.id)
-    emitEvent(state, 'construction', 'chronicle.upgradeAvailable', { upgradeName: upgrade.name })
+    emitEvent(state, 'construction', 'chronicle.upgradeAvailable', {
+      upgradeKey: contentKeys.upgradeName(upgrade.id),
+    })
   }
 }

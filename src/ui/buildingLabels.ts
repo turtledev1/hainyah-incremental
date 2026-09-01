@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { contentKeys } from '../i18n/contentKeys'
 import type { BuildingDefinition, ContentRegistry } from '../game/model/content'
 import { formatRate } from './format'
 
@@ -17,7 +18,7 @@ export function describeWorkerContribution(
         described.push(
           translate('buildings.producesPerWorker', {
             rate: formatRate(outputPerWorkerPerSecond),
-            resourceName: registry.resourcesById.get(effect.resourceId)?.name ?? effect.resourceId,
+            resourceName: translate(contentKeys.resourceName(effect.resourceId)),
             role: workerRole(building, translate),
           }),
         )
@@ -49,10 +50,13 @@ export function describeWorkerContribution(
 }
 
 export function workerRole(building: BuildingDefinition, translate: TFunction): string {
-  return building.workerRoleName ?? translate('buildings.genericWorkers')
+  return translate(contentKeys.buildingWorkerRole(building.id), {
+    defaultValue: translate('buildings.genericWorkers'),
+  })
 }
 
 function workerRoleSingular(building: BuildingDefinition, translate: TFunction): string {
-  const plural = workerRole(building, translate)
-  return plural.endsWith('s') ? plural.slice(0, -1) : plural
+  return translate(contentKeys.buildingWorkerRoleSingular(building.id), {
+    defaultValue: translate('buildings.genericWorker'),
+  })
 }

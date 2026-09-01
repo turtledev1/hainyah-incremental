@@ -17,11 +17,8 @@ import type { GameEventKind, GameState } from './state'
 
 export interface ResourceDefinition {
   readonly id: ResourceId
-  readonly name: string
-  readonly flavor: string
   /** Present when the resource can be gathered by hand before any building exists. */
   readonly manualGather?: {
-    readonly actionLabel: string
     readonly baseAmountPerClick: number
   }
 }
@@ -45,15 +42,11 @@ export type BuildingEffect =
 
 export interface BuildingDefinition {
   readonly id: BuildingId
-  readonly name: string
-  readonly flavor: string
   readonly acreCost: number
   /** Flat: the hundredth of something costs what the first did. */
   readonly costs: ResourceAmounts
   readonly baseConstructionSeconds: number
   readonly workerSlotsPerBuilding: number
-  /** What a citizen working here is called, so "drill-masters" reads apart from "soldiers". */
-  readonly workerRoleName?: string
   readonly effects: readonly BuildingEffect[]
 }
 
@@ -66,18 +59,12 @@ export interface MagicCircleAccess {
 
 export interface RaceDefinition {
   readonly id: RaceId
-  readonly name: string
-  readonly tagline: string
-  readonly advantages: readonly string[]
-  readonly disadvantages: readonly string[]
   readonly magicCircleAccess: MagicCircleAccess
   readonly modifiers: readonly Modifier[]
 }
 
 export interface MagicCircleDefinition {
   readonly id: MagicCircleId
-  readonly name: string
-  readonly flavor: string
   /** Experience needed to reach each tier, index 0 being tier 1. */
   readonly tierExperienceThresholds: readonly number[]
 }
@@ -117,8 +104,6 @@ export interface SpellDefinition {
   readonly id: SpellId
   readonly circleId: MagicCircleId
   readonly tier: number
-  readonly name: string
-  readonly description: string
   readonly manaCost: number
   readonly cooldownSeconds: number
   readonly effect: SpellEffect
@@ -135,8 +120,6 @@ export interface UpgradeRequirements {
 export interface UpgradeDefinition {
   readonly id: UpgradeId
   readonly lineId: UpgradeLineId
-  readonly name: string
-  readonly flavor: string
   readonly costs: ResourceAmounts
   readonly requires: UpgradeRequirements
   readonly modifiers: readonly Modifier[]
@@ -148,15 +131,11 @@ export interface UpgradeDefinition {
 
 export interface UpgradeLineDefinition {
   readonly id: UpgradeLineId
-  readonly name: string
-  readonly flavor: string
 }
 
 export interface ConquestTargetDefinition {
   readonly id: ConquestTargetId
-  readonly name: string
   readonly tier: number
-  readonly flavor: string
   readonly requiredSoldiers: number
   readonly defenseStrength: number
   readonly acresGained: number
@@ -168,9 +147,7 @@ export interface ConquestTargetDefinition {
 
 export interface ThieveryTargetDefinition {
   readonly id: ThieveryTargetId
-  readonly name: string
   readonly tier: number
-  readonly flavor: string
   readonly requiredThieves: number
   readonly baseSuccessChance: number
   readonly baseCasualtyRate: number
@@ -180,8 +157,6 @@ export interface ThieveryTargetDefinition {
 
 export interface AscensionStageDefinition {
   readonly index: number
-  readonly name: string
-  readonly flavor: string
   readonly costs: ResourceAmounts
 }
 

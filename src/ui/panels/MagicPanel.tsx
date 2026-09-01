@@ -15,6 +15,7 @@ import { CardGrid } from '../components/CardGrid'
 import { SectionCard } from '../components/SectionCard'
 import { summariseModifiers } from '../modifierLabels'
 import { formatDuration, formatNumber, formatPerHour, formatRate, formatStockpile } from '../format'
+import { contentKeys } from '../../i18n/contentKeys'
 
 interface MagicPanelProps {
   readonly state: GameState
@@ -32,7 +33,7 @@ function SpellCard({ spell }: { readonly spell: SpellView }) {
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 1 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            {spell.definition.name}
+            {t(contentKeys.spellName(spell.definition.id))}
           </Typography>
           <Stack direction="row" sx={{ gap: 0.5 }}>
             {spell.definition.effect.kind === 'buff' ? (
@@ -55,12 +56,16 @@ function SpellCard({ spell }: { readonly spell: SpellView }) {
                 />
               </Tooltip>
             ) : null}
-            <Chip size="small" variant="outlined" label={`tier ${spell.definition.tier}`} />
+            <Chip
+              size="small"
+              variant="outlined"
+              label={t('realm.spellTier', { tier: spell.definition.tier })}
+            />
           </Stack>
         </Stack>
 
         <Typography variant="body2" color="text.secondary">
-          {spell.definition.description}
+          {t(contentKeys.spellDescription(spell.definition.id))}
         </Typography>
 
         <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.5 }}>
@@ -142,18 +147,21 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
               <Stack key={circle.definition.id} sx={{ gap: 0.4 }}>
                 <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline" }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    {circle.definition.name}
+                    {t(contentKeys.circleName(circle.definition.id))}
                   </Typography>
                   <Typography variant="caption" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-                    tier {circle.tiersUnlocked}
                     {nextThreshold
-                      ? ` · ${formatStockpile(circle.experience)} / ${formatNumber(nextThreshold)}`
-                      : ' · mastered'}
+                      ? t('realm.circleProgress', {
+                          tier: circle.tiersUnlocked,
+                          experience: formatStockpile(circle.experience),
+                          threshold: formatNumber(nextThreshold),
+                        })
+                      : t('realm.circleMastered', { tier: circle.tiersUnlocked })}
                   </Typography>
                 </Stack>
                 <LinearProgress variant="determinate" value={progress} color="secondary" />
                 <Typography variant="caption" color="text.secondary">
-                  {circle.definition.flavor}
+                  {t(contentKeys.circleFlavor(circle.definition.id))}
                 </Typography>
               </Stack>
             )
@@ -167,7 +175,10 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
                 key={buff.spellId}
                 color="secondary"
                 size="small"
-                label={`${buff.label} · ${formatDuration(buff.remainingSeconds)}`}
+                label={t('realm.buffRunning', {
+                  spellName: t(contentKeys.spellName(buff.spellId)),
+                  remaining: formatDuration(buff.remainingSeconds),
+                })}
               />
             ))}
             {pendingBoosts.map((boost) => (
@@ -176,7 +187,12 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
                 color="primary"
                 variant="outlined"
                 size="small"
-                label={`${boost.label} · next ${boost.consumeOn === 'expedition' ? 'attack' : 'heist'}`}
+                label={t(
+                  boost.consumeOn === 'expedition'
+                    ? 'realm.boostAwaitsAttack'
+                    : 'realm.boostAwaitsHeist',
+                  { spellName: t(contentKeys.spellName(boost.spellId)) },
+                )}
               />
             ))}
           </Stack>

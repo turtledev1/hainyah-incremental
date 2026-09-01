@@ -153,7 +153,6 @@ describe('construction progress', () => {
     queueBuilding(withBuff, testRegistry, modifiersFor(withBuff), 'temple')
     withBuff.magic.activeBuffs.push({
       spellId: 'earth.livingStone',
-      label: 'Living Stone',
       remainingSeconds: 999,
       modifiers: [{ target: 'constructionSpeed', operation: 'multiply', value: 2 }],
     })
