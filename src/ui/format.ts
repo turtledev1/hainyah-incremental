@@ -46,7 +46,7 @@ export function formatPerHour(perSecond: number): string {
 
 export function formatDuration(totalSeconds: number): string {
   if (!Number.isFinite(totalSeconds)) {
-    return 'never'
+    return '∞'
   }
   const seconds = Math.max(0, Math.round(totalSeconds))
   if (seconds < 60) {

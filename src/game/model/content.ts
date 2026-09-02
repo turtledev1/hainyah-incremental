@@ -136,7 +136,8 @@ export interface UpgradeLineDefinition {
 export interface ConquestTargetDefinition {
   readonly id: ConquestTargetId
   readonly tier: number
-  readonly requiredSoldiers: number
+  /** What the place is balanced against; the player may send any force they like. */
+  readonly recommendedSoldiers: number
   readonly defenseStrength: number
   readonly acresGained: number
   readonly plunder: ResourceAmounts

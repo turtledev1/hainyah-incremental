@@ -60,7 +60,7 @@ describe('the content registry', () => {
     const byTier = [...testRegistry.conquestTargets].sort((left, right) => left.tier - right.tier)
 
     for (let index = 1; index < byTier.length; index += 1) {
-      expect(byTier[index]!.requiredSoldiers).toBeGreaterThan(byTier[index - 1]!.requiredSoldiers)
+      expect(byTier[index]!.recommendedSoldiers).toBeGreaterThan(byTier[index - 1]!.recommendedSoldiers)
       expect(byTier[index]!.acresGained).toBeGreaterThan(byTier[index - 1]!.acresGained)
     }
   })

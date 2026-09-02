@@ -24,7 +24,7 @@ describe('what a building tells the player about its workers', () => {
   })
 
   it('states what each worker in a producing building actually brings in', () => {
-    expect(describe_('quarry', 0.2)).toEqual(['+0.2/s Stone for each of its quarriers'])
+    expect(describe_('quarry', 0.2)).toEqual(['+0.2/s stone for each of its quarriers'])
   })
 
   it('names the role rather than calling everyone a worker', () => {

@@ -35,7 +35,7 @@ export const EXPEDITION_REFUSALS = [
   'unknownTarget',
   'targetExhausted',
   'notEnoughSoldiersAtHome',
-  'belowRequiredForce',
+  'noSoldiersSent',
 ] as const
 
 export type ExpeditionRefusal = (typeof EXPEDITION_REFUSALS)[number]
@@ -56,8 +56,8 @@ export function checkExpeditionRefusal(
   if (soldiers > state.soldiersAtHome) {
     return 'notEnoughSoldiersAtHome'
   }
-  if (soldiers < target.requiredSoldiers) {
-    return 'belowRequiredForce'
+  if (soldiers < 1) {
+    return 'noSoldiersSent'
   }
   return undefined
 }

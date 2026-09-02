@@ -5,7 +5,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   {
     id: 'hamlet',
     tier: 1,
-    requiredSoldiers: 6,
+    recommendedSoldiers: 6,
     defenseStrength: 6,
     acresGained: 3,
     plunder: { food: 60, wood: 40, stone: 20, gold: 15 },
@@ -15,7 +15,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   {
     id: 'village',
     tier: 2,
-    requiredSoldiers: 25,
+    recommendedSoldiers: 25,
     defenseStrength: 34,
     acresGained: 8,
     plunder: { food: 300, wood: 220, stone: 140, gold: 120 },
@@ -25,7 +25,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   {
     id: 'town',
     tier: 3,
-    requiredSoldiers: 90,
+    recommendedSoldiers: 90,
     defenseStrength: 145,
     acresGained: 22,
     plunder: { food: 1_800, wood: 1_500, stone: 1_200, gold: 1_400 },
@@ -35,7 +35,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   {
     id: 'city',
     tier: 4,
-    requiredSoldiers: 320,
+    recommendedSoldiers: 320,
     defenseStrength: 640,
     acresGained: 60,
     plunder: { food: 12_000, wood: 11_000, stone: 10_000, gold: 14_000 },
@@ -45,7 +45,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   {
     id: 'capital',
     tier: 5,
-    requiredSoldiers: 1_100,
+    recommendedSoldiers: 1_100,
     defenseStrength: 2_600,
     acresGained: 160,
     plunder: { food: 90_000, wood: 85_000, stone: 80_000, gold: 120_000 },
@@ -55,7 +55,7 @@ export const CONQUEST_TARGET_DEFINITIONS: readonly ConquestTargetDefinition[] = 
   {
     id: 'twinThrones',
     tier: 6,
-    requiredSoldiers: 4_000,
+    recommendedSoldiers: 4_000,
     defenseStrength: 11_000,
     acresGained: 400,
     plunder: { food: 600_000, wood: 600_000, stone: 600_000, gold: 900_000 },

@@ -68,11 +68,13 @@ export const FR_CONTENT = {
       tagline: 'Ils ont appris les deux chants : celui qui fait croître et celui qui défait.',
       advantages: [
         'Le Cercle Sombre de droit, plus un cercle élémentaire de votre choix',
+        'Deux cercles portent bien plus de mana qu’un seul, en réserve comme en récupération',
         'Les temples rendent 50 % d’expérience magique en plus',
         'Les camps de bûcherons rendent 30 % de bois en plus',
       ],
       disadvantages: [
         'Peu nombreux et lents à se multiplier : croissance 25 % plus lente',
+        'Étude partagée en deux : chaque cercle atteint plus tard ses sorts profonds',
         'Les mines rendent 20 % d’or en moins',
         'Fragiles au combat : 25 % de pertes en plus',
       ],

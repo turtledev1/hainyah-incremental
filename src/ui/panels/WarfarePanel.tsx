@@ -32,15 +32,13 @@ function TargetCard({
 }) {
   const { t } = useTranslation()
   const attack = useGameStore((store) => store.attack)
-  const [requestedSoldiers, setRequestedSoldiers] = useState<number>(target.definition.requiredSoldiers)
+  const [requestedSoldiers, setRequestedSoldiers] = useState<number>(target.definition.recommendedSoldiers)
 
-  const refusal = target.refusalAtRequiredForce
+  const refusal = target.refusalAtRecommendedForce
   const canSend =
-    !target.isExhausted &&
-    requestedSoldiers >= target.definition.requiredSoldiers &&
-    requestedSoldiers <= soldiersAtHome
+    !target.isExhausted && requestedSoldiers >= 1 && requestedSoldiers <= soldiersAtHome
   const powerPerSoldier =
-    target.estimatedAttackPower / Math.max(1, target.definition.requiredSoldiers)
+    target.estimatedAttackPower / Math.max(1, target.definition.recommendedSoldiers)
   const projectedPower = powerPerSoldier * requestedSoldiers
   const isFavourable = projectedPower >= target.estimatedDefense
 
@@ -87,7 +85,7 @@ function TargetCard({
             value={requestedSoldiers}
             onChange={(event) => setRequestedSoldiers(Number(event.target.value))}
             sx={{ width: 110 }}
-            slotProps={{ htmlInput: { min: target.definition.requiredSoldiers, step: 1 } }}
+            slotProps={{ htmlInput: { min: 1, step: 1 } }}
           />
           <Typography variant="caption" color={isFavourable ? 'success.main' : 'error.main'} sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
             {t('panels.conquest.power', { power: formatNumber(projectedPower) })}
@@ -98,9 +96,14 @@ function TargetCard({
           title={
             target.isExhausted
               ? t('refusals.expedition.targetExhausted')
-              : refusal && requestedSoldiers === target.definition.requiredSoldiers
+              : refusal && requestedSoldiers === target.definition.recommendedSoldiers
                 ? t(`refusals.expedition.${refusal}`)
-                : t('realm.requiresSoldiers', { count: target.definition.requiredSoldiers })
+                : t('realm.forceAdvice', {
+                    count: target.definition.recommendedSoldiers,
+                    verdict: t(
+                      isFavourable ? 'realm.forceLooksEnough' : 'realm.forceLooksShort',
+                    ),
+                  })
           }
         >
           <span>

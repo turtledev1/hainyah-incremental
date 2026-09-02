@@ -52,8 +52,8 @@ describe('formatting a duration', () => {
     expect(formatDuration(90_000)).toBe('1d 1h')
   })
 
-  it('says never rather than showing infinity to a player', () => {
-    expect(formatDuration(Number.POSITIVE_INFINITY)).toBe('never')
+  it('shows a symbol rather than a number when nothing is ever coming', () => {
+    expect(formatDuration(Number.POSITIVE_INFINITY)).toBe('∞')
   })
 })
 

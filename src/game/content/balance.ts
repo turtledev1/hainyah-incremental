@@ -21,12 +21,16 @@ export const BALANCE = {
      * not something to click through every couple of minutes. Buffs therefore last
      * most of a cooldown, and the pool refills slowly.
      */
-    baseManaCapacity: 20,
-    baseManaRegenPerSecond: 0.004,
-    /** A mage's pool and their recovery come from what they have learned, not from buildings. */
-    manaCapacityPerCircleTier: 170,
-    manaRegenPerCircleTierPerSecond: 0.008,
-    manaCostByTier: [25, 50, 100, 175, 300, 500],
+    baseManaCapacity: 0,
+    baseManaRegenPerSecond: 0,
+    /**
+     * A mage's pool and their recovery come from what they have learned, not from buildings.
+     * The pool holds roughly two sustained buffs of the deepest tier reached, so which two
+     * is a decision; recovery refills it over about two hours.
+     */
+    manaCapacityPerCircleTier: 12,
+    manaRegenPerCircleTierPerSecond: 0.0017,
+    manaCostByTier: [5, 10, 15, 20, 25, 30],
     /**
      * The decision a session turns on: the same mana buys one burst now, or two
      * sustained buffs that are still running while you are away.

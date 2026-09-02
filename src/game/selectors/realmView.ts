@@ -112,7 +112,7 @@ export interface ConquestTargetView {
   readonly estimatedAttackPower: number
   readonly estimatedDefense: number
   readonly estimatedLegSeconds: number
-  readonly refusalAtRequiredForce?: ExpeditionRefusal
+  readonly refusalAtRecommendedForce?: ExpeditionRefusal
 }
 
 export interface ThieveryTargetView {
@@ -248,16 +248,16 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
       estimatedAttackPower: computeAttackPowerEstimate(
         state,
         registry,
-        definition.requiredSoldiers,
+        definition.recommendedSoldiers,
         true,
       ),
       estimatedDefense: computeTargetDefenseEstimate(state, registry, definition.id, true),
       estimatedLegSeconds: computeLegSeconds(state, registry, definition.id),
-      refusalAtRequiredForce: checkExpeditionRefusal(
+      refusalAtRecommendedForce: checkExpeditionRefusal(
         state,
         registry,
         definition.id,
-        definition.requiredSoldiers,
+        definition.recommendedSoldiers,
       ),
     }
   })

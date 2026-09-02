@@ -113,7 +113,7 @@ export const frenchTranslations = {
       unknownTarget: 'Ce lieu n’existe pas.',
       targetExhausted: 'Il n’y a plus rien à y prendre.',
       notEnoughSoldiersAtHome: 'Vous n’avez pas autant de soldats au pays.',
-      belowRequiredForce: 'Trop peu de soldats pour que la marche en vaille la peine.',
+      noSoldiersSent: 'Envoyez au moins un soldat.',
     },
     heist: {
       unknownTarget: 'Cette cible n’existe pas.',
@@ -298,7 +298,7 @@ export const frenchTranslations = {
   modifiers: {
     everyProduction: 'Toute la production',
     allProduction: 'Production de {{resourceName}}',
-    consumption: '{{resourceName}} mangée par habitant',
+    consumption: 'Faim de {{resourceName}}',
     buildingOutput: 'Rendement de {{buildingName}}',
     capacity: {
       population: 'Capacité de logement',
@@ -399,8 +399,10 @@ export const frenchTranslations = {
     requiresBuildings: 'Demande {{required}} × {{buildingName}} — vous en avez {{owned}}',
     requiresMagicTier: 'Demande un cercle au rang {{tier}}',
     requiresConquest: 'Demande la prise de {{targetName}}',
-    requiresSoldiers_one: 'Demande au moins {{count}} soldat',
-    requiresSoldiers_other: 'Demande au moins {{count}} soldats',
+    forceAdvice_one: 'Calibré pour {{count}} soldat. {{verdict}}',
+    forceAdvice_other: 'Calibré pour {{count}} soldats. {{verdict}}',
+    forceLooksEnough: 'La force que vous envoyez devrait suffire.',
+    forceLooksShort: 'La force que vous envoyez semble trop faible.',
   },
 
   offline: {

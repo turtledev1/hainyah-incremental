@@ -32,7 +32,7 @@ describe('telling the player what an upgrade changes', () => {
         CONTENT_REGISTRY,
         translate,
       ),
-    ).toBe('Food eaten per citizen -10%')
+    ).toBe('Hunger for food -10%')
   })
 
   it('collapses a modifier on every resource into one line', () => {

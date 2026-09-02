@@ -1,22 +1,22 @@
 export const EN_CONTENT = {
   resources: {
     food: {
-      name: 'Food',
+      name: 'food',
       flavor: 'Grain, roots and salted meat. Your people eat whether or not you conquer.',
       gatherAction: 'Forage',
     },
     wood: {
-      name: 'Wood',
+      name: 'wood',
       flavor: 'Timber for houses, scaffolds and siege ladders.',
       gatherAction: 'Gather wood',
     },
     stone: {
-      name: 'Stone',
+      name: 'stone',
       flavor: 'Cut blocks. Everything that must outlast you is built from it.',
       gatherAction: 'Collect stone',
     },
     gold: {
-      name: 'Gold',
+      name: 'gold',
       flavor: 'Struck coin. It buys tools, silence and soldiers.',
     },
   },
@@ -67,11 +67,13 @@ export const EN_CONTENT = {
       tagline: 'They learned both songs: the one that grows and the one that unmakes.',
       advantages: [
         'The Dark Circle by right, plus one elemental circle of your choosing',
+        'Two circles carry far more mana than one, in pool and in recovery',
         'Temples yield 50% more magical experience',
         'Lumber camps yield 30% more wood',
       ],
       disadvantages: [
         'Few and slow to multiply: 25% slower population growth',
+        'Study split two ways: each circle is slower to reach its deepest spells',
         'Mines yield 20% less gold',
         'Fragile in battle: 25% more casualties',
       ],

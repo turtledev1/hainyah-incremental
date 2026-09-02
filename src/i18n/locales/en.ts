@@ -112,7 +112,7 @@ export const englishTranslations = {
       unknownTarget: 'No such place.',
       targetExhausted: 'There is nothing left there to take.',
       notEnoughSoldiersAtHome: 'You do not have that many soldiers at home.',
-      belowRequiredForce: 'Too few soldiers to be worth the march.',
+      noSoldiersSent: 'Send at least one soldier.',
     },
     heist: {
       unknownTarget: 'No such mark.',
@@ -292,8 +292,8 @@ export const englishTranslations = {
 
   modifiers: {
     everyProduction: 'All production',
-    allProduction: '{{resourceName}} production',
-    consumption: '{{resourceName}} eaten per citizen',
+    allProduction: 'Production of {{resourceName}}',
+    consumption: 'Hunger for {{resourceName}}',
     buildingOutput: '{{buildingName}} output',
     capacity: {
       population: 'Housing capacity',
@@ -389,8 +389,10 @@ export const englishTranslations = {
     requiresBuildings: 'Needs {{required}} × {{buildingName}} — you have {{owned}}',
     requiresMagicTier: 'Needs a circle at tier {{tier}}',
     requiresConquest: 'Needs {{targetName}} taken',
-    requiresSoldiers_one: 'Needs at least {{count}} soldier',
-    requiresSoldiers_other: 'Needs at least {{count}} soldiers',
+    forceAdvice_one: 'Balanced for {{count}} soldier. {{verdict}}',
+    forceAdvice_other: 'Balanced for {{count}} soldiers. {{verdict}}',
+    forceLooksEnough: 'The force you are sending should carry it.',
+    forceLooksShort: 'The force you are sending looks too weak.',
   },
 
   offline: {

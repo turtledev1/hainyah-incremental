@@ -21,16 +21,36 @@ function armedRealm(soldiers: number, overrides: Partial<Parameters<typeof creat
 }
 
 describe('sending an army', () => {
-  it('refuses a force smaller than the target demands', () => {
-    const state = armedRealm(HAMLET.requiredSoldiers - 1)
+  it('lets a small force march, because the battle is settled on power', () => {
+    const state = armedRealm(HAMLET.recommendedSoldiers - 1)
 
-    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', HAMLET.requiredSoldiers - 1)).toBe(
-      'belowRequiredForce',
-    )
+    expect(
+      checkExpeditionRefusal(state, testRegistry, 'hamlet', HAMLET.recommendedSoldiers - 1),
+    ).toBeUndefined()
+  })
+
+  it('refuses an expedition with nobody in it', () => {
+    expect(checkExpeditionRefusal(armedRealm(10), testRegistry, 'hamlet', 0)).toBe('noSoldiersSent')
+  })
+
+  it('lets a buffed handful take a place a bare handful could not', () => {
+    const spell = testRegistry.spellsById.get('fire.immolate')!
+    const buffed = armedRealm(HAMLET.recommendedSoldiers - 3)
+    buffed.magic.activeBuffs.push({
+      spellId: spell.id,
+      remainingSeconds: HAMLET.travelSeconds + 10,
+      modifiers: spell.effect.kind === 'buff' ? spell.effect.modifiers : [],
+    })
+    const soldiers = HAMLET.recommendedSoldiers - 3
+    launchExpedition(buffed, testRegistry, 'hamlet', soldiers)
+
+    const afterBattle = advanceGame(buffed, HAMLET.travelSeconds + 1, testRegistry)
+
+    expect(afterBattle.statistics.battlesWon).toBe(1)
   })
 
   it('refuses to send soldiers the realm does not have at home', () => {
-    const state = armedRealm(HAMLET.requiredSoldiers)
+    const state = armedRealm(HAMLET.recommendedSoldiers)
 
     expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', 500)).toBe(
       'notEnoughSoldiersAtHome',
@@ -141,7 +161,7 @@ describe('resolving a battle', () => {
   })
 
   it('fails and takes no acres when the defences far outmatch the force sent', () => {
-    const barelyEnoughToMarch = testRegistry.conquestTargetsById.get('capital')!.requiredSoldiers
+    const barelyEnoughToMarch = testRegistry.conquestTargetsById.get('capital')!.recommendedSoldiers
     const state = armedRealm(barelyEnoughToMarch)
     launchExpedition(state, testRegistry, 'capital', barelyEnoughToMarch)
     const acresBefore = state.acres
@@ -188,7 +208,7 @@ describe('resolving a battle', () => {
   })
 
   it('never kills an undead soldier, though the assault can still fail', () => {
-    const doomedForce = testRegistry.conquestTargetsById.get('capital')!.requiredSoldiers
+    const doomedForce = testRegistry.conquestTargetsById.get('capital')!.recommendedSoldiers
     const state = armedRealm(doomedForce, { raceId: 'undead', circleIds: ['dark'] })
     launchExpedition(state, testRegistry, 'capital', doomedForce)
 
@@ -256,7 +276,7 @@ describe('what protects an army', () => {
 
   it('does not change whether the battle is won, only what it costs', () => {
     const target = testRegistry.conquestTargetsById.get('capital')!
-    const force = target.requiredSoldiers
+    const force = target.recommendedSoldiers
     const shielded = armedRealm(force)
     shielded.magic.activeBuffs.push({
       spellId: 'earth.bulwark',
