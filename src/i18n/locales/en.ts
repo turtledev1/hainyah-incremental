@@ -237,7 +237,6 @@ export const englishTranslations = {
     keepPlaying: 'Keep playing',
     abandonConfirm: 'Abandon it',
     languageTitle: 'Language',
-    languageSubtitle: 'Changes the whole game, including the chronicle already written.',
   },
 
   raceSelection: {

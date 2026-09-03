@@ -88,8 +88,18 @@ export const BALANCE = {
     ],
   },
 
+  ascension: {
+    /** The Wonder is announced when a realm is plainly large, well before it can pay. */
+    announceAtAcres: 1_000,
+  },
+
   offline: {
     maximumCreditedSeconds: 12 * 60 * 60,
+    /**
+     * A gap this short is an alt-tab, so it runs at the browser's own tick: work that
+     * overflows one building into the next stays as small as it is when watched.
+     */
+    tickAccurateSeconds: 30,
     /** Elapsed time below this is simulated second by second, above it in coarse buckets. */
     fineGrainedSeconds: 5 * 60,
     coarseBucketSeconds: 60,

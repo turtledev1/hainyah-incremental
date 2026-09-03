@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
-import { BALANCE } from '../content/balance'
+import { BALANCE, FIXED_TICK_SECONDS } from '../content/balance'
+import { advanceGame } from './tick'
 import { applyOfflineProgress } from './offlineCatchUp'
+import { buildModifierIndexForState } from '../systems/modifiers'
+import { queueBuilding } from '../systems/construction'
 
 function productiveRealm() {
   return createRealm({
@@ -109,6 +112,32 @@ describe('crediting time away', () => {
     const { state: caughtUp } = applyOfflineProgress(state, testRegistry, 60 * 60)
 
     expect(caughtUp.population).toBeLessThan(30)
+  })
+
+  it('runs a short absence exactly as the browser would have', () => {
+    const queuedRealm = () => {
+      const state = createRealm({
+        acres: 100,
+        resources: { wood: 100_000, stone: 100_000, gold: 100_000, food: 100_000 },
+      })
+      const modifiers = buildModifierIndexForState(state, testRegistry)
+      queueBuilding(state, testRegistry, modifiers, 'house')
+      queueBuilding(state, testRegistry, modifiers, 'farm')
+      return state
+    }
+    const awaySeconds = 7
+
+    const { state: caughtUp } = applyOfflineProgress(queuedRealm(), testRegistry, awaySeconds)
+    let watched = queuedRealm()
+    for (let step = 0; step < awaySeconds / FIXED_TICK_SECONDS; step += 1) {
+      watched = advanceGame(watched, FIXED_TICK_SECONDS, testRegistry)
+    }
+
+    expect(caughtUp.constructionQueue[0]!.buildingId).toBe('farm')
+    expect(caughtUp.constructionQueue[0]!.secondsRemaining).toBeCloseTo(
+      watched.constructionQueue[0]!.secondsRemaining,
+      6,
+    )
   })
 
   it('simulates half a day quickly enough to run on load', () => {

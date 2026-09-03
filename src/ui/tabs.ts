@@ -1,3 +1,4 @@
+import { BALANCE } from '../game/content/balance'
 import type { GameState } from '../game/model/state'
 import type { RealmView } from '../game/selectors/realmView'
 
@@ -39,7 +40,7 @@ export const TAB_DEFINITIONS: readonly TabDefinition[] = [
   {
     key: 'wonder',
     labelKey: 'tabs.wonder',
-    isUnlocked: (state) => state.highestConquestTierDefeated > 0,
+    isUnlocked: (state) => state.acres >= BALANCE.ascension.announceAtAcres,
   },
   { key: 'settings', labelKey: 'tabs.settings' },
 ]

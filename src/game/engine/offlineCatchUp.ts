@@ -1,4 +1,4 @@
-import { BALANCE } from '../content/balance'
+import { BALANCE, FIXED_TICK_SECONDS } from '../content/balance'
 import type { ContentRegistry } from '../model/content'
 import type { ResourceId } from '../model/ids'
 import { RESOURCE_IDS } from '../model/ids'
@@ -38,7 +38,17 @@ export function applyOfflineProgress(
   const buildingsBefore = draft.statistics.buildingsConstructed
 
   let remainingSeconds = creditedSeconds
-  const fineGrainedBudget = Math.min(remainingSeconds, BALANCE.offline.fineGrainedSeconds)
+  const tickAccurateSteps = Math.floor(
+    Math.min(remainingSeconds, BALANCE.offline.tickAccurateSeconds) / FIXED_TICK_SECONDS,
+  )
+  for (let step = 0; step < tickAccurateSteps; step += 1) {
+    advanceGameInPlace(draft, FIXED_TICK_SECONDS, registry)
+  }
+  remainingSeconds -= tickAccurateSteps * FIXED_TICK_SECONDS
+
+  const fineGrainedSecondsLeft =
+    BALANCE.offline.fineGrainedSeconds - BALANCE.offline.tickAccurateSeconds
+  const fineGrainedBudget = Math.floor(Math.min(remainingSeconds, fineGrainedSecondsLeft))
   for (let elapsed = 0; elapsed < fineGrainedBudget; elapsed += 1) {
     advanceGameInPlace(draft, 1, registry)
   }

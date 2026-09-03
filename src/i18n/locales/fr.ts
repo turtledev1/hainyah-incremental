@@ -241,7 +241,6 @@ export const frenchTranslations = {
     keepPlaying: 'Continuer à jouer',
     abandonConfirm: 'L’abandonner',
     languageTitle: 'Langue',
-    languageSubtitle: 'Change la langue de tout le jeu, y compris la chronique déjà écrite.',
   },
 
   raceSelection: {

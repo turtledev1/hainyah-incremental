@@ -22,6 +22,7 @@ import { WarfarePanel } from '../panels/WarfarePanel'
 import { formatDuration } from '../format'
 import { tabToShow, unlockedTabs, type TabKey } from '../tabs'
 import { contentKeys } from '../../i18n/contentKeys'
+import { RacePanel } from '../panels/RacePanel'
 
 export function GameScreen({ state }: { readonly state: GameState }) {
   const { t } = useTranslation()
@@ -72,6 +73,7 @@ export function GameScreen({ state }: { readonly state: GameState }) {
               />
               <PopulationPanel state={state} view={view} />
               <BuildingsPanel state={state} view={view} />
+              <RacePanel raceId={state.raceId} />
             </Stack>
           ) : null}
           {activeTab === 'improvements' ? <UpgradesPanel state={state} view={view} /> : null}

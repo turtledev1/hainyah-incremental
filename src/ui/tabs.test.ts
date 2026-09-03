@@ -3,6 +3,7 @@ import { createRealm, testRegistry } from '../test/realmFixtures'
 import { deriveRealmView } from '../game/selectors/realmView'
 import type { GameState } from '../game/model/state'
 import { tabToShow, unlockedTabs } from './tabs'
+import { BALANCE } from '../game/content/balance'
 
 function keysFor(state: GameState): readonly string[] {
   return unlockedTabs(state, deriveRealmView(state, testRegistry)).map((tab) => tab.key)
@@ -37,19 +38,20 @@ describe('which tabs a realm shows', () => {
     expect(keysFor(createRealm({ buildings: { thievesGuild: 1 } }))).toContain('thievery')
   })
 
-  it('opens the Wonder once land has actually been taken', () => {
-    const beforeAnyBattle = createRealm({ buildings: { temple: 4 } })
-    const afterAVictory = createRealm({ buildings: { temple: 4 } })
-    afterAVictory.highestConquestTierDefeated = 1
+  it('opens the Wonder once the realm is plainly large, not with the first temple', () => {
+    const smallRealm = createRealm({ buildings: { temple: 4 }, acres: 200 })
+    smallRealm.highestConquestTierDefeated = 2
+    const wideRealm = createRealm({ acres: BALANCE.ascension.announceAtAcres })
 
-    expect(keysFor(beforeAnyBattle)).not.toContain('wonder')
-    expect(keysFor(afterAVictory)).toContain('wonder')
+    expect(keysFor(smallRealm)).not.toContain('wonder')
+    expect(keysFor(wideRealm)).toContain('wonder')
   })
 
   it('shows everything to a realm that has built everything', () => {
     const state = createRealm({
       buildings: { temple: 4, barracks: 4, thievesGuild: 4, house: 10 },
       resources: { wood: 1_000, stone: 1_000, gold: 1_000 },
+      acres: BALANCE.ascension.announceAtAcres,
     })
     state.highestConquestTierDefeated = 3
     state.revealedUpgradeIds.push('housing.timberFrames')

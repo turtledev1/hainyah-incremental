@@ -71,7 +71,7 @@ export function SettingsPanel({ state }: { readonly state: GameState }) {
         </Stack>
       </SectionCard>
 
-      <SectionCard title={t('settings.languageTitle')} subtitle={t('settings.languageSubtitle')}>
+      <SectionCard title={t('settings.languageTitle')}>
         <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
           {Object.entries(languageNames).map(([code, name]) => (
             <Button

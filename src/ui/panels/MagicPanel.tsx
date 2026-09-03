@@ -14,7 +14,7 @@ import { NUMERIC_FONT_FAMILY } from '../../theme/hainyahTheme'
 import { CardGrid } from '../components/CardGrid'
 import { SectionCard } from '../components/SectionCard'
 import { summariseModifiers } from '../modifierLabels'
-import { formatDuration, formatNumber, formatPerHour, formatRate, formatStockpile } from '../format'
+import { formatDuration, formatNumber, formatPerHour, formatStockpile } from '../format'
 import { contentKeys } from '../../i18n/contentKeys'
 
 interface MagicPanelProps {
@@ -135,7 +135,7 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
     <Stack sx={{ gap: 2 }}>
       <SectionCard
         title={t('panels.circles.title')}
-        subtitle={t('panels.circles.subtitle', { rate: formatRate(view.magicExperiencePerSecond) })}
+        subtitle={t('panels.circles.subtitle', { rate: formatPerHour(view.magicExperiencePerSecond) })}
       >
         <Stack sx={{ gap: 1.5 }}>
           {view.circles.map((circle) => {
