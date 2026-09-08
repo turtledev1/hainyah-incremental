@@ -2,8 +2,9 @@ import type { TFunction } from 'i18next'
 import { contentKeys } from '../i18n/contentKeys'
 import type { ContentRegistry } from '../game/model/content'
 import type { BuildingId, CapacityId, ResourceId } from '../game/model/ids'
-import type { Modifier, ModifierTarget } from '../game/model/modifiers'
+import type { Modifier, ModifierIndex, ModifierTarget } from '../game/model/modifiers'
 import { describeModifier } from '../game/model/modifiers'
+import { formatNumber } from './format'
 
 export function describeModifierTarget(
   target: ModifierTarget,
@@ -51,6 +52,16 @@ export function stackModifiers(
   )
 }
 
+/** An upgrade states the total its line reaches, so the tier reads as that total. */
+export function upgradeTotal(modifier: Modifier): string {
+  if (modifier.operation !== 'multiply') {
+    return describeModifier(modifier)
+  }
+  const rounded = formatNumber(modifier.value)
+  /** A repeatable tier moves the total by a few percent, which one decimal would hide. */
+  return `×${rounded === '1' || rounded === '1.0' ? modifier.value.toFixed(2) : rounded}`
+}
+
 export function describeModifierEffect(
   modifier: Modifier,
   registry: ContentRegistry,
@@ -64,6 +75,7 @@ export function summariseModifiers(
   modifiers: readonly Modifier[],
   registry: ContentRegistry,
   translate: TFunction,
+  describeValue: (modifier: Modifier) => string = describeModifier,
 ): readonly string[] {
   const everyProductionTarget = (['food', 'wood', 'stone', 'gold'] as const).map(
     (resourceId) => `production.${resourceId}` as ModifierTarget,
@@ -78,7 +90,7 @@ export function summariseModifiers(
   const described: string[] = []
   if (touchesEveryResource) {
     described.push(
-      `${translate('modifiers.everyProduction')} ${describeModifier(productionModifiers[0]!)}`,
+      `${translate('modifiers.everyProduction')} ${describeValue(productionModifiers[0]!)}`,
     )
   }
 
@@ -86,7 +98,9 @@ export function summariseModifiers(
     if (touchesEveryResource && productionModifiers.includes(modifier)) {
       continue
     }
-    described.push(describeModifierEffect(modifier, registry, translate))
+    described.push(
+      `${describeModifierTarget(modifier.target, registry, translate)} ${describeValue(modifier)}`,
+    )
   }
   return described
 }

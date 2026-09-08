@@ -9,28 +9,34 @@ export function collectActiveModifiers(
   state: GameState,
   registry: ContentRegistry,
 ): readonly Modifier[] {
-  const collected: Modifier[] = []
+  return [
+    ...(registry.racesById.get(state.raceId)?.modifiers ?? []),
+    ...ownedUpgradeModifiers(state, registry),
+    ...state.magic.activeBuffs.flatMap((activeBuff) => activeBuff.modifiers),
+  ]
+}
 
-  const race = registry.racesById.get(state.raceId)
-  if (race) {
-    collected.push(...race.modifiers)
-  }
+/** Upgrade values are line totals, so the last tier listed and owned wins each target. */
+function ownedUpgradeModifiers(
+  state: GameState,
+  registry: ContentRegistry,
+): readonly Modifier[] {
+  const byLineAndTarget = new Map<string, readonly Modifier[]>()
 
-  for (const [upgradeId, purchaseCount] of Object.entries(state.purchasedUpgrades)) {
-    const upgrade = registry.upgradesById.get(upgradeId)
-    if (!upgrade || purchaseCount <= 0) {
+  for (const upgrade of registry.upgrades) {
+    const purchases = state.purchasedUpgrades[upgrade.id] ?? 0
+    if (purchases <= 0) {
       continue
     }
-    for (let purchase = 0; purchase < purchaseCount; purchase += 1) {
-      collected.push(...upgrade.modifiers)
+    for (const modifier of upgrade.modifiers) {
+      byLineAndTarget.set(
+        `${upgrade.lineId} ${modifier.target}`,
+        Array.from({ length: purchases }, () => modifier),
+      )
     }
   }
 
-  for (const activeBuff of state.magic.activeBuffs) {
-    collected.push(...activeBuff.modifiers)
-  }
-
-  return collected
+  return [...byLineAndTarget.values()].flat()
 }
 
 export function buildModifierIndex(modifiers: readonly Modifier[]): ModifierIndex {

@@ -2,8 +2,7 @@ export const FR_CONTENT = {
   resources: {
     food: {
       name: 'nourriture',
-      flavor:
-        'Grain, racines et viande salée. Votre peuple mange, que vous conquériez ou non.',
+      flavor: 'Grain, racines et viande salée. Votre peuple mange, que vous conquériez ou non.',
       gatherAction: 'Fourrager',
     },
     wood: {
@@ -83,8 +82,7 @@ export const FR_CONTENT = {
   buildings: {
     house: {
       name: 'Maison',
-      flavor:
-        'Quatre murs et un âtre. Augmente le nombre d’habitants que votre terre peut tenir.',
+      flavor: 'Quatre murs et un âtre. Augmente le nombre d’habitants que votre terre peut tenir.',
     },
     farm: {
       name: 'Ferme',
@@ -315,6 +313,10 @@ export const FR_CONTENT = {
       name: 'Logistique',
       flavor: 'Les routes rendent toutes les autres améliorations plus utiles.',
     },
+    masonry: {
+      name: 'Maçonnerie',
+      flavor: 'N’importe qui peut empiler des pierres. Le faire vite est un métier.',
+    },
     military: {
       name: 'Militaire',
       flavor: 'Exercice, discipline et machines de guerre.',
@@ -343,155 +345,155 @@ export const FR_CONTENT = {
   upgrades: {
     'housing.timberFrames': {
       name: 'Charpentes',
-      flavor:
-        'Une vraie charpente au lieu de perches liées. Capacité de logement +40 %.',
+      flavor: 'Une vraie charpente au lieu de perches liées.',
     },
     'housing.stoneHouses': {
       name: 'Maisons de pierre',
-      flavor: 'Pierre taillée, deux étages, un vrai toit. Capacité de logement +60 %.',
+      flavor: 'Pierre taillée, deux étages, un vrai toit.',
     },
     'housing.manorHalls': {
       name: 'Halles seigneuriales',
-      flavor: 'De longues salles où dorment des familles entières. Capacité de logement +80 %.',
+      flavor: 'De longues salles où dorment des familles entières.',
     },
     'farming.ironPlows': {
       name: 'Charrues de fer',
-      flavor: 'Le fer tranche la motte que le soc de bois ne faisait que meurtrir. Fermes +30 %.',
+      flavor: 'Le fer tranche la motte que le soc de bois ne faisait que meurtrir.',
     },
     'farming.cropRotation': {
       name: 'Rotation des cultures',
-      flavor: 'Laissez un champ se reposer et il vous le rend. Fermes +40 %.',
+      flavor: 'Laissez un champ se reposer et il vous le rend.',
     },
     'farming.aqueducts': {
       name: 'Aqueducs',
-      flavor: 'L’eau arrive, qu’il pleuve ou non. Fermes +50 %.',
+      flavor: 'L’eau arrive, qu’il pleuve ou non.',
     },
     'woodcutting.bronzeAxes': {
       name: 'Haches de bronze',
-      flavor: 'Des fers coulés qui gardent leur tranchant. Camps de bûcherons +30 %.',
+      flavor: 'Des fers coulés qui gardent leur tranchant.',
     },
     'woodcutting.steelAxes': {
       name: 'Haches d’acier',
-      flavor: 'Moitié moins de coups, deux fois plus d’arbres. Camps de bûcherons +40 %.',
+      flavor: 'Moitié moins de coups, deux fois plus d’arbres.',
     },
     'woodcutting.whipsaws': {
       name: 'Scies passe-partout',
-      flavor:
-        'Des scies à deux hommes et une aire d’abattage qui ne s’arrête jamais. Camps de bûcherons +50 %.',
+      flavor: 'Des scies à deux hommes et une aire d’abattage qui ne s’arrête jamais.',
     },
     'quarrying.ironChisels': {
       name: 'Ciseaux de fer',
-      flavor: 'La pierre se fend là où vous la marquez. Carrières +30 %.',
+      flavor: 'La pierre se fend là où vous la marquez.',
     },
     'quarrying.wedgeAndFeather': {
       name: 'Coins et plumes',
-      flavor: 'Une astuce de fer qui ouvre un front proprement. Carrières +40 %.',
+      flavor: 'Une astuce de fer qui ouvre un front proprement.',
     },
     'quarrying.cranes': {
       name: 'Grues à roue',
-      flavor: 'Les blocs quittent la fosse aussi vite qu’on les taille. Carrières +50 %.',
+      flavor: 'Les blocs quittent la fosse aussi vite qu’on les taille.',
     },
     'mining.ironPicks': {
       name: 'Pics de fer',
-      flavor: 'Le fer mord là où le bronze glisse. Mines +30 %.',
+      flavor: 'Le fer mord là où le bronze glisse.',
     },
     'mining.steelPicks': {
       name: 'Pics d’acier',
-      flavor: 'Des têtes trempées et un forgeron pour les tenir. Mines +40 %.',
+      flavor: 'Des têtes trempées et un forgeron pour les tenir.',
     },
     'mining.blastingPowder': {
       name: 'Poudre de mine',
-      flavor: 'Une charge fait en un battement de cœur ce qu’un poste entier ne pouvait. Mines +60 %.',
+      flavor: 'Une charge fait en un battement de cœur ce qu’un poste entier ne pouvait.',
     },
     'preservation.rootCellars': {
       name: 'Caves à racines',
-      flavor: 'La terre froide garde une récolte honnête. Votre peuple mange 10 % de moins.',
+      flavor: 'La terre froide garde une récolte honnête.',
     },
     'preservation.granaries': {
       name: 'Greniers',
-      flavor:
-        'Planchers surélevés, couvercles serrés, aucune vermine. Votre peuple mange encore 15 % de moins.',
+      flavor: 'Planchers surélevés, couvercles serrés, aucune vermine.',
     },
     'preservation.coldVaults': {
       name: 'Glacières',
-      flavor:
-        'De la glace taillée en hiver, gardée toute l’année. Votre peuple mange encore 20 % de moins.',
+      flavor: 'De la glace taillée en hiver, gardée toute l’année.',
     },
     'logistics.handcarts': {
       name: 'Charrettes à bras',
-      flavor: 'Personne ne devrait porter ce qu’une roue peut porter. Toute la production +10 %.',
+      flavor: 'Personne ne devrait porter ce qu’une roue peut porter.',
     },
     'logistics.wagons': {
       name: 'Chariots',
-      flavor: 'Attelages et essieux. Toute la production +15 %, marches 15 % plus rapides.',
+      flavor: 'Attelages et essieux.',
     },
     'logistics.pavedRoads': {
       name: 'Routes pavées',
-      flavor:
-        'De la pierre sous chaque roue du royaume. Toute la production +20 %, marches 25 % plus rapides.',
+      flavor: 'De la pierre sous chaque roue du royaume.',
+    },
+    'masonry.workCrews': {
+      name: 'Équipes de chantier',
+      flavor: 'Des équipes qui connaissent l’ordre des travaux.',
+    },
+    'masonry.scaffolding': {
+      name: 'Échafaudages',
+      flavor: 'Plus personne n’attend une échelle.',
+    },
+    'masonry.masterBuilders': {
+      name: 'Maîtres bâtisseurs',
+      flavor: 'Ils en ont dressé cent avant celui-là.',
     },
     'military.drillYards': {
       name: 'Cours d’exercice',
-      flavor: 'Des soldats qui l’ont déjà fait. Puissance d’attaque +25 %.',
+      flavor: 'Des soldats qui l’ont déjà fait.',
     },
     'military.standingArmy': {
       name: 'Armée permanente',
-      flavor:
-        'Payée, logée, toujours prête. Puissance d’attaque +35 %, capacité de l’armée +20 %.',
+      flavor: 'Payée, logée, toujours prête.',
     },
     'military.siegeEngines': {
       name: 'Machines de siège',
-      flavor: 'Les murs cessent d’être un argument. Puissance d’attaque +60 %, pertes −20 %.',
+      flavor: 'Les murs cessent d’être un argument.',
     },
     'thievery.lockpicks': {
       name: 'Passe-partout',
-      flavor:
-        'Un jeu de crochets et quelqu’un qui sait s’en servir. Réussite des coups +20 %.',
+      flavor: 'Un jeu de crochets et quelqu’un qui sait s’en servir.',
     },
     'thievery.smokeBombs': {
       name: 'Bombes fumigènes',
-      flavor: 'Une sortie vaut mieux qu’une entrée. Pertes −30 %, butin +25 %.',
+      flavor: 'Une sortie vaut mieux qu’une entrée.',
     },
     'thievery.guildNetwork': {
       name: 'Réseau de la guilde',
-      flavor:
-        'Des yeux dans chaque cité que vous n’avez pas encore prise. Réussite +25 %, butin +60 %.',
+      flavor: 'Des yeux dans chaque cité que vous n’avez pas encore prise.',
     },
     'arcana.scriptoria': {
       name: 'Scriptoria',
-      flavor: 'Quelqu’un a enfin pris des notes. Expérience magique +30 %.',
+      flavor: 'Quelqu’un a enfin pris des notes.',
     },
     'arcana.astrolabes': {
       name: 'Astrolabes',
-      flavor:
-        'Hai et Yah mesurés à l’aune des étoiles. Expérience +40 %, réserve de mana +50 %.',
+      flavor: 'Hai et Yah mesurés à l’aune des étoiles.',
     },
     'arcana.leyLines': {
       name: 'Lignes telluriques',
-      flavor:
-        'Les cercles n’attendent plus vos temples. Expérience +60 %, réserve de mana doublée.',
+      flavor: 'Les cercles n’attendent plus vos temples.',
     },
     'gathering.callousedHands': {
       name: 'Mains calleuses',
-      flavor: 'Vous faites ça depuis un moment. Récolte à la main doublée.',
+      flavor: 'Vous faites ça depuis un moment.',
     },
     'gathering.practisedHands': {
       name: 'Mains exercées',
-      flavor: 'Moins de gestes perdus. Récolte à la main triplée encore.',
+      flavor: 'Moins de gestes perdus.',
     },
     'gathering.masterGatherers': {
       name: 'Maîtres récolteurs',
-      flavor: 'Une équipe qui va où vous pointez. Récolte à la main décuplée.',
+      flavor: 'Une équipe qui va où vous pointez.',
     },
     'fortification.reinforceWalls': {
       name: 'Renforcer les murs',
-      flavor:
-        'Une assise de pierre en plus, quelques soldats de plus rentrés. Pertes −4 % à chaque fois.',
+      flavor: 'Une assise de pierre en plus, quelques soldats de plus rentrés.',
     },
     'bribery.guildBribes': {
       name: 'Pots-de-vin de la guilde',
-      flavor:
-        'De la monnaie dans la bonne paume. Réussite des coups +3 % à chaque fois, sans qu’aucun coup soit jamais sûr.',
+      flavor: 'De la monnaie dans la bonne paume, sans qu’aucun coup soit jamais sûr.',
     },
   },
   conquestTargets: {
@@ -544,8 +546,7 @@ export const FR_CONTENT = {
     },
     royalVault: {
       name: 'Chambre forte royale',
-      flavor:
-        'Le genre de coup dont la guilde fait des récits, surtout à propos des enterrements.',
+      flavor: 'Le genre de coup dont la guilde fait des récits, surtout à propos des enterrements.',
     },
   },
   ascensionStages: {

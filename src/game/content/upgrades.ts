@@ -10,6 +10,7 @@ export const UPGRADE_LINE_DEFINITIONS: readonly UpgradeLineDefinition[] = [
   { id: 'mining' },
   { id: 'preservation' },
   { id: 'logistics' },
+  { id: 'masonry' },
   { id: 'military' },
   { id: 'thievery' },
   { id: 'arcana' },
@@ -38,7 +39,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'housing',
     costs: { wood: 2_500, stone: 4_000, gold: 800 },
     requires: { upgradeIds: ['housing.timberFrames'], buildingCounts: { house: 8 } },
-    modifiers: [{ target: 'capacity.population', operation: 'multiply', value: 1.6 }],
+    modifiers: [{ target: 'capacity.population', operation: 'multiply', value: 2.2 }],
   },
   {
     id: 'housing.manorHalls',
@@ -49,7 +50,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       buildingCounts: { house: 20 },
       conquestTierDefeated: 2,
     },
-    modifiers: [{ target: 'capacity.population', operation: 'multiply', value: 1.8 }],
+    modifiers: [{ target: 'capacity.population', operation: 'multiply', value: 4 }],
   },
 
   {
@@ -64,14 +65,14 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'farming',
     costs: { wood: 2_000, food: 3_000, gold: 1_200 },
     requires: { upgradeIds: ['farming.ironPlows'], buildingCounts: { farm: 5 } },
-    modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.4 }],
+    modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.8 }],
   },
   {
     id: 'farming.aqueducts',
     lineId: 'farming',
     costs: { stone: 45_000, wood: 20_000, gold: 15_000 },
     requires: { upgradeIds: ['farming.cropRotation'], buildingCounts: { farm: 12 } },
-    modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 1.5 }],
+    modifiers: [{ target: 'buildingOutput.farm', operation: 'multiply', value: 2.7 }],
   },
 
   {
@@ -86,14 +87,14 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'woodcutting',
     costs: { wood: 1_800, stone: 900, gold: 1_400 },
     requires: { upgradeIds: ['woodcutting.bronzeAxes'], buildingCounts: { lumberCamp: 5 } },
-    modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 1.4 }],
+    modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 1.8 }],
   },
   {
     id: 'woodcutting.whipsaws',
     lineId: 'woodcutting',
     costs: { wood: 30_000, stone: 18_000, gold: 22_000 },
     requires: { upgradeIds: ['woodcutting.steelAxes'], buildingCounts: { lumberCamp: 12 } },
-    modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 1.5 }],
+    modifiers: [{ target: 'buildingOutput.lumberCamp', operation: 'multiply', value: 2.7 }],
   },
 
   {
@@ -108,14 +109,14 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'quarrying',
     costs: { wood: 1_500, stone: 1_200, gold: 1_500 },
     requires: { upgradeIds: ['quarrying.ironChisels'], buildingCounts: { quarry: 5 } },
-    modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 1.4 }],
+    modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 1.8 }],
   },
   {
     id: 'quarrying.cranes',
     lineId: 'quarrying',
     costs: { wood: 35_000, stone: 25_000, gold: 20_000 },
     requires: { upgradeIds: ['quarrying.wedgeAndFeather'], buildingCounts: { quarry: 12 } },
-    modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 1.5 }],
+    modifiers: [{ target: 'buildingOutput.quarry', operation: 'multiply', value: 2.7 }],
   },
 
   {
@@ -130,7 +131,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'mining',
     costs: { wood: 2_500, stone: 2_500, gold: 2_000 },
     requires: { upgradeIds: ['mining.ironPicks'], buildingCounts: { mine: 5 } },
-    modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 1.4 }],
+    modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 1.8 }],
   },
   {
     id: 'mining.blastingPowder',
@@ -141,7 +142,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       buildingCounts: { mine: 12 },
       anyMagicCircleTier: 2,
     },
-    modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 1.6 }],
+    modifiers: [{ target: 'buildingOutput.mine', operation: 'multiply', value: 2.9 }],
   },
 
   {
@@ -156,7 +157,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'preservation',
     costs: { wood: 3_000, stone: 3_000, gold: 1_000 },
     requires: { upgradeIds: ['preservation.rootCellars'], buildingCounts: { farm: 8 } },
-    modifiers: [{ target: 'consumption.food', operation: 'multiply', value: 0.85 }],
+    modifiers: [{ target: 'consumption.food', operation: 'multiply', value: 0.75 }],
   },
   {
     id: 'preservation.coldVaults',
@@ -167,7 +168,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       buildingCounts: { farm: 15 },
       anyMagicCircleTier: 3,
     },
-    modifiers: [{ target: 'consumption.food', operation: 'multiply', value: 0.8 }],
+    modifiers: [{ target: 'consumption.food', operation: 'multiply', value: 0.6 }],
   },
 
   {
@@ -183,7 +184,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     costs: { wood: 5_000, stone: 2_000, gold: 3_500 },
     requires: { upgradeIds: ['logistics.handcarts'], buildingCounts: { house: 12 } },
     modifiers: [
-      ...allProductionModifiers(1.15),
+      ...allProductionModifiers(1.25),
       { target: 'warfare.travelSpeed', operation: 'multiply', value: 1.15 },
     ],
   },
@@ -197,10 +198,36 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       conquestTierDefeated: 3,
     },
     modifiers: [
-      ...allProductionModifiers(1.2),
-      { target: 'warfare.travelSpeed', operation: 'multiply', value: 1.25 },
+      ...allProductionModifiers(1.5),
+      { target: 'warfare.travelSpeed', operation: 'multiply', value: 1.5 },
       { target: 'thievery.speed', operation: 'multiply', value: 1.25 },
     ],
+  },
+
+  {
+    id: 'masonry.workCrews',
+    lineId: 'masonry',
+    costs: { wood: 2_500, stone: 1_800, gold: 1_200 },
+    requires: { buildingCounts: { house: 6 } },
+    modifiers: [{ target: 'constructionSpeed', operation: 'multiply', value: 1.5 }],
+  },
+  {
+    id: 'masonry.scaffolding',
+    lineId: 'masonry',
+    costs: { wood: 40_000, stone: 32_000, gold: 22_000 },
+    requires: { upgradeIds: ['masonry.workCrews'], buildingCounts: { quarry: 8, house: 20 } },
+    modifiers: [{ target: 'constructionSpeed', operation: 'multiply', value: 2.6 }],
+  },
+  {
+    id: 'masonry.masterBuilders',
+    lineId: 'masonry',
+    costs: { wood: 280_000, stone: 280_000, gold: 240_000 },
+    requires: {
+      upgradeIds: ['masonry.scaffolding'],
+      buildingCounts: { quarry: 25, house: 60 },
+      conquestTierDefeated: 3,
+    },
+    modifiers: [{ target: 'constructionSpeed', operation: 'multiply', value: 6.6 }],
   },
 
   {
@@ -220,7 +247,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       conquestTierDefeated: 1,
     },
     modifiers: [
-      { target: 'warfare.attackPower', operation: 'multiply', value: 1.35 },
+      { target: 'warfare.attackPower', operation: 'multiply', value: 1.7 },
       { target: 'capacity.army', operation: 'multiply', value: 1.2 },
     ],
   },
@@ -234,7 +261,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       conquestTierDefeated: 3,
     },
     modifiers: [
-      { target: 'warfare.attackPower', operation: 'multiply', value: 1.6 },
+      { target: 'warfare.attackPower', operation: 'multiply', value: 2.7 },
       { target: 'warfare.casualtyRate', operation: 'multiply', value: 0.8 },
     ],
   },
@@ -266,8 +293,8 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       anyMagicCircleTier: 3,
     },
     modifiers: [
-      { target: 'thievery.successChance', operation: 'multiply', value: 1.25 },
-      { target: 'thievery.loot', operation: 'multiply', value: 1.6 },
+      { target: 'thievery.successChance', operation: 'multiply', value: 1.5 },
+      { target: 'thievery.loot', operation: 'multiply', value: 2 },
     ],
   },
 
@@ -284,7 +311,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     costs: { wood: 5_000, stone: 4_000, gold: 6_000 },
     requires: { upgradeIds: ['arcana.scriptoria'], buildingCounts: { temple: 3 } },
     modifiers: [
-      { target: 'magic.experienceGain', operation: 'multiply', value: 1.4 },
+      { target: 'magic.experienceGain', operation: 'multiply', value: 1.8 },
       { target: 'magic.manaPool', operation: 'multiply', value: 1.5 },
       { target: 'magic.manaRegen', operation: 'multiply', value: 1.3 },
     ],
@@ -299,9 +326,9 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       anyMagicCircleTier: 3,
     },
     modifiers: [
-      { target: 'magic.experienceGain', operation: 'multiply', value: 1.6 },
-      { target: 'magic.manaPool', operation: 'multiply', value: 2 },
-      { target: 'magic.manaRegen', operation: 'multiply', value: 1.8 },
+      { target: 'magic.experienceGain', operation: 'multiply', value: 2.9 },
+      { target: 'magic.manaPool', operation: 'multiply', value: 3 },
+      { target: 'magic.manaRegen', operation: 'multiply', value: 2.3 },
     ],
   },
 
@@ -317,14 +344,14 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     lineId: 'gathering',
     costs: { wood: 500, stone: 400, gold: 100 },
     requires: { upgradeIds: ['gathering.callousedHands'] },
-    modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 3 }],
+    modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 6 }],
   },
   {
     id: 'gathering.masterGatherers',
     lineId: 'gathering',
     costs: { wood: 8_000, stone: 6_000, gold: 4_000 },
     requires: { upgradeIds: ['gathering.practisedHands'], buildingCounts: { house: 10 } },
-    modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 10 }],
+    modifiers: [{ target: 'manualGatherYield', operation: 'multiply', value: 60 }],
   },
 
   {

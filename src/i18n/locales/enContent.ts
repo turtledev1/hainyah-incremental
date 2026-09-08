@@ -300,6 +300,10 @@ export const EN_CONTENT = {
       name: 'Logistics',
       flavor: 'Roads make every other improvement worth more.',
     },
+    masonry: {
+      name: 'Masonry',
+      flavor: 'Anyone can stack stone. Doing it quickly is a trade.',
+    },
     military: {
       name: 'Military',
       flavor: 'Drill, discipline and engines of war.',
@@ -328,143 +332,155 @@ export const EN_CONTENT = {
   upgrades: {
     'housing.timberFrames': {
       name: 'Timber Frames',
-      flavor: 'A proper frame instead of lashed poles. Housing capacity +40%.',
+      flavor: 'A proper frame instead of lashed poles.',
     },
     'housing.stoneHouses': {
       name: 'Stone Houses',
-      flavor: 'Cut stone, two storeys, a real roof. Housing capacity +60%.',
+      flavor: 'Cut stone, two storeys, a real roof.',
     },
     'housing.manorHalls': {
       name: 'Manor Halls',
-      flavor: 'Long halls that sleep whole families. Housing capacity +80%.',
+      flavor: 'Long halls that sleep whole families.',
     },
     'farming.ironPlows': {
       name: 'Iron Plows',
-      flavor: 'Iron cuts the sod the wooden share only bruised. Farms +30%.',
+      flavor: 'Iron cuts the sod the wooden share only bruised.',
     },
     'farming.cropRotation': {
       name: 'Crop Rotation',
-      flavor: 'Rest a field and it pays you back. Farms +40%.',
+      flavor: 'Rest a field and it pays you back.',
     },
     'farming.aqueducts': {
       name: 'Aqueducts',
-      flavor: 'Water arrives whether or not it rains. Farms +50%.',
+      flavor: 'Water arrives whether or not it rains.',
     },
     'woodcutting.bronzeAxes': {
       name: 'Bronze Axes',
-      flavor: 'Cast heads that keep an edge. Lumber camps +30%.',
+      flavor: 'Cast heads that keep an edge.',
     },
     'woodcutting.steelAxes': {
       name: 'Steel Axes',
-      flavor: 'Half the strokes, twice the trees. Lumber camps +40%.',
+      flavor: 'Half the strokes, twice the trees.',
     },
     'woodcutting.whipsaws': {
       name: 'Whipsaws',
-      flavor: 'Two-man saws and a felling yard that never stops. Lumber camps +50%.',
+      flavor: 'Two-man saws and a felling yard that never stops.',
     },
     'quarrying.ironChisels': {
       name: 'Iron Chisels',
-      flavor: 'Stone splits where you mark it. Quarries +30%.',
+      flavor: 'Stone splits where you mark it.',
     },
     'quarrying.wedgeAndFeather': {
       name: 'Wedge & Feather',
-      flavor: 'A trick of iron that opens a face cleanly. Quarries +40%.',
+      flavor: 'A trick of iron that opens a face cleanly.',
     },
     'quarrying.cranes': {
       name: 'Treadwheel Cranes',
-      flavor: 'Blocks leave the pit as fast as they are cut. Quarries +50%.',
+      flavor: 'Blocks leave the pit as fast as they are cut.',
     },
     'mining.ironPicks': {
       name: 'Iron Picks',
-      flavor: 'Iron bites where bronze glances. Mines +30%.',
+      flavor: 'Iron bites where bronze glances.',
     },
     'mining.steelPicks': {
       name: 'Steel Picks',
-      flavor: 'Tempered heads and a smith to keep them. Mines +40%.',
+      flavor: 'Tempered heads and a smith to keep them.',
     },
     'mining.blastingPowder': {
       name: 'Blasting Powder',
-      flavor: 'A charge does in a heartbeat what a shift could not. Mines +60%.',
+      flavor: 'A charge does in a heartbeat what a shift could not.',
     },
     'preservation.rootCellars': {
       name: 'Root Cellars',
-      flavor: 'Cold earth keeps a harvest honest. Your people eat 10% less.',
+      flavor: 'Cold earth keeps a harvest honest.',
     },
     'preservation.granaries': {
       name: 'Granaries',
-      flavor: 'Raised floors, tight lids, no vermin. Your people eat a further 15% less.',
+      flavor: 'Raised floors, tight lids, no vermin.',
     },
     'preservation.coldVaults': {
       name: 'Cold Vaults',
-      flavor: 'Ice cut in winter, kept all year. Your people eat a further 20% less.',
+      flavor: 'Ice cut in winter, kept all year.',
     },
     'logistics.handcarts': {
       name: 'Handcarts',
-      flavor: 'Nobody should carry what a wheel can. All production +10%.',
+      flavor: 'Nobody should carry what a wheel can.',
     },
     'logistics.wagons': {
       name: 'Wagons',
-      flavor: 'Draught teams and axles. All production +15%, marches 15% faster.',
+      flavor: 'Draught teams and axles.',
     },
     'logistics.pavedRoads': {
       name: 'Paved Roads',
-      flavor: 'Stone under every wheel in the realm. All production +20%, marches 25% faster.',
+      flavor: 'Stone under every wheel in the realm.',
+    },
+    'masonry.workCrews': {
+      name: 'Work Crews',
+      flavor: 'Gangs who know the order the work goes in.',
+    },
+    'masonry.scaffolding': {
+      name: 'Scaffolding',
+      flavor: 'Nobody waits for a ladder any more.',
+    },
+    'masonry.masterBuilders': {
+      name: 'Master Builders',
+      flavor: 'They have raised a hundred of these.',
     },
     'military.drillYards': {
       name: 'Drill Yards',
-      flavor: 'Soldiers who have done it before. Attack power +25%.',
+      flavor: 'Soldiers who have done it before.',
     },
     'military.standingArmy': {
       name: 'Standing Army',
-      flavor: 'Paid, housed, always ready. Attack power +35%, army capacity +20%.',
+      flavor: 'Paid, housed, always ready.',
     },
     'military.siegeEngines': {
       name: 'Siege Engines',
-      flavor: 'Walls stop being an argument. Attack power +60%, casualties −20%.',
+      flavor: 'Walls stop being an argument.',
     },
     'thievery.lockpicks': {
       name: 'Lockpicks',
-      flavor: 'A set of picks and someone taught to use them. Heist success +20%.',
+      flavor: 'A set of picks and someone taught to use them.',
     },
     'thievery.smokeBombs': {
       name: 'Smoke Bombs',
-      flavor: 'An exit is worth more than an entrance. Casualties −30%, loot +25%.',
+      flavor: 'An exit is worth more than an entrance.',
     },
     'thievery.guildNetwork': {
       name: 'Guild Network',
-      flavor: 'Eyes in every city you have not taken yet. Success +25%, loot +60%.',
+      flavor: 'Eyes in every city you have not taken yet.',
     },
     'arcana.scriptoria': {
       name: 'Scriptoria',
-      flavor: 'Someone finally wrote it down. Magical experience +30%.',
+      flavor: 'Someone finally wrote it down.',
     },
     'arcana.astrolabes': {
       name: 'Astrolabes',
-      flavor: 'Hai and Yah measured against the stars. Experience +40%, mana pool +50%.',
+      flavor: 'Hai and Yah measured against the stars.',
     },
     'arcana.leyLines': {
       name: 'Ley Lines',
-      flavor: 'The circles no longer wait on your temples. Experience +60%, mana pool doubled.',
+      flavor: 'The circles no longer wait on your temples.',
     },
     'gathering.callousedHands': {
       name: 'Calloused Hands',
-      flavor: 'You have done this a while now. Hand-gathering doubled.',
+      flavor: 'You have done this a while now.',
     },
     'gathering.practisedHands': {
       name: 'Practised Hands',
-      flavor: 'Fewer wasted motions. Hand-gathering tripled again.',
+      flavor: 'Fewer wasted motions.',
     },
     'gathering.masterGatherers': {
       name: 'Master Gatherers',
-      flavor: 'A crew that follows where you point. Hand-gathering ten times over.',
+      flavor: 'A crew that follows where you point.',
     },
     'fortification.reinforceWalls': {
       name: 'Reinforce Walls',
-      flavor: 'Another course of stone, another few soldiers home. Casualties −4% each time.',
+      flavor: 'Another course of stone, another few soldiers home.',
     },
     'bribery.guildBribes': {
       name: 'Guild Bribes',
-      flavor: 'Coin in the right palm. Heist success +3% each time, though no job is ever certain.',
+      flavor: 'Coin in the right palm, though no job is ever certain.',
     },
   },
   conquestTargets: {

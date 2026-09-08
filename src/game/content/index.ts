@@ -32,8 +32,18 @@ function assertRegistryIsConsistent(registry: ContentRegistry): void {
       throw new Error(`Upgrade ${upgrade.id} belongs to unknown line ${upgrade.lineId}`)
     }
     for (const prerequisiteId of upgrade.requires.upgradeIds ?? []) {
-      if (!registry.upgradesById.has(prerequisiteId)) {
+      const prerequisite = registry.upgradesById.get(prerequisiteId)
+      if (!prerequisite) {
         throw new Error(`Upgrade ${upgrade.id} requires unknown upgrade ${prerequisiteId}`)
+      }
+      /** The last tier owned in a line wins, so a line has to read in tier order. */
+      if (prerequisite.lineId !== upgrade.lineId) {
+        throw new Error(
+          `Upgrade ${upgrade.id} requires ${prerequisiteId} from another line, which would silence it`,
+        )
+      }
+      if (registry.upgrades.indexOf(prerequisite) > registry.upgrades.indexOf(upgrade)) {
+        throw new Error(`Upgrade ${upgrade.id} is listed before ${prerequisiteId}, which it requires`)
       }
     }
     for (const buildingId of Object.keys(upgrade.requires.buildingCounts ?? {})) {

@@ -39,6 +39,7 @@ export type UpgradeLineId =
   | 'farming'
   | 'preservation'
   | 'logistics'
+  | 'masonry'
   | 'military'
   | 'thievery'
   | 'arcana'

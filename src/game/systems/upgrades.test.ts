@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
 import { BALANCE } from '../content/balance'
+import { advanceGame } from '../engine/tick'
 import { capacityOf } from './capacity'
+import { queueBuilding } from './construction'
 import { buildModifierIndexForState, resolveMultiplier } from './modifiers'
 import {
   checkUpgradeRefusal,
@@ -11,6 +13,13 @@ import {
   revealUpgrades,
   upgradeCost,
 } from './upgrades'
+
+/** Upgrades state the total their line reaches, so tests read that rather than recompute it. */
+function declaredTotal(upgradeId: string, target: string): number {
+  return testRegistry
+    .upgradesById.get(upgradeId)!
+    .modifiers.find((modifier) => modifier.target === target)!.value
+}
 
 const generousStores = { wood: 10_000_000, stone: 10_000_000, gold: 10_000_000, food: 10_000_000 }
 
@@ -105,7 +114,9 @@ describe('buying an upgrade', () => {
       'population',
     )
 
-    expect(capacityAfter).toBe(Math.floor(capacityBefore * 1.4 * 1.6))
+    expect(capacityAfter).toBe(
+      Math.floor(capacityBefore * declaredTotal('housing.stoneHouses', 'capacity.population')),
+    )
   })
 
   it('improves the building it targets and nothing else', () => {
@@ -146,6 +157,78 @@ describe('repeatable upgrades', () => {
     state.purchasedUpgrades[definition.id] = definition.repeatable!.maxPurchases
 
     expect(checkUpgradeRefusal(state, testRegistry, definition.id)).toBe('alreadyAtMaximum')
+  })
+})
+
+describe('a line that states its totals', () => {
+  const mineOutput = (state: ReturnType<typeof createRealm>) =>
+    resolveMultiplier(buildModifierIndexForState(state, testRegistry), 'buildingOutput.mine')
+
+  it('reaches the total a tier declares, not the product of the line', () => {
+    const state = createRealm({ raceId: 'human' })
+
+    state.purchasedUpgrades['mining.ironPicks'] = 1
+    expect(mineOutput(state)).toBeCloseTo(declaredTotal('mining.ironPicks', 'buildingOutput.mine'), 10)
+
+    state.purchasedUpgrades['mining.steelPicks'] = 1
+    expect(mineOutput(state)).toBeCloseTo(declaredTotal('mining.steelPicks', 'buildingOutput.mine'), 10)
+
+    state.purchasedUpgrades['mining.blastingPowder'] = 1
+    expect(mineOutput(state)).toBeCloseTo(
+      declaredTotal('mining.blastingPowder', 'buildingOutput.mine'),
+      10,
+    )
+  })
+
+  it('keeps what a later tier says nothing about', () => {
+    const state = createRealm({ raceId: 'human' })
+    state.purchasedUpgrades['military.drillYards'] = 1
+    state.purchasedUpgrades['military.standingArmy'] = 1
+    state.purchasedUpgrades['military.siegeEngines'] = 1
+    const index = buildModifierIndexForState(state, testRegistry)
+
+    expect(resolveMultiplier(index, 'warfare.attackPower')).toBeCloseTo(
+      declaredTotal('military.siegeEngines', 'warfare.attackPower'),
+      10,
+    )
+    expect(resolveMultiplier(index, 'capacity.army')).toBeCloseTo(
+      declaredTotal('military.standingArmy', 'capacity.army'),
+      10,
+    )
+  })
+
+  it('still compounds a repeatable, which has no later tier to take it over', () => {
+    const state = createRealm({ raceId: 'human' })
+    state.purchasedUpgrades['fortification.reinforceWalls'] = 10
+    const perPurchase = declaredTotal('fortification.reinforceWalls', 'warfare.casualtyRate')
+
+    expect(
+      resolveMultiplier(buildModifierIndexForState(state, testRegistry), 'warfare.casualtyRate'),
+    ).toBeCloseTo(perPurchase ** 10, 10)
+  })
+})
+
+describe('the masonry line', () => {
+  it('drains a long queue several times faster once it is fully adopted', () => {
+    const queueAHundredHouses = (state: ReturnType<typeof createRealm>) => {
+      for (let order = 0; order < 100; order += 1) {
+        queueBuilding(state, testRegistry, buildModifierIndexForState(state, testRegistry), 'house')
+      }
+      return state
+    }
+    const plainRealm = queueAHundredHouses(
+      createRealm({ raceId: 'dwarf', acres: 150, resources: generousStores }),
+    )
+    const skilledRealm = createRealm({ raceId: 'dwarf', acres: 150, resources: generousStores })
+    for (const upgradeId of ['masonry.workCrews', 'masonry.scaffolding', 'masonry.masterBuilders']) {
+      skilledRealm.purchasedUpgrades[upgradeId] = 1
+    }
+    queueAHundredHouses(skilledRealm)
+
+    const plainBuilt = advanceGame(plainRealm, 40, testRegistry).buildings.house
+    const skilledBuilt = advanceGame(skilledRealm, 40, testRegistry).buildings.house
+
+    expect(skilledBuilt).toBeGreaterThan(plainBuilt * 5)
   })
 })
 

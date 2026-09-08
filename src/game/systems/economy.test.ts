@@ -117,7 +117,14 @@ describe('food and famine', () => {
       buildModifierIndexForState(state, testRegistry),
     )
 
-    expect(consumption).toBeCloseTo(100 * BALANCE.population.foodEatenPerCitizenPerSecond * 0.9 * 0.85, 10)
+    const declaredTotal = testRegistry
+      .upgradesById.get('preservation.granaries')!
+      .modifiers.find((modifier) => modifier.target === 'consumption.food')!.value
+
+    expect(consumption).toBeCloseTo(
+      100 * BALANCE.population.foodEatenPerCitizenPerSecond * declaredTotal,
+      10,
+    )
   })
 
   it('leaves undead consumption at zero even with the preservation line adopted', () => {

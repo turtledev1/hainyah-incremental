@@ -13,7 +13,7 @@ import { useGameStore } from '../../game/store/gameStore'
 import { CardGrid } from '../components/CardGrid'
 import { CostList } from '../components/CostList'
 import { SectionCard } from '../components/SectionCard'
-import { stackModifiers, summariseModifiers } from '../modifierLabels'
+import { stackModifiers, summariseModifiers, upgradeTotal } from '../modifierLabels'
 import { describeUnmetRequirements } from '../upgradeLabels'
 import { contentKeys } from '../../i18n/contentKeys'
 
@@ -22,7 +22,13 @@ interface UpgradesPanelProps {
   readonly view: RealmView
 }
 
-function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readonly state: GameState }) {
+function UpgradeCard({
+  upgrade,
+  state,
+}: {
+  readonly upgrade: UpgradeView
+  readonly state: GameState
+}) {
   const { t } = useTranslation()
   const registry = useGameStore((store) => store.registry)
   const buyUpgrade = useGameStore((store) => store.buyUpgrade)
@@ -53,7 +59,12 @@ function UpgradeCard({ upgrade, state }: { readonly upgrade: UpgradeView; readon
         </Typography>
 
         <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.5 }}>
-          {summariseModifiers(upgrade.definition.modifiers, registry, t).map((effect) => (
+          {summariseModifiers(
+            upgrade.definition.modifiers,
+            registry,
+            t,
+            upgradeTotal,
+          ).map((effect) => (
             <Chip key={effect} size="small" variant="outlined" color="success" label={effect} />
           ))}
         </Stack>

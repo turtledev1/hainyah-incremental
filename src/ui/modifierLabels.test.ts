@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { CONTENT_REGISTRY } from '../game/content'
 import { i18n } from '../i18n'
-import { describeModifierEffect, stackModifiers, summariseModifiers } from './modifierLabels'
+import {
+  describeModifierEffect,
+  stackModifiers,
+  summariseModifiers,
+  upgradeTotal,
+} from './modifierLabels'
 import { contentKeys } from '../i18n/contentKeys'
 
 const translate = i18n.t.bind(i18n)
@@ -48,7 +53,7 @@ describe('telling the player what an upgrade changes', () => {
 
     const described = summariseModifiers(wagons.modifiers, CONTENT_REGISTRY, translate)
 
-    expect(described[0]).toBe('All production +15%')
+    expect(described[0]).toBe('All production +25%')
     expect(described).toContain('March speed +15%')
   })
 
@@ -117,6 +122,40 @@ describe('what a repeatable upgrade adds up to', () => {
     expect(
       stackModifiers([{ target: 'capacity.army', operation: 'add', value: 5 }], 4),
     ).toEqual([{ target: 'capacity.army', operation: 'add', value: 20 }])
+  })
+})
+
+describe('where a tier of an upgrade line lands', () => {
+  const totalsFor = (upgradeId: string) =>
+    summariseModifiers(
+      CONTENT_REGISTRY.upgradesById.get(upgradeId)!.modifiers,
+      CONTENT_REGISTRY,
+      translate,
+      upgradeTotal,
+    )
+
+  it('reads a line of tiers as a ladder of totals', () => {
+    expect(totalsFor('mining.ironPicks')).toEqual(['Mine output ×1.3'])
+    expect(totalsFor('mining.steelPicks')).toEqual(['Mine output ×1.8'])
+    expect(totalsFor('mining.blastingPowder')).toEqual(['Mine output ×2.9'])
+  })
+
+  it('reads a line of reductions as a shrinking multiplier', () => {
+    expect(totalsFor('preservation.rootCellars')).toEqual(['Hunger for food ×0.9'])
+    expect(totalsFor('preservation.coldVaults')).toEqual(['Hunger for food ×0.6'])
+  })
+
+  it('keeps enough precision for a repeatable tier worth a few percent', () => {
+    expect(totalsFor('fortification.reinforceWalls')).toEqual(['Battle casualties ×0.96'])
+    expect(totalsFor('bribery.guildBribes')).toEqual(['Heist success ×1.03'])
+  })
+
+  it('still collapses an improvement that lifts every resource into one line', () => {
+    expect(totalsFor('logistics.pavedRoads')).toEqual([
+      'All production ×1.5',
+      'March speed ×1.5',
+      'Thief speed ×1.3',
+    ])
   })
 })
 
