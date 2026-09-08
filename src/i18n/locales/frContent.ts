@@ -54,7 +54,7 @@ export const FR_CONTENT = {
       tagline: 'Ils n’ont pas faim, et ils ne restent pas morts.',
       advantages: [
         'Votre peuple ne mange jamais — les fermes sont inutiles, la famine impossible',
-        'Les armées ne subissent aucune perte, même si un assaut peut encore échouer',
+        'Rien de déjà mort ne peut mourir : aucune perte en bataille ni en larcin, même si l’un ou l’autre peut échouer',
         'Maîtrise du Cercle Sombre',
       ],
       disadvantages: [

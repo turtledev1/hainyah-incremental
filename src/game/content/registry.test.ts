@@ -75,12 +75,13 @@ describe('the content registry', () => {
 })
 
 describe('each playable race', () => {
-  it('delivers the undead promise: no hunger and no battle deaths', () => {
+  it('delivers the undead promise: no hunger, and no dying twice', () => {
     const state = createRealm({ raceId: 'undead', circleIds: ['dark'] })
     const modifiers = buildModifierIndexForState(state, testRegistry)
 
     expect(resolveMultiplier(modifiers, 'consumption.food')).toBe(0)
     expect(resolveMultiplier(modifiers, 'warfare.casualtyRate')).toBe(0)
+    expect(resolveMultiplier(modifiers, 'thievery.casualtyRate')).toBe(0)
   })
 
   it('delivers the dwarven promise: richer mines and quarries', () => {

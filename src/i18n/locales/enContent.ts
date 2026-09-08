@@ -53,7 +53,7 @@ export const EN_CONTENT = {
       tagline: 'They do not hunger, and they do not stay dead.',
       advantages: [
         'Your people never eat — farms are pointless, famine impossible',
-        'Armies suffer no casualties, though an assault can still fail',
+        'Nothing already dead can die again: no losses in battle or on a heist, though either can still fail',
         'Command of the Dark Circle',
       ],
       disadvantages: [

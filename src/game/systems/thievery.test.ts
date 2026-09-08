@@ -35,6 +35,35 @@ describe('sending thieves out', () => {
   })
 })
 
+describe('who comes back', () => {
+  const runJobs = (state: ReturnType<typeof guildRealm>, jobs: number) => {
+    let running = state
+    for (let job = 0; job < jobs; job += 1) {
+      launchHeist(running, testRegistry, 'granary')
+      running = advanceGame(running, GRANARY.durationSeconds + 1, testRegistry)
+    }
+    return running
+  }
+
+  it('brings every undead thief home, however the job goes', () => {
+    const state = guildRealm(GRANARY.requiredThieves * 4, 'undead')
+    const thievesBefore = state.thievesAtHome
+
+    const afterJobs = runJobs(state, 40)
+
+    expect(afterJobs.thievesAtHome).toBe(thievesBefore)
+  })
+
+  it('loses living thieves over the same run of jobs, so the promise means something', () => {
+    const state = guildRealm(GRANARY.requiredThieves * 4)
+    const thievesBefore = state.thievesAtHome
+
+    const afterJobs = runJobs(state, 40)
+
+    expect(afterJobs.thievesAtHome).toBeLessThan(thievesBefore)
+  })
+})
+
 describe('the odds of a job', () => {
   it('improves with the thievery upgrade line', () => {
     const plainRealm = guildRealm(10)

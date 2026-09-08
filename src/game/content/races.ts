@@ -36,6 +36,7 @@ export const RACE_DEFINITIONS: readonly RaceDefinition[] = [
     modifiers: [
       { target: 'consumption.food', operation: 'multiply', value: 0 },
       { target: 'warfare.casualtyRate', operation: 'multiply', value: 0 },
+      { target: 'thievery.casualtyRate', operation: 'multiply', value: 0 },
       { target: 'populationGrowthRate', operation: 'multiply', value: 0.6 },
       { target: 'magic.experienceGain', operation: 'multiply', value: 0.8 },
       { target: 'thievery.successChance', operation: 'multiply', value: 0.8 },
