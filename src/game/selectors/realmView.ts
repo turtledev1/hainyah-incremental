@@ -63,10 +63,10 @@ import {
 } from '../systems/upgrades'
 import {
   checkExpeditionRefusal,
+  armiesOutAgainst,
   computeAttackPowerEstimate,
   computeLegSeconds,
   computeTargetDefenseEstimate,
-  isTargetExhausted,
   timesConquered,
   type ExpeditionRefusal,
 } from '../systems/warfare'
@@ -109,7 +109,7 @@ export interface MagicCircleView {
 export interface ConquestTargetView {
   readonly definition: ConquestTargetDefinition
   readonly timesConquered: number
-  readonly isExhausted: boolean
+  readonly placesFree: number
   readonly estimatedAttackPower: number
   readonly estimatedDefense: number
   readonly estimatedLegSeconds: number
@@ -246,7 +246,7 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
     return {
       definition,
       timesConquered: timesConquered(state, definition.id),
-      isExhausted: isTargetExhausted(state, registry, definition.id),
+      placesFree: definition.placesInTheWorld - armiesOutAgainst(state, definition.id),
       estimatedAttackPower: computeAttackPowerEstimate(
         state,
         registry,

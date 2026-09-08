@@ -19,21 +19,13 @@ export function timesConquered(state: GameState, targetId: ConquestTargetId): nu
   return state.defeatedConquestTargets[targetId] ?? 0
 }
 
-export function isTargetExhausted(
-  state: GameState,
-  registry: ContentRegistry,
-  targetId: ConquestTargetId,
-): boolean {
-  const target = registry.conquestTargetsById.get(targetId)
-  if (!target) {
-    return true
-  }
-  return timesConquered(state, targetId) >= target.conquestLimit
+export function armiesOutAgainst(state: GameState, targetId: ConquestTargetId): number {
+  return state.expeditions.filter((expedition) => expedition.targetId === targetId).length
 }
 
 export const EXPEDITION_REFUSALS = [
   'unknownTarget',
-  'targetExhausted',
+  'everyPlaceUnderAttack',
   'notEnoughSoldiersAtHome',
   'noSoldiersSent',
 ] as const
@@ -50,8 +42,8 @@ export function checkExpeditionRefusal(
   if (!target) {
     return 'unknownTarget'
   }
-  if (isTargetExhausted(state, registry, targetId)) {
-    return 'targetExhausted'
+  if (armiesOutAgainst(state, targetId) >= target.placesInTheWorld) {
+    return 'everyPlaceUnderAttack'
   }
   if (soldiers > state.soldiersAtHome) {
     return 'notEnoughSoldiersAtHome'

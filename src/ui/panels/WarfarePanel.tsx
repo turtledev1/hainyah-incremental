@@ -36,14 +36,14 @@ function TargetCard({
 
   const refusal = target.refusalAtRecommendedForce
   const canSend =
-    !target.isExhausted && requestedSoldiers >= 1 && requestedSoldiers <= soldiersAtHome
+    target.placesFree > 0 && requestedSoldiers >= 1 && requestedSoldiers <= soldiersAtHome
   const powerPerSoldier =
     target.estimatedAttackPower / Math.max(1, target.definition.recommendedSoldiers)
   const projectedPower = powerPerSoldier * requestedSoldiers
   const isFavourable = projectedPower >= target.estimatedDefense
 
   return (
-    <Card sx={{ opacity: target.isExhausted ? 0.55 : 1 }}>
+    <Card>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.9 }}>
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 1 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -52,10 +52,7 @@ function TargetCard({
           <Chip
             size="small"
             variant="outlined"
-            label={t('realm.timesTaken', {
-              count: target.timesConquered,
-              limit: target.definition.conquestLimit,
-            })}
+            label={t('realm.timesTaken', { count: target.timesConquered })}
           />
         </Stack>
 
@@ -70,6 +67,11 @@ function TargetCard({
               strength: formatNumber(target.estimatedDefense),
             }),
             travel: formatDuration(target.estimatedLegSeconds),
+          })}
+          {' · '}
+          {t('realm.placesFree', {
+            count: target.placesFree,
+            places: target.definition.placesInTheWorld,
           })}
         </Typography>
 
@@ -94,16 +96,14 @@ function TargetCard({
 
         <Tooltip
           title={
-            target.isExhausted
-              ? t('refusals.expedition.targetExhausted')
+            target.placesFree <= 0
+              ? t('refusals.expedition.everyPlaceUnderAttack')
               : refusal && requestedSoldiers === target.definition.recommendedSoldiers
-                ? t(`refusals.expedition.${refusal}`)
-                : t('realm.forceAdvice', {
-                    count: target.definition.recommendedSoldiers,
-                    verdict: t(
-                      isFavourable ? 'realm.forceLooksEnough' : 'realm.forceLooksShort',
-                    ),
-                  })
+              ? t(`refusals.expedition.${refusal}`)
+              : t('realm.forceAdvice', {
+                  count: target.definition.recommendedSoldiers,
+                  verdict: t(isFavourable ? 'realm.forceLooksEnough' : 'realm.forceLooksShort'),
+                })
           }
         >
           <span>

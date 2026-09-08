@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
 import { advanceGame } from '../engine/tick'
+import { deriveRealmView } from '../selectors/realmView'
 import type { GameState } from '../model/state'
 import { checkExpeditionRefusal, computeLegSeconds, launchExpedition } from './warfare'
 
@@ -57,11 +58,63 @@ describe('sending an army', () => {
     )
   })
 
-  it('refuses a target that has already been taken as many times as it exists', () => {
-    const state = armedRealm(50)
-    state.defeatedConquestTargets.hamlet = HAMLET.conquestLimit
+  it('counts down the places the realm can still march on', () => {
+    const capital = testRegistry.conquestTargetsById.get('capital')!
+    const state = armedRealm(capital.recommendedSoldiers * 2)
+    const placesFreeForCapital = (realm: GameState) =>
+      deriveRealmView(realm, testRegistry).conquestTargets.find(
+        (target) => target.definition.id === 'capital',
+      )!.placesFree
 
-    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', 50)).toBe('targetExhausted')
+    expect(placesFreeForCapital(state)).toBe(capital.placesInTheWorld)
+
+    launchExpedition(state, testRegistry, 'capital', capital.recommendedSoldiers)
+
+    expect(placesFreeForCapital(state)).toBe(capital.placesInTheWorld - 1)
+  })
+
+  it('refuses a further army once every place of that kind is under attack', () => {
+    const twinThrones = testRegistry.conquestTargetsById.get('twinThrones')!
+    const state = armedRealm(twinThrones.recommendedSoldiers * 2)
+    launchExpedition(state, testRegistry, 'twinThrones', twinThrones.recommendedSoldiers)
+
+    expect(twinThrones.placesInTheWorld).toBe(1)
+    expect(
+      checkExpeditionRefusal(state, testRegistry, 'twinThrones', twinThrones.recommendedSoldiers),
+    ).toBe('everyPlaceUnderAttack')
+  })
+
+  it('lets as many armies out as the world has places of that kind', () => {
+    const capital = testRegistry.conquestTargetsById.get('capital')!
+    const state = armedRealm(capital.recommendedSoldiers * (capital.placesInTheWorld + 1))
+
+    for (let army = 0; army < capital.placesInTheWorld; army += 1) {
+      expect(
+        launchExpedition(state, testRegistry, 'capital', capital.recommendedSoldiers),
+      ).toBeUndefined()
+    }
+
+    expect(
+      checkExpeditionRefusal(state, testRegistry, 'capital', capital.recommendedSoldiers),
+    ).toBe('everyPlaceUnderAttack')
+  })
+
+  it('frees a place again once the army is home', () => {
+    const twinThrones = testRegistry.conquestTargetsById.get('twinThrones')!
+    const state = armedRealm(twinThrones.recommendedSoldiers)
+    launchExpedition(state, testRegistry, 'twinThrones', twinThrones.recommendedSoldiers)
+
+    const afterTheCampaign = advanceGame(state, twinThrones.travelSeconds * 2 + 2, testRegistry)
+
+    expect(afterTheCampaign.expeditions).toHaveLength(0)
+    expect(checkExpeditionRefusal(afterTheCampaign, testRegistry, 'twinThrones', 1)).toBeUndefined()
+  })
+
+  it('keeps taking a place that has been taken many times over', () => {
+    const state = armedRealm(50)
+    state.defeatedConquestTargets.hamlet = 500
+
+    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', 50)).toBeUndefined()
   })
 
   it('marches the soldiers out of the realm while they are away', () => {

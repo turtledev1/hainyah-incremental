@@ -142,8 +142,8 @@ export interface ConquestTargetDefinition {
   readonly acresGained: number
   readonly plunder: ResourceAmounts
   readonly travelSeconds: number
-  /** Times this target can be conquered; the world only holds so many cities. */
-  readonly conquestLimit: number
+  /** How many such places exist, so how many armies can be out against them at once. */
+  readonly placesInTheWorld: number
 }
 
 export interface ThieveryTargetDefinition {
