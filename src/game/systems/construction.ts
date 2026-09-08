@@ -34,14 +34,8 @@ export function unlockedBulkSteps(state: GameState): readonly number[] {
     .map((step) => step.size)
 }
 
-/** The queue has to hold whatever the largest available order can put in it. */
-export function maximumQueueLength(state: GameState): number {
-  return Math.max(BALANCE.construction.baseQueueLength, ...unlockedBulkSteps(state), 0)
-}
-
 export const CONSTRUCTION_REFUSALS = [
   'unknownBuilding',
-  'queueFull',
   'noFreeAcres',
   'cannotAffordCost',
 ] as const
@@ -57,9 +51,6 @@ export function checkConstructionRefusal(
   const building = registry.buildingsById.get(buildingId)
   if (!building) {
     return 'unknownBuilding'
-  }
-  if (state.constructionQueue.length >= maximumQueueLength(state)) {
-    return 'queueFull'
   }
   if (freeAcres(state, registry) < building.acreCost) {
     return 'noFreeAcres'

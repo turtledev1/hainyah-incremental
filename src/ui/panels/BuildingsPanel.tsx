@@ -123,7 +123,22 @@ function BuildingCard({
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
             {t(contentKeys.buildingName(building.definition.id))}
           </Typography>
-          <Typography sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>{formatNumber(building.count)}</Typography>
+          <Stack direction="row" sx={{ alignItems: 'baseline', gap: 0.5 }}>
+            <Typography sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
+              {formatNumber(building.count)}
+            </Typography>
+            {building.queued > 0 ? (
+              <Tooltip title={t('realm.goingUp', { count: building.queued })}>
+                <Typography
+                  variant="caption"
+                  color="primary"
+                  sx={{ fontFamily: NUMERIC_FONT_FAMILY }}
+                >
+                  +{formatNumber(building.queued)}
+                </Typography>
+              </Tooltip>
+            ) : null}
+          </Stack>
         </Stack>
 
         <Typography variant="body2" color="text.secondary">

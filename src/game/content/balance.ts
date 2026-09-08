@@ -76,8 +76,6 @@ export const BALANCE = {
   },
 
   construction: {
-    /** A short queue keeps early building decisions meaningful. */
-    baseQueueLength: 5,
     /**
      * Placing one order at a time is a decision on ten acres and an errand on ten
      * thousand, so larger steps open up as the realm grows.

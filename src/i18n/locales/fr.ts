@@ -85,7 +85,6 @@ export const frenchTranslations = {
   refusals: {
     construction: {
       unknownBuilding: 'Ce bâtiment n’existe pas.',
-      queueFull: 'Vos bâtisseurs ont déjà tout ce qu’ils peuvent porter.',
       noFreeAcres: 'Aucun acre libre pour bâtir — il faudra prendre plus de terres.',
       cannotAffordCost: 'Pas assez de matériaux.',
     },
@@ -334,6 +333,8 @@ export const frenchTranslations = {
     acresInUse: '{{used}} acres sur {{total}} occupés. Chaque bâtiment prend un acre.',
     nothingUnderConstruction: 'Personne ne bâtit quoi que ce soit.',
     underConstruction: 'Construction de {{buildingName}}',
+    goingUp_one: '{{count}} autre en construction',
+    goingUp_other: '{{count}} autres en construction',
     runHeadline: '{{raceName}} · {{played}} de jeu · {{circles}}',
     spellTier: 'rang {{tier}}',
     circleProgress: 'rang {{tier}} · {{experience}} / {{threshold}}',

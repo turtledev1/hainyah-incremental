@@ -4,7 +4,6 @@ import { advanceGame } from '../engine/tick'
 import {
   checkConstructionRefusal,
   demolishBuilding,
-  maximumQueueLength,
   buildingCost,
   queueBuilding,
   queueBuildings,
@@ -110,15 +109,26 @@ describe('queueing a building', () => {
     )
   })
 
-  it('refuses once the queue is full rather than accepting unlimited orders', () => {
+  it('takes as many orders as there are acres and materials for, and no fewer', () => {
     const state = createRealm({ acres: 40, resources: generousStores })
 
-    for (let order = 0; order < 5; order += 1) {
+    for (let order = 0; order < 30; order += 1) {
       expect(queueBuilding(state, testRegistry, modifiersFor(state), 'house')).toBeUndefined()
     }
 
+    expect(state.constructionQueue).toHaveLength(30)
+    expect(freeAcres(state, testRegistry)).toBe(10)
+  })
+
+  it('refuses only when the queue has reserved the last free acre', () => {
+    const state = createRealm({ acres: 12, resources: generousStores })
+
+    for (let order = 0; order < 12; order += 1) {
+      queueBuilding(state, testRegistry, modifiersFor(state), 'house')
+    }
+
     expect(checkConstructionRefusal(state, testRegistry, modifiersFor(state), 'house')).toBe(
-      'queueFull',
+      'noFreeAcres',
     )
   })
 })
@@ -263,15 +273,10 @@ describe('building in bulk', () => {
     expect(woodBefore - state.resources.wood).toBe(singleCost * 10)
   })
 
-  it('lets the queue hold a bulk order once the realm is large enough to place one', () => {
+  it('places a bulk order in one go', () => {
     const state = createRealm({ acres: 10_000, resources: generousStores })
 
-    expect(maximumQueueLength(state)).toBeGreaterThanOrEqual(100)
     expect(queueBuildings(state, testRegistry, modifiersFor(state), 'house', 100)).toBe(100)
-  })
-
-  it('still holds a small realm to a short queue', () => {
-    expect(maximumQueueLength(createRealm({ acres: 10 }))).toBe(5)
   })
 })
 

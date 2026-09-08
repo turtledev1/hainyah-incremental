@@ -74,6 +74,7 @@ import {
 export interface BuildingView {
   readonly definition: BuildingDefinition
   readonly count: number
+  readonly queued: number
   readonly workers: number
   readonly workerSlots: number
   readonly nextCost: ResourceAmounts
@@ -195,6 +196,7 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
     return {
       definition,
       count: state.buildings[definition.id],
+      queued: state.constructionQueue.filter((order) => order.buildingId === definition.id).length,
       workers: state.workerAssignments[definition.id],
       workerSlots: workerSlotsTotal(state, registry, definition.id),
       nextCost: buildingCost(registry, modifiers, definition.id),

@@ -84,7 +84,6 @@ export const englishTranslations = {
   refusals: {
     construction: {
       unknownBuilding: 'No such building.',
-      queueFull: 'Your builders already have all they can handle.',
       noFreeAcres: 'No free acre to build on — you will have to take more land.',
       cannotAffordCost: 'Not enough materials.',
     },
@@ -329,6 +328,8 @@ export const englishTranslations = {
     acresInUse: '{{used}} of {{total}} acres in use. Each building takes one acre.',
     nothingUnderConstruction: 'Nobody is building anything.',
     underConstruction: 'Building {{buildingName}}',
+    goingUp_one: '{{count}} more going up',
+    goingUp_other: '{{count}} more going up',
     runHeadline: '{{raceName}} · {{played}} played · {{circles}}',
     spellTier: 'tier {{tier}}',
     circleProgress: 'tier {{tier}} · {{experience}} / {{threshold}}',
