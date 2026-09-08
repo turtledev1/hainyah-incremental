@@ -39,14 +39,11 @@ export function computePopulationGrowthPerSecond(
     }
   }
 
-  /**
-   * The rate does not taper as housing fills — that made each citizen in a house
-   * slower than the last. It rises with the population instead, and counts whole
-   * citizens so the countdown stays exact between births.
-   */
+  /** Whole citizens only, so the countdown to the next birth holds still between births. */
   const arrivalsPerSecond =
     BALANCE.population.arrivalsPerSecond +
-    Math.floor(state.population) * BALANCE.population.extraArrivalsPerCitizenPerSecond
+    Math.sqrt(Math.floor(state.population)) *
+      BALANCE.population.extraArrivalsPerRootCitizenPerSecond
 
   return arrivalsPerSecond * populationGrowthMultiplier(modifiers)
 }

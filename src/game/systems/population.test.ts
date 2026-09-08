@@ -54,10 +54,18 @@ describe('when the next citizen arrives', () => {
 
     const justAfterBirth = advanceGame(state, atStart + 0.5, testRegistry)
 
+    const asIfNeverWaited = createRealm({
+      population: 1,
+      buildings: { house: 2 },
+      resources: wellFed,
+    })
     expect(Math.floor(justAfterBirth.population)).toBe(1)
     expect(
       secondsUntilNextCitizen(justAfterBirth, testRegistry, modifiersFor(justAfterBirth)),
-    ).toBeGreaterThan(atStart / 2)
+    ).toBeCloseTo(
+      secondsUntilNextCitizen(asIfNeverWaited, testRegistry, modifiersFor(asIfNeverWaited)),
+      0,
+    )
   })
 
   it('predicts the arrival closely enough to trust the countdown', () => {

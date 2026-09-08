@@ -7,8 +7,7 @@ export const BALANCE = {
 
   population: {
     arrivalsPerSecond: 0.035,
-    /** More people means more parents, so a bigger realm fills a new house faster. */
-    extraArrivalsPerCitizenPerSecond: 0.004,
+    extraArrivalsPerRootCitizenPerSecond: 0.04,
     foodEatenPerCitizenPerSecond: 0.05,
     /** Growth pauses unless the granary holds this many seconds of food. */
     foodReserveSecondsRequiredForGrowth: 20,
