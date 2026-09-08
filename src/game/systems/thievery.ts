@@ -140,6 +140,7 @@ function resolveHeist(
       scaleLoot(target.loot, lootFraction * resolveMultiplier(index, 'thievery.loot')),
     )
     state.statistics.heistsSucceeded += 1
+    state.highestThieveryTierRobbed = Math.max(state.highestThieveryTierRobbed, target.tier)
     emitEvent(
       state,
       'thievery',

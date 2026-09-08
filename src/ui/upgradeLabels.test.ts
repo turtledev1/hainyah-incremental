@@ -36,6 +36,14 @@ describe('telling the player how to unlock an improvement', () => {
     expect(requirementsFor(state)).toEqual([])
   })
 
+  it('names the mark that has to be robbed for a guild-gated improvement', () => {
+    const smokeBombs = CONTENT_REGISTRY.upgradesById.get('thievery.smokeBombs')!
+
+    expect(
+      describeUnmetRequirements(smokeBombs, createRealm(), CONTENT_REGISTRY, translate),
+    ).toContain("Needs Mason's Compound robbed")
+  })
+
   it('names the place that has to fall for a conquest-gated improvement', () => {
     const siegeEngines = CONTENT_REGISTRY.upgradesById.get('military.siegeEngines')!
 

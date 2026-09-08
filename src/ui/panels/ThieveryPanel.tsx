@@ -111,9 +111,11 @@ export function ThieveryPanel({ state, view }: ThieveryPanelProps) {
         })}
       >
         <CardGrid minimumColumnWidth={250}>
-          {view.thieveryTargets.map((target) => (
-            <MarkCard key={target.definition.id} target={target} />
-          ))}
+          {view.thieveryTargets
+            .filter((target) => target.isRevealed)
+            .map((target) => (
+              <MarkCard key={target.definition.id} target={target} />
+            ))}
         </CardGrid>
       </SectionCard>
     </Stack>

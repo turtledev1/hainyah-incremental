@@ -128,6 +128,33 @@ describe('sending an army', () => {
   })
 })
 
+describe('what the world shows a young realm', () => {
+  const revealedTargets = (state: GameState) =>
+    deriveRealmView(state, testRegistry)
+      .conquestTargets.filter((target) => target.isRevealed)
+      .map((target) => target.definition.id)
+
+  it('offers only the smallest place and the next one up at the start', () => {
+    expect(revealedTargets(createRealm())).toEqual(['hamlet', 'village'])
+  })
+
+  it('shows one more place for every tier actually taken', () => {
+    const state = createRealm()
+    state.highestConquestTierDefeated = 2
+
+    expect(revealedTargets(state)).toEqual(['hamlet', 'village', 'town', 'city'])
+  })
+
+  it('keeps the Twin Thrones out of sight until a city has fallen', () => {
+    const state = createRealm()
+    state.highestConquestTierDefeated = 3
+    expect(revealedTargets(state)).not.toContain('twinThrones')
+
+    state.highestConquestTierDefeated = 4
+    expect(revealedTargets(state)).toContain('twinThrones')
+  })
+})
+
 describe('estimating the journey', () => {
   it('quotes a dwarf a longer leg than the map promises, both ways', () => {
     const dwarfRealm = createRealm({ raceId: 'dwarf' })

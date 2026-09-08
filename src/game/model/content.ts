@@ -115,6 +115,7 @@ export interface UpgradeRequirements {
   /** Any circle the race can reach, since the choice is made at race selection. */
   readonly anyMagicCircleTier?: number
   readonly conquestTierDefeated?: number
+  readonly thieveryTierRobbed?: number
 }
 
 export interface UpgradeDefinition {

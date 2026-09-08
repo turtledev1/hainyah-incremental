@@ -98,6 +98,7 @@ export const englishTranslations = {
       missingBuildings: 'You do not have enough of the buildings this improves.',
       magicTierTooLow: 'Your circles are not deep enough yet.',
       conquestTierTooLow: 'You have not taken a settlement large enough to learn this.',
+      thieveryTierTooLow: 'Your guild has not robbed anywhere grand enough to learn this.',
       cannotAffordCost: 'Not enough materials.',
     },
     cast: {
@@ -392,6 +393,7 @@ export const englishTranslations = {
     requiresBuildings: 'Needs {{required}} × {{buildingName}} — you have {{owned}}',
     requiresMagicTier: 'Needs a circle at tier {{tier}}',
     requiresConquest: 'Needs {{targetName}} taken',
+    requiresHeist: 'Needs {{targetName}} robbed',
     forceAdvice_one: 'Balanced for {{count}} soldier. {{verdict}}',
     forceAdvice_other: 'Balanced for {{count}} soldiers. {{verdict}}',
     forceLooksEnough: 'The force you are sending should carry it.',

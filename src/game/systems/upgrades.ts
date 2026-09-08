@@ -34,6 +34,7 @@ export const UPGRADE_REFUSALS = [
   'missingBuildings',
   'magicTierTooLow',
   'conquestTierTooLow',
+  'thieveryTierTooLow',
   'cannotAffordCost',
 ] as const
 
@@ -72,6 +73,12 @@ export function checkUpgradeRefusal(
     state.highestConquestTierDefeated < upgrade.requires.conquestTierDefeated
   ) {
     return 'conquestTierTooLow'
+  }
+  if (
+    upgrade.requires.thieveryTierRobbed !== undefined &&
+    state.highestThieveryTierRobbed < upgrade.requires.thieveryTierRobbed
+  ) {
+    return 'thieveryTierTooLow'
   }
   if (!canAfford(state, upgradeCost(state, upgrade))) {
     return 'cannotAffordCost'
@@ -130,6 +137,12 @@ export function isUpgradeWithinReach(
   if (
     upgrade.requires.conquestTierDefeated !== undefined &&
     state.highestConquestTierDefeated < upgrade.requires.conquestTierDefeated
+  ) {
+    return false
+  }
+  if (
+    upgrade.requires.thieveryTierRobbed !== undefined &&
+    state.highestThieveryTierRobbed < upgrade.requires.thieveryTierRobbed
   ) {
     return false
   }

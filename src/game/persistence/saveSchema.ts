@@ -13,7 +13,7 @@ import type {
 import { BUILDING_IDS, MAGIC_CIRCLE_IDS, RESOURCE_IDS } from '../model/ids'
 import type { ExpeditionPhase, GameEvent, GameState, RunStatistics } from '../model/state'
 
-export const CURRENT_SAVE_FORMAT_VERSION = 1
+export const CURRENT_SAVE_FORMAT_VERSION = 2
 
 /**
  * Deliberately separate from `GameState`, and free of balance numbers: refactoring the
@@ -74,6 +74,7 @@ export interface PersistedSave {
   readonly revealedUpgradeIds: readonly UpgradeId[]
   readonly defeatedConquestTargets: Record<ConquestTargetId, number>
   readonly highestConquestTierDefeated: number
+  readonly highestThieveryTierRobbed: number
   readonly lastBattleSoldiersLost: number
   readonly completedAscensionStages: number
   readonly hasAscended: boolean
@@ -125,6 +126,7 @@ export function toPersistedSave(state: GameState, savedAtEpochMs: number): Persi
     revealedUpgradeIds: [...state.revealedUpgradeIds],
     defeatedConquestTargets: { ...state.defeatedConquestTargets },
     highestConquestTierDefeated: state.highestConquestTierDefeated,
+    highestThieveryTierRobbed: state.highestThieveryTierRobbed,
     lastBattleSoldiersLost: state.lastBattleSoldiersLost,
     completedAscensionStages: state.completedAscensionStages,
     hasAscended: state.hasAscended,
@@ -228,6 +230,7 @@ export function fromPersistedSave(save: PersistedSave, registry: ContentRegistry
     ].filter((upgradeId) => registry.upgradesById.has(upgradeId)),
     defeatedConquestTargets: { ...save.defeatedConquestTargets },
     highestConquestTierDefeated: save.highestConquestTierDefeated,
+    highestThieveryTierRobbed: save.highestThieveryTierRobbed,
     lastBattleSoldiersLost: save.lastBattleSoldiersLost,
     completedAscensionStages: save.completedAscensionStages,
     hasAscended: save.hasAscended,

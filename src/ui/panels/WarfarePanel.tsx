@@ -190,7 +190,9 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
         subtitle={t('panels.conquest.subtitle')}
       >
         <CardGrid minimumColumnWidth={280}>
-          {view.conquestTargets.map((target) => (
+          {view.conquestTargets
+            .filter((target) => target.isRevealed)
+            .map((target) => (
             <TargetCard
               key={target.definition.id}
               target={target}

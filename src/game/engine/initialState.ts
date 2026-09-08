@@ -52,6 +52,7 @@ export function createInitialGameState(options: NewRunOptions): GameState {
     revealedUpgradeIds: [],
     defeatedConquestTargets: {},
     highestConquestTierDefeated: 0,
+    highestThieveryTierRobbed: 0,
     lastBattleSoldiersLost: 0,
     completedAscensionStages: 0,
     hasAscended: false,

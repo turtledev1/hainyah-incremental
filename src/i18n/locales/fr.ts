@@ -99,6 +99,7 @@ export const frenchTranslations = {
       missingBuildings: 'Vous n’avez pas assez des bâtiments qu’elle améliore.',
       magicTierTooLow: 'Vos cercles ne sont pas encore assez profonds.',
       conquestTierTooLow: 'Vous n’avez pas encore pris de cité assez grande pour l’apprendre.',
+      thieveryTierTooLow: 'Votre guilde n’a pas encore dévalisé de lieu assez grand pour l’apprendre.',
       cannotAffordCost: 'Pas assez de matériaux.',
     },
     cast: {
@@ -402,6 +403,7 @@ export const frenchTranslations = {
     requiresBuildings: 'Demande {{required}} × {{buildingName}} — vous en avez {{owned}}',
     requiresMagicTier: 'Demande un cercle au rang {{tier}}',
     requiresConquest: 'Demande la prise de {{targetName}}',
+    requiresHeist: 'Demande le vol de {{targetName}}',
     forceAdvice_one: 'Calibré pour {{count}} soldat. {{verdict}}',
     forceAdvice_other: 'Calibré pour {{count}} soldats. {{verdict}}',
     forceLooksEnough: 'La force que vous envoyez devrait suffire.',

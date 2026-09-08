@@ -45,6 +45,23 @@ export function describeUnmetRequirements(
     unmet.push(translate('realm.requiresMagicTier', { tier: requiredMagicTier }))
   }
 
+  const requiredThieveryTier = upgrade.requires.thieveryTierRobbed
+  if (
+    requiredThieveryTier !== undefined &&
+    state.highestThieveryTierRobbed < requiredThieveryTier
+  ) {
+    const mark = registry.thieveryTargets.find(
+      (candidate) => candidate.tier === requiredThieveryTier,
+    )
+    unmet.push(
+      translate('realm.requiresHeist', {
+        targetName: mark
+          ? translate(contentKeys.thieveryTargetName(mark.id))
+          : translate('realm.somewhere'),
+      }),
+    )
+  }
+
   const requiredConquestTier = upgrade.requires.conquestTierDefeated
   if (
     requiredConquestTier !== undefined &&

@@ -1,5 +1,10 @@
+import { THIEVERY_TARGET_DEFINITIONS } from '../content/thieveryTargets'
 import type { PersistedSave } from './saveSchema'
 import { CURRENT_SAVE_FORMAT_VERSION } from './saveSchema'
+
+const HIGHEST_THIEVERY_TIER = Math.max(
+  ...THIEVERY_TARGET_DEFINITIONS.map((target) => target.tier),
+)
 
 /** One entry per format bump. `fromVersion` is the version the step upgrades away from. */
 interface SaveMigration {
@@ -8,7 +13,16 @@ interface SaveMigration {
   readonly apply: (save: Record<string, unknown>) => Record<string, unknown>
 }
 
-export const SAVE_MIGRATIONS: readonly SaveMigration[] = []
+export const SAVE_MIGRATIONS: readonly SaveMigration[] = [
+  {
+    fromVersion: 1,
+    describe: 'Marks are revealed a tier at a time; a save from before had them all.',
+    apply: (save) => ({
+      ...save,
+      highestThieveryTierRobbed: HIGHEST_THIEVERY_TIER,
+    }),
+  },
+]
 
 export function migrateSave(rawSave: Record<string, unknown>): PersistedSave {
   let working = rawSave

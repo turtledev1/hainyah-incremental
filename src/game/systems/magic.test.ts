@@ -12,6 +12,8 @@ import {
   tiersUnlockedInCircle,
 } from './magic'
 import { buildModifierIndexForState, resolveMultiplier } from './modifiers'
+import type { GameState } from '../model/state'
+import { deriveRealmView } from '../selectors/realmView'
 
 function castOn(state: ReturnType<typeof createRealm>, spellId: string) {
   return castSpell(state, testRegistry, spellId, createRandomNumberGenerator(state))
@@ -83,6 +85,34 @@ describe('circle experience', () => {
     expect(advanced.magic.experience.water).toBeGreaterThan(0)
     expect(advanced.magic.experience.water).toBeCloseTo(advanced.magic.experience.dark, 10)
     expect(advanced.magic.experience.fire).toBe(0)
+  })
+})
+
+describe('which spells a circle shows', () => {
+  const revealedSpells = (state: GameState) =>
+    deriveRealmView(state, testRegistry)
+      .spells.filter((spell) => spell.isRevealed)
+      .map((spell) => spell.definition.tier)
+
+  it('shows only the first tier before a temple has taught anything', () => {
+    expect(revealedSpells(createRealm({ circleIds: ['fire'] }))).toEqual([1])
+  })
+
+  it('shows the tier just beyond what the circle has reached', () => {
+    const state = createRealm({ circleIds: ['fire'] })
+    state.magic.experience.fire = BALANCE.magic.tierExperienceThresholds[2]!
+
+    expect(revealedSpells(state)).toEqual([1, 2, 3, 4])
+  })
+
+  it('shows both circles an elf studies, each at its own depth', () => {
+    const state = createRealm({ raceId: 'elf', circleIds: ['dark', 'water'] })
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[1]!
+
+    const revealed = deriveRealmView(state, testRegistry).spells.filter((spell) => spell.isRevealed)
+
+    expect(revealed.filter((spell) => spell.definition.circleId === 'dark')).toHaveLength(3)
+    expect(revealed.filter((spell) => spell.definition.circleId === 'water')).toHaveLength(1)
   })
 })
 

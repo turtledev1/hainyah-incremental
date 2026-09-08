@@ -207,9 +207,11 @@ export function MagicPanel({ state, view }: MagicPanelProps) {
         })}
       >
         <CardGrid minimumColumnWidth={250}>
-          {view.spells.map((spell) => (
-            <SpellCard key={spell.definition.id} spell={spell} />
-          ))}
+          {view.spells
+            .filter((spell) => spell.isRevealed)
+            .map((spell) => (
+              <SpellCard key={spell.definition.id} spell={spell} />
+            ))}
         </CardGrid>
       </SectionCard>
     </Stack>

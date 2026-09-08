@@ -277,7 +277,11 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     id: 'thievery.smokeBombs',
     lineId: 'thievery',
     costs: { wood: 3_000, stone: 1_500, gold: 5_000 },
-    requires: { upgradeIds: ['thievery.lockpicks'], buildingCounts: { thievesGuild: 3 } },
+    requires: {
+      upgradeIds: ['thievery.lockpicks'],
+      buildingCounts: { thievesGuild: 3 },
+      thieveryTierRobbed: 2,
+    },
     modifiers: [
       { target: 'thievery.casualtyRate', operation: 'multiply', value: 0.7 },
       { target: 'thievery.loot', operation: 'multiply', value: 1.25 },
@@ -291,6 +295,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       upgradeIds: ['thievery.smokeBombs'],
       buildingCounts: { thievesGuild: 8 },
       anyMagicCircleTier: 3,
+      thieveryTierRobbed: 4,
     },
     modifiers: [
       { target: 'thievery.successChance', operation: 'multiply', value: 1.5 },
@@ -366,7 +371,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
     id: 'bribery.guildBribes',
     lineId: 'bribery',
     costs: { gold: 9_000 },
-    requires: { buildingCounts: { thievesGuild: 2 } },
+    requires: { buildingCounts: { thievesGuild: 2 }, thieveryTierRobbed: 3 },
     modifiers: [{ target: 'thievery.successChance', operation: 'multiply', value: 1.03 }],
     repeatable: { maxPurchases: 12, costGrowth: 1.4 },
   },

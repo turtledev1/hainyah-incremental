@@ -95,6 +95,7 @@ export interface UpgradeView {
 export interface SpellView {
   readonly definition: SpellDefinition
   readonly isUnlocked: boolean
+  readonly isRevealed: boolean
   readonly cooldownRemainingSeconds: number
   readonly refusal?: CastRefusal
 }
@@ -110,6 +111,7 @@ export interface ConquestTargetView {
   readonly definition: ConquestTargetDefinition
   readonly timesConquered: number
   readonly placesFree: number
+  readonly isRevealed: boolean
   readonly estimatedAttackPower: number
   readonly estimatedDefense: number
   readonly estimatedLegSeconds: number
@@ -119,6 +121,7 @@ export interface ConquestTargetView {
 export interface ThieveryTargetView {
   readonly definition: ThieveryTargetDefinition
   readonly successChance: number
+  readonly isRevealed: boolean
   readonly refusal?: HeistRefusal
 }
 
@@ -223,6 +226,8 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
     .map((definition) => ({
       definition,
       isUnlocked: isSpellUnlocked(state, registry, definition),
+      isRevealed:
+        definition.tier <= tiersUnlockedInCircle(state, registry, definition.circleId) + 1,
       cooldownRemainingSeconds: state.magic.spellCooldowns[definition.id] ?? 0,
       refusal: checkCastRefusal(state, registry, definition.id),
     }))
@@ -247,6 +252,7 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
       definition,
       timesConquered: timesConquered(state, definition.id),
       placesFree: definition.placesInTheWorld - armiesOutAgainst(state, definition.id),
+      isRevealed: definition.tier <= state.highestConquestTierDefeated + 2,
       estimatedAttackPower: computeAttackPowerEstimate(
         state,
         registry,
@@ -267,6 +273,7 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
   const thieveryTargets: ThieveryTargetView[] = registry.thieveryTargets.map((definition) => ({
     definition,
     successChance: computeSuccessChance(state, registry, definition.id),
+    isRevealed: definition.tier <= state.highestThieveryTierRobbed + 2,
     refusal: checkHeistRefusal(state, registry, definition.id),
   }))
 

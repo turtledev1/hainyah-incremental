@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
 import { BALANCE } from '../content/balance'
 import { advanceGame } from '../engine/tick'
+import { deriveRealmView } from '../selectors/realmView'
 import { checkHeistRefusal, computeSuccessChance, launchHeist } from './thievery'
 
 const GRANARY = testRegistry.thieveryTargetsById.get('granary')!
@@ -61,6 +62,34 @@ describe('who comes back', () => {
     const afterJobs = runJobs(state, 40)
 
     expect(afterJobs.thievesAtHome).toBeLessThan(thievesBefore)
+  })
+})
+
+describe('what the guild shows a young realm', () => {
+  const revealedMarks = (state: ReturnType<typeof guildRealm>) =>
+    deriveRealmView(state, testRegistry)
+      .thieveryTargets.filter((target) => target.isRevealed)
+      .map((target) => target.definition.id)
+
+  it('offers only the easiest mark and the next one up at the start', () => {
+    expect(revealedMarks(guildRealm(10))).toEqual(['granary', 'timberYard', 'masonsCompound'])
+  })
+
+  it('shows one more mark once a tier has actually been robbed', () => {
+    let state = guildRealm(GRANARY.requiredThieves * 5)
+    for (let job = 0; job < 5; job += 1) {
+      launchHeist(state, testRegistry, 'granary')
+      state = advanceGame(state, GRANARY.durationSeconds + 1, testRegistry)
+    }
+
+    expect(state.statistics.heistsSucceeded).toBeGreaterThan(0)
+    expect(state.highestThieveryTierRobbed).toBe(GRANARY.tier)
+    expect(revealedMarks(state)).toEqual([
+      'granary',
+      'timberYard',
+      'masonsCompound',
+      'countingHouse',
+    ])
   })
 })
 

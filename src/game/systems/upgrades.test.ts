@@ -160,6 +160,38 @@ describe('repeatable upgrades', () => {
   })
 })
 
+describe('improvements the guild has to earn', () => {
+  const generousGuild = {
+    resources: generousStores,
+    buildings: { thievesGuild: 12 },
+  } as const
+
+  it('refuses a thievery improvement until a mark of that standing has been robbed', () => {
+    const state = createRealm(generousGuild)
+    state.purchasedUpgrades['thievery.lockpicks'] = 1
+
+    expect(checkUpgradeRefusal(state, testRegistry, 'thievery.smokeBombs')).toBe(
+      'thieveryTierTooLow',
+    )
+
+    state.highestThieveryTierRobbed = 2
+
+    expect(checkUpgradeRefusal(state, testRegistry, 'thievery.smokeBombs')).toBeUndefined()
+  })
+
+  it('keeps such an improvement out of the list until then', () => {
+    const state = createRealm(generousGuild)
+    state.purchasedUpgrades['thievery.lockpicks'] = 1
+    const smokeBombs = testRegistry.upgradesById.get('thievery.smokeBombs')!
+
+    expect(isUpgradeWithinReach(state, testRegistry, smokeBombs)).toBe(false)
+
+    state.highestThieveryTierRobbed = 2
+
+    expect(isUpgradeWithinReach(state, testRegistry, smokeBombs)).toBe(true)
+  })
+})
+
 describe('a line that states its totals', () => {
   const mineOutput = (state: ReturnType<typeof createRealm>) =>
     resolveMultiplier(buildModifierIndexForState(state, testRegistry), 'buildingOutput.mine')
