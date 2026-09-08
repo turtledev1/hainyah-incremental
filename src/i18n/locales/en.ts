@@ -103,6 +103,7 @@ export const englishTranslations = {
       tierLocked: 'Your temples have not learned this yet.',
       onCooldown: 'The circle needs time before it will answer again.',
       notEnoughMana: 'Not enough mana.',
+      boostAlreadyWaiting: 'This one already waits on your next raid.',
     },
     expedition: {
       unknownTarget: 'No such place.',

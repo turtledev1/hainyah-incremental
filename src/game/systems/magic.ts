@@ -68,6 +68,7 @@ export const CAST_REFUSALS = [
   'tierLocked',
   'onCooldown',
   'notEnoughMana',
+  'boostAlreadyWaiting',
 ] as const
 
 export type CastRefusal = (typeof CAST_REFUSALS)[number]
@@ -92,6 +93,13 @@ export function checkCastRefusal(
   }
   if (state.magic.mana < spell.manaCost) {
     return 'notEnoughMana'
+  }
+  /** A waiting boost has no duration, so there is nothing for a second cast to refresh. */
+  if (
+    spell.effect.kind === 'pendingBoost' &&
+    state.magic.pendingBoosts.some((boost) => boost.spellId === spellId)
+  ) {
+    return 'boostAlreadyWaiting'
   }
   return undefined
 }
@@ -130,9 +138,6 @@ export function castSpell(
       break
     }
     case 'pendingBoost': {
-      state.magic.pendingBoosts = state.magic.pendingBoosts.filter(
-        (boost) => boost.spellId !== spellId,
-      )
       state.magic.pendingBoosts.push({
         spellId,
         consumeOn: spell.effect.consumeOn,

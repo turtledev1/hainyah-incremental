@@ -204,6 +204,33 @@ describe('casting', () => {
     expect(modifiersFromSpellIds(testRegistry, claimedByExpedition)).toHaveLength(1)
   })
 
+  it('refuses a boost already waiting rather than spending the mana on nothing', () => {
+    const state = createRealm({ circleIds: ['dark'] })
+    state.magic.experience.dark = 100
+    state.magic.mana = 500
+    castOn(state, 'dark.blight')
+    state.magic.spellCooldowns['dark.blight'] = 0
+    const manaAfterFirstCast = state.magic.mana
+
+    expect(castOn(state, 'dark.blight')).toBe('boostAlreadyWaiting')
+
+    expect(state.magic.pendingBoosts).toHaveLength(1)
+    expect(state.magic.mana).toBe(manaAfterFirstCast)
+  })
+
+  it('lets the boost be cast again once a raid has claimed the waiting one', () => {
+    const state = createRealm({ circleIds: ['dark'] })
+    state.magic.experience.dark = 100
+    state.magic.mana = 500
+    castOn(state, 'dark.blight')
+    state.magic.spellCooldowns['dark.blight'] = 0
+    consumePendingBoosts(state, 'expedition')
+
+    expect(castOn(state, 'dark.blight')).toBeUndefined()
+
+    expect(state.magic.pendingBoosts).toHaveLength(1)
+  })
+
   it('does not let a heist claim a boost meant for an army', () => {
     const state = createRealm({ circleIds: ['dark'] })
     state.magic.experience.dark = 100
