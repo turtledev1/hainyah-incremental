@@ -70,16 +70,12 @@ export const frenchTranslations = {
     terraformNeeds:
       'Façonner la Terre demande {{stone, compactNumber}} de pierre et {{wood, compactNumber}} de bois.',
     terraformLifts: 'Façonner la Terre soulève un nouvel acre hors de l’eau.',
-    ledgerBalanced: 'Le registre est déjà équilibré — rien à échanger.',
     ledgerEmpty: 'Il n’y a rien dans le registre à échanger.',
     transmuted:
-      'Transmutation change {{taken, compactNumber}} de $t({{source}}) en {{gained, compactNumber}} de $t({{destination}}).',
+      'Transmutation dépense {{taken, compactNumber}} de $t({{source}}) pour {{gained, compactNumber}} de tout le reste.',
     sacrificeRefused: 'On n’offre rien à Yah, et Yah ne donne rien.',
-    sacrificed_one: 'Sacrifice cède {{count}} habitant contre un monceau de biens.',
-    sacrificed_other: 'Sacrifice cède {{count}} habitants contre un monceau de biens.',
-    raiseThrallSilent: 'Rien ne répond — aucun mort récent, ou aucune caserne pour les tenir.',
-    raiseThrallCalls_one: 'Lever les Serfs rappelle {{count}} soldat du champ de bataille.',
-    raiseThrallCalls_other: 'Lever les Serfs rappelle {{count}} soldats du champ de bataille.',
+    sacrificed_one: 'Sacrifice cède {{count}} habitant contre le prix de son travail.',
+    sacrificed_other: 'Sacrifice cède {{count}} habitants contre le prix de leur travail.',
   },
 
   refusals: {

@@ -44,6 +44,14 @@ export const BALANCE = {
     /** Transmute is a utility for a shortage, so it comes round sooner. */
     transmuteCooldownSeconds: 30 * 60,
     tierExperienceThresholds: [100, 600, 2_500, 10_000, 50_000, 250_000],
+
+    transmuteShareOfLargestStore: 0.1,
+    sacrificeShareOfPopulation: 0.1,
+    /** Growth refills a tenth of a realm in two to five minutes, so this is a modest tap. */
+    sacrificeSecondsOfOutput: 60 * 60,
+    /** A floor, for a realm that produces almost nothing yet. */
+    sacrificeMinimumPerHead: { wood: 90, stone: 90, gold: 45 },
+    barrowLegionArmyCapacityMultiplier: 2,
   },
 
   warfare: {

@@ -69,16 +69,12 @@ export const englishTranslations = {
     terraformNeeds:
       'Terraform needs {{stone, compactNumber}} stone and {{wood, compactNumber}} wood.',
     terraformLifts: 'Terraform lifts a new acre out of the water.',
-    ledgerBalanced: 'The ledger is already balanced — nothing to trade.',
     ledgerEmpty: 'There is nothing in the ledger to trade.',
     transmuted:
-      'Transmute turns {{taken, compactNumber}} $t({{source}}) into {{gained, compactNumber}} $t({{destination}}).',
+      'Transmute spends {{taken, compactNumber}} $t({{source}}) for {{gained, compactNumber}} of everything else.',
     sacrificeRefused: 'Yah is offered nothing, and gives nothing.',
-    sacrificed_one: 'Sacrifice gives up {{count}} citizen for a mound of goods.',
-    sacrificed_other: 'Sacrifice gives up {{count}} citizens for a mound of goods.',
-    raiseThrallSilent: 'Nothing answers — no recent dead, or no barracks to hold them.',
-    raiseThrallCalls_one: 'Raise Thrall calls up {{count}} soldier from the field.',
-    raiseThrallCalls_other: 'Raise Thrall calls up {{count}} soldiers from the field.',
+    sacrificed_one: 'Sacrifice gives up {{count}} citizen for what their work was worth.',
+    sacrificed_other: 'Sacrifice gives up {{count}} citizens for what their work was worth.',
   },
 
   refusals: {

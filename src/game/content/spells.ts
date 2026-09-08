@@ -1,9 +1,10 @@
 import { contentKeys } from '../../i18n/contentKeys'
 import type { SpellDefinition, SpellEffectContext } from '../model/content'
-import type { ResourceId } from '../model/ids'
+import type { ResourceAmounts, ResourceId } from '../model/ids'
 import { RESOURCE_IDS } from '../model/ids'
 import { capacityOf } from '../systems/capacity'
 import { grantAcres } from '../systems/land'
+import { computeProductionPerSecond } from '../systems/production'
 import {
   addResource,
   addResources,
@@ -31,12 +32,6 @@ function circleTiersUnlocked(context: SpellEffectContext, circleId: 'dark'): num
 function mostAbundantResource(context: SpellEffectContext): ResourceId {
   return RESOURCE_IDS.reduce((best, candidate) =>
     context.state.resources[candidate] > context.state.resources[best] ? candidate : best,
-  )
-}
-
-function scarcestResource(context: SpellEffectContext): ResourceId {
-  return RESOURCE_IDS.reduce((worst, candidate) =>
-    context.state.resources[candidate] < context.state.resources[worst] ? candidate : worst,
   )
 }
 
@@ -447,25 +442,25 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
       kind: 'instant',
       apply: (context) => {
         const source = mostAbundantResource(context)
-        const destination = scarcestResource(context)
-        if (source === destination) {
-          context.emit('magic', 'chronicle.ledgerBalanced')
-          return
-        }
-        const amountTaken = context.state.resources[source] * 0.1
+        const amountTaken =
+          context.state.resources[source] * BALANCE.magic.transmuteShareOfLargestStore
         if (amountTaken <= 0) {
           context.emit('magic', 'chronicle.ledgerEmpty')
           return
         }
         const efficiency = 0.5 + 0.1 * circleTiersUnlocked(context, 'dark')
+        const destinations = RESOURCE_IDS.filter((resourceId) => resourceId !== source)
+        const gainedEach = (amountTaken * efficiency) / destinations.length
+
         addResource(context.state, source, -amountTaken)
-        addResource(context.state, destination, amountTaken * efficiency)
+        for (const destination of destinations) {
+          addResource(context.state, destination, gainedEach)
+        }
         context.state.magic.transmutationsPerformed += 1
         context.emit('magic', 'chronicle.transmuted', {
           taken: Math.floor(amountTaken),
           source: contentKeys.resourceName(source),
-          gained: Math.floor(amountTaken * efficiency),
-          destination: contentKeys.resourceName(destination),
+          gained: Math.floor(gainedEach),
         })
       },
     },
@@ -478,47 +473,57 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
     effect: {
       kind: 'instant',
+      /** Paid from output, so a people who farm nothing are owed no food. */
       apply: (context) => {
-        const offered = Math.max(1, Math.floor(context.state.population * 0.1))
+        const citizensBefore = Math.max(1, Math.floor(context.state.population))
+        const offered = Math.max(
+          1,
+          Math.floor(context.state.population * BALANCE.magic.sacrificeShareOfPopulation),
+        )
         const sacrificed = removeCitizens(context.state, offered)
         if (sacrificed <= 0) {
           context.emit('magic', 'chronicle.sacrificeRefused')
           return
         }
-        addResources(context.state, {
-          food: sacrificed * 120,
-          wood: sacrificed * 90,
-          stone: sacrificed * 90,
-          gold: sacrificed * 45,
-        })
+
+        const production = computeProductionPerSecond(
+          context.state,
+          context.registry,
+          context.modifiers,
+        )
+        const shareGivenUp = sacrificed / citizensBefore
+        const minimumPerHead: ResourceAmounts = BALANCE.magic.sacrificeMinimumPerHead
+        const paid: ResourceAmounts = {}
+        for (const resourceId of RESOURCE_IDS) {
+          const fromOutput =
+            production[resourceId] * BALANCE.magic.sacrificeSecondsOfOutput * shareGivenUp
+          const floor = (minimumPerHead[resourceId] ?? 0) * sacrificed
+          paid[resourceId] = Math.max(fromOutput, floor)
+        }
+
+        addResources(context.state, paid)
         context.emit('magic', 'chronicle.sacrificed', { count: sacrificed })
       },
     },
   },
   {
-    id: 'dark.raiseThrall',
+    id: 'dark.barrowLegion',
     circleId: 'dark',
     tier: 4,
-    manaCost: manaCostForTier(4),
-    cooldownSeconds: BALANCE.magic.instantCooldownSeconds,
+    manaCost: burstManaCostForTier(4),
+    cooldownSeconds: BALANCE.magic.burstCooldownSeconds,
+    /** Soldiers over capacity desert once it fades, and desertion spares an army marching. */
     effect: {
-      kind: 'instant',
-      apply: (context) => {
-        const armyCapacity = capacityOf(context.state, context.registry, context.modifiers, 'army')
-        const currentSoldiers =
-          context.state.soldiersAtHome +
-          context.state.expeditions.reduce((total, expedition) => total + expedition.soldiers, 0)
-        const room = Math.max(0, armyCapacity - currentSoldiers)
-        const raised = Math.min(room, context.state.lastBattleSoldiersLost)
-        if (raised <= 0) {
-          context.emit('magic', 'chronicle.raiseThrallSilent')
-          return
-        }
-        context.state.population += raised
-        context.state.soldiersAtHome += raised
-        context.state.lastBattleSoldiersLost -= raised
-        context.emit('magic', 'chronicle.raiseThrallCalls', { count: raised })
-      },
+      kind: 'buff',
+      shape: 'burst',
+      durationSeconds: BALANCE.magic.burstDurationSeconds,
+      modifiers: [
+        {
+          target: 'capacity.army',
+          operation: 'multiply',
+          value: BALANCE.magic.barrowLegionArmyCapacityMultiplier,
+        },
+      ],
     },
   },
   {
@@ -540,13 +545,19 @@ const DARK_SPELLS: readonly SpellDefinition[] = [
     tier: 6,
     manaCost: manaCostForTier(6),
     cooldownSeconds: BALANCE.magic.sustainedCooldownSeconds,
+    /** The mana price lands harder on a one-circle people: the pool scales with circles studied. */
     effect: {
       kind: 'buff',
       shape: 'sustained',
       durationSeconds: BALANCE.magic.sustainedDurationSeconds,
       modifiers: [
-        { target: 'warfare.attackPower', operation: 'multiply', value: 1.8 },
-        { target: 'warfare.casualtyRate', operation: 'multiply', value: 0.25 },
+        { target: 'magic.manaRegen', operation: 'multiply', value: 0 },
+        ...RESOURCE_IDS.map((resourceId) => ({
+          target: `production.${resourceId}` as const,
+          operation: 'multiply' as const,
+          value: 2,
+        })),
+        { target: 'warfare.attackPower', operation: 'multiply', value: 2 },
       ],
     },
   },

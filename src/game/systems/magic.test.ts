@@ -12,6 +12,7 @@ import {
   tiersUnlockedInCircle,
 } from './magic'
 import { buildModifierIndexForState, resolveMultiplier } from './modifiers'
+import { capacityOf } from './capacity'
 import type { GameState } from '../model/state'
 import { deriveRealmView } from '../selectors/realmView'
 
@@ -224,7 +225,7 @@ describe('casting', () => {
     expect(state.resources.gold).toBeGreaterThan(0)
   })
 
-  it('has Transmute move value from the largest store into the smallest', () => {
+  it('spends Transmute from the largest store and spreads it over every other resource', () => {
     const state = createRealm({
       circleIds: ['dark'],
       resources: { wood: 10_000, stone: 100, food: 5_000, gold: 3_000 },
@@ -236,6 +237,24 @@ describe('casting', () => {
 
     expect(state.resources.wood).toBeCloseTo(9_000, 6)
     expect(state.resources.stone).toBeGreaterThan(100)
+    expect(state.resources.food).toBeGreaterThan(5_000)
+    expect(state.resources.gold).toBeGreaterThan(3_000)
+  })
+
+  it('never routes a transmutation into a single resource the realm cannot spend', () => {
+    const state = createRealm({
+      raceId: 'undead',
+      circleIds: ['dark'],
+      resources: { wood: 10_000, stone: 0, food: 0, gold: 0 },
+    })
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[1]!
+    state.magic.mana = 500
+
+    castOn(state, 'dark.transmute')
+
+    expect(state.resources.stone).toBeGreaterThan(0)
+    expect(state.resources.gold).toBeGreaterThan(0)
+    expect(state.resources.stone).toBeCloseTo(state.resources.gold, 10)
   })
 
   it('trades Transmute at a loss until the Dark Circle is deep, and better once it is', () => {
@@ -260,17 +279,112 @@ describe('casting', () => {
     expect(deepRealm.resources.stone).toBeGreaterThan(shallowRealm.resources.stone)
   })
 
-  it('refuses to raise thralls when nobody has died recently', () => {
-    const state = createRealm({ circleIds: ['dark'], buildings: { barracks: 2 }, workers: { barracks: 4 }, population: 20 })
-    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[3]!
+  it('pays a sacrifice out of what the realm produces, so the trade keeps pace with the realm', () => {
+    const smallRealm = createRealm({
+      circleIds: ['dark'],
+      population: 200,
+      buildings: { house: 60, quarry: 4 },
+      workers: { quarry: 12 },
+      resources: { food: 100_000 },
+    })
+    const largeRealm = createRealm({
+      circleIds: ['dark'],
+      population: 200,
+      buildings: { house: 60, quarry: 40 },
+      workers: { quarry: 120 },
+      resources: { food: 100_000 },
+    })
+    for (const realm of [smallRealm, largeRealm]) {
+      realm.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[2]!
+      realm.magic.mana = 500
+      castOn(realm, 'dark.sacrifice')
+    }
+
+    expect(largeRealm.resources.stone).toBeGreaterThan(smallRealm.resources.stone)
+  })
+
+  it('pays an undead realm no food for a sacrifice, because an undead realm farms none', () => {
+    const state = createRealm({
+      raceId: 'undead',
+      circleIds: ['dark'],
+      population: 200,
+      buildings: { house: 60, quarry: 20 },
+      workers: { quarry: 60 },
+    })
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[2]!
     state.magic.mana = 500
 
-    castOn(state, 'dark.raiseThrall')
+    castOn(state, 'dark.sacrifice')
 
-    expect(state.soldiersAtHome).toBe(0)
+    expect(state.resources.food).toBe(0)
+    expect(state.resources.stone).toBeGreaterThan(0)
+  })
+
+  it('lets a barracks hold twice its soldiers while the Barrow Legion stands', () => {
+    const state = createRealm({
+      circleIds: ['dark'],
+      population: 200,
+      buildings: { house: 60, barracks: 4 },
+      workers: { barracks: 8 },
+      resources: { food: 100_000 },
+    })
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[3]!
+    state.magic.mana = 500
+    const capacityBefore = capacityOf(
+      state,
+      testRegistry,
+      buildModifierIndexForState(state, testRegistry),
+      'army',
+    )
+
+    expect(castOn(state, 'dark.barrowLegion')).toBeUndefined()
+
     expect(
-      state.eventLog.some((event) => event.messageKey === 'chronicle.raiseThrallSilent'),
-    ).toBe(true)
+      capacityOf(state, testRegistry, buildModifierIndexForState(state, testRegistry), 'army'),
+    ).toBe(capacityBefore * BALANCE.magic.barrowLegionArmyCapacityMultiplier)
+  })
+
+  it('lets the soldiers raised over capacity desert once the Barrow Legion fades', () => {
+    const state = createRealm({
+      circleIds: ['dark'],
+      population: 200,
+      buildings: { house: 60, barracks: 4 },
+      workers: { barracks: 8 },
+      resources: { food: 100_000 },
+    })
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[3]!
+    state.magic.mana = 500
+    castOn(state, 'dark.barrowLegion')
+    const modifiers = buildModifierIndexForState(state, testRegistry)
+    state.soldiersAtHome = capacityOf(state, testRegistry, modifiers, 'army')
+    const raisedStrength = state.soldiersAtHome
+
+    // A tick snapshots its modifiers before magic runs, so the drop lands on the next one.
+    const atExpiry = advanceGame(state, BALANCE.magic.burstDurationSeconds + 1, testRegistry)
+    const afterExpiry = advanceGame(atExpiry, 600, testRegistry)
+
+    expect(atExpiry.magic.activeBuffs).toHaveLength(0)
+    expect(afterExpiry.soldiersAtHome).toBeLessThan(raisedStrength)
+  })
+
+  it('stops mana returning while the Pact of Hai and Yah holds', () => {
+    const state = createRealm({ circleIds: ['dark'], resources: { food: 1_000_000 } })
+    state.magic.experience.dark = BALANCE.magic.tierExperienceThresholds[5]!
+    // A full pool and no more: anything above capacity is clamped away on the first tick.
+    state.magic.mana = currentManaCapacity(
+      state,
+      testRegistry,
+      buildModifierIndexForState(state, testRegistry),
+    )
+    castOn(state, 'dark.pactOfHaiAndYah')
+    const manaAfterCasting = state.magic.mana
+
+    const later = advanceGame(state, 30 * 60, testRegistry)
+
+    expect(manaAfterCasting).toBeLessThan(
+      currentManaCapacity(state, testRegistry, buildModifierIndexForState(state, testRegistry)),
+    )
+    expect(later.magic.mana).toBe(manaAfterCasting)
   })
 
   it('regenerates mana up to the pool the mage has earned and no further', () => {

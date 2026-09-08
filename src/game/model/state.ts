@@ -130,7 +130,7 @@ export interface GameState {
   readonly defeatedConquestTargets: Record<ConquestTargetId, number>
   highestConquestTierDefeated: number
   highestThieveryTierRobbed: number
-  /** Feeds the resurrection spells, which trade on what the last battle cost you. */
+  /** Feeds Phoenix Pyre, which trades on what the last battle cost you. */
   lastBattleSoldiersLost: number
   completedAscensionStages: number
   hasAscended: boolean

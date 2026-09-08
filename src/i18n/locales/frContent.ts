@@ -262,17 +262,17 @@ export const FR_CONTENT = {
     'dark.transmute': {
       name: 'Transmutation',
       description:
-        'Yah tient un registre : un dixième de votre plus grande réserve devient la ressource qui vous manque le plus. Un cercle plus profond perd moins dans l’échange, et au plus profond il y gagne.',
+        'Yah tient un registre : un dixième de votre plus grande réserve est dépensé, et tout le reste monte d’une part de ce montant. Un cercle plus profond perd moins dans l’échange, et au plus profond il y gagne.',
     },
     'dark.sacrifice': {
       name: 'Sacrifice',
       description:
-        'Un dixième de votre peuple est donné à Yah, et ce qu’il valait revient en marchandises.',
+        'Un dixième de votre peuple est donné à Yah, et une heure du travail qu’il aurait accompli revient d’un coup — plus votre royaume produit, plus l’offrande est riche.',
     },
-    'dark.raiseThrall': {
-      name: 'Lever les Serfs',
+    'dark.barrowLegion': {
+      name: 'Légion des Tertres',
       description:
-        'Les morts de votre dernière bataille se relèvent en soldats, et ils n’ont besoin d’aucune maison.',
+        'Yah ouvre les tertres, et pendant dix minutes vos casernes tiennent deux fois plus de soldats. Recrutez et marchez sans attendre — à la fin, tout soldat au-delà de votre véritable capacité déserte, mais une armée déjà en campagne est épargnée jusqu’à son retour.',
     },
     'dark.soulHarvest': {
       name: 'Moisson des Âmes',
@@ -281,7 +281,7 @@ export const FR_CONTENT = {
     'dark.pactOfHaiAndYah': {
       name: 'Pacte de Hai et Yah',
       description:
-        'Les deux dieux marchent avec chaque armée que vous envoyez : attaque +80 %, et trois pertes sur quatre sont épargnées.',
+        'Les deux dieux marchent avec vous, et le prix est tout autre sort : production et attaque doublent, et aucun mana ne revient tant que le pacte tient.',
     },
   },
   upgradeLines: {

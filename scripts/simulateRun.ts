@@ -215,13 +215,14 @@ function cheapestFirst(
 /** Feeding your own citizens to Yah on a timer is not what a careful player does. */
 const SPELLS_THE_STRATEGY_WILL_NOT_CAST: readonly string[] = ['dark.sacrifice']
 
-/** Transmute trades at a loss below the deepest tiers, so it waits for a real shortage. */
+/** Transmute trades at a loss below the deepest tiers, so it waits for a runaway store. */
 function isWorthCasting(state: GameState, spellId: string): boolean {
   if (spellId !== 'dark.transmute') {
     return true
   }
   const stores = RESOURCE_IDS.map((resourceId) => state.resources[resourceId])
-  return Math.min(...stores) < Math.max(...stores) * 0.2
+  const total = stores.reduce((runningTotal, stored) => runningTotal + stored, 0)
+  return total > 0 && Math.max(...stores) > total * 0.5
 }
 
 function castWhateverHelps(state: GameState): void {

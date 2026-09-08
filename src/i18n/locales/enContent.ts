@@ -252,15 +252,15 @@ export const EN_CONTENT = {
     },
     'dark.transmute': {
       name: 'Transmute',
-      description: 'Yah keeps a ledger: a tenth of your largest store becomes the resource you have least of. A deeper circle loses less in the trade, and at the deepest it gains.',
+      description: 'Yah keeps a ledger: a tenth of your largest store is spent, and everything else rises by a share of it. A deeper circle loses less in the trade, and at the deepest it gains.',
     },
     'dark.sacrifice': {
       name: 'Sacrifice',
-      description: 'A tenth of your people are given to Yah, and what they were worth comes back as goods.',
+      description: 'A tenth of your people are given to Yah, and an hour of the work they would have done comes back at once — so the more your realm produces, the richer the offering.',
     },
-    'dark.raiseThrall': {
-      name: 'Raise Thrall',
-      description: 'Your last battle’s dead stand up again as soldiers, and they need no house.',
+    'dark.barrowLegion': {
+      name: 'Barrow Legion',
+      description: 'Yah opens the barrows, and for ten minutes your barracks hold twice as many soldiers. Recruit and march at once — when it fades, anyone above your true capacity deserts, though an army already in the field is spared until it comes home.',
     },
     'dark.soulHarvest': {
       name: 'Soul Harvest',
@@ -268,7 +268,7 @@ export const EN_CONTENT = {
     },
     'dark.pactOfHaiAndYah': {
       name: 'Pact of Hai and Yah',
-      description: 'Both gods march with every army you send: attack +80%, and three losses in four are spared.',
+      description: 'Both gods march with you, and the price is every other spell: production and attack double, and no mana returns while the pact holds.',
     },
   },
   upgradeLines: {
