@@ -321,6 +321,10 @@ export const FR_CONTENT = {
       name: 'Militaire',
       flavor: 'Exercice, discipline et machines de guerre.',
     },
+    command: {
+      name: 'Commandement',
+      flavor: 'Des officiers à qui confier une armée entière.',
+    },
     thievery: {
       name: 'Larcin',
       flavor: 'Le métier discret, pratiqué comme il faut.',
@@ -450,6 +454,14 @@ export const FR_CONTENT = {
     'military.siegeEngines': {
       name: 'Machines de siège',
       flavor: 'Les murs cessent d’être un argument.',
+    },
+    'command.warCaptains': {
+      name: 'Capitaines de guerre',
+      flavor: 'Une deuxième colonne, et quelqu’un pour la mener.',
+    },
+    'command.warGenerals': {
+      name: 'Généraux de guerre',
+      flavor: 'Trois campagnes à la fois, et aucune à surveiller toi-même.',
     },
     'thievery.lockpicks': {
       name: 'Passe-partout',

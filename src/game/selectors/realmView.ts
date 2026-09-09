@@ -63,7 +63,9 @@ import {
 } from '../systems/upgrades'
 import {
   checkExpeditionRefusal,
+  armiesInTheField,
   armiesOutAgainst,
+  maximumArmiesInTheField,
   computeAttackPowerEstimate,
   computeLegSeconds,
   computeTargetDefenseEstimate,
@@ -160,6 +162,8 @@ export interface RealmView {
   readonly upgrades: readonly UpgradeView[]
   readonly spells: readonly SpellView[]
   readonly circles: readonly MagicCircleView[]
+  readonly armiesInTheField: number
+  readonly maximumArmiesInTheField: number
   readonly conquestTargets: readonly ConquestTargetView[]
   readonly thieveryTargets: readonly ThieveryTargetView[]
   readonly ascension: AscensionView
@@ -304,6 +308,8 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
     upgrades,
     spells,
     circles,
+    armiesInTheField: armiesInTheField(state),
+    maximumArmiesInTheField: maximumArmiesInTheField(state, registry),
     conquestTargets,
     thieveryTargets,
     ascension: {

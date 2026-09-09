@@ -41,6 +41,7 @@ export type UpgradeLineId =
   | 'logistics'
   | 'masonry'
   | 'military'
+  | 'command'
   | 'thievery'
   | 'arcana'
   | 'gathering'

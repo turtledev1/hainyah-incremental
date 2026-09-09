@@ -11,6 +11,7 @@ import {
   buildModifierIndex,
   collectActiveModifiers,
   resolveMultiplier,
+  resolveValue,
   safeDivide,
 } from './modifiers'
 import { addResources, emitEvent } from './stateHelpers'
@@ -23,8 +24,27 @@ export function armiesOutAgainst(state: GameState, targetId: ConquestTargetId): 
   return state.expeditions.filter((expedition) => expedition.targetId === targetId).length
 }
 
+export function armiesInTheField(state: GameState): number {
+  return state.expeditions.length
+}
+
+export function maximumArmiesInTheField(state: GameState, registry: ContentRegistry): number {
+  return Math.floor(
+    resolveValue(
+      buildModifierIndex(collectActiveModifiers(state, registry)),
+      'warfare.campaignSlots',
+      BALANCE.warfare.baseArmiesInTheField,
+    ),
+  )
+}
+
+export function freeCampaignSlots(state: GameState, registry: ContentRegistry): number {
+  return Math.max(0, maximumArmiesInTheField(state, registry) - armiesInTheField(state))
+}
+
 export const EXPEDITION_REFUSALS = [
   'unknownTarget',
+  'noCampaignSlotFree',
   'everyPlaceUnderAttack',
   'notEnoughSoldiersAtHome',
   'noSoldiersSent',
@@ -41,6 +61,9 @@ export function checkExpeditionRefusal(
   const target = registry.conquestTargetsById.get(targetId)
   if (!target) {
     return 'unknownTarget'
+  }
+  if (freeCampaignSlots(state, registry) <= 0) {
+    return 'noCampaignSlotFree'
   }
   if (armiesOutAgainst(state, targetId) >= target.placesInTheWorld) {
     return 'everyPlaceUnderAttack'

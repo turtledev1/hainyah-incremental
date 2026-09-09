@@ -12,6 +12,7 @@ export const UPGRADE_LINE_DEFINITIONS: readonly UpgradeLineDefinition[] = [
   { id: 'logistics' },
   { id: 'masonry' },
   { id: 'military' },
+  { id: 'command' },
   { id: 'thievery' },
   { id: 'arcana' },
   { id: 'gathering' },
@@ -227,7 +228,7 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       buildingCounts: { quarry: 25, house: 60 },
       conquestTierDefeated: 3,
     },
-    modifiers: [{ target: 'constructionSpeed', operation: 'multiply', value: 6.6 }],
+    modifiers: [{ target: 'constructionSpeed', operation: 'multiply', value: 4.5 }],
   },
 
   {
@@ -264,6 +265,25 @@ export const UPGRADE_DEFINITIONS: readonly UpgradeDefinition[] = [
       { target: 'warfare.attackPower', operation: 'multiply', value: 2.7 },
       { target: 'warfare.casualtyRate', operation: 'multiply', value: 0.8 },
     ],
+  },
+
+  {
+    id: 'command.warCaptains',
+    lineId: 'command',
+    costs: { wood: 4_000, stone: 2_000, gold: 8_000 },
+    requires: { buildingCounts: { barracks: 5 }, conquestTierDefeated: 2 },
+    modifiers: [{ target: 'warfare.campaignSlots', operation: 'add', value: 1 }],
+  },
+  {
+    id: 'command.warGenerals',
+    lineId: 'command',
+    costs: { wood: 60_000, stone: 40_000, gold: 120_000 },
+    requires: {
+      upgradeIds: ['command.warCaptains'],
+      buildingCounts: { barracks: 20 },
+      conquestTierDefeated: 4,
+    },
+    modifiers: [{ target: 'warfare.campaignSlots', operation: 'add', value: 2 }],
   },
 
   {

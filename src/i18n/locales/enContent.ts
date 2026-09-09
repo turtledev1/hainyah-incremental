@@ -308,6 +308,10 @@ export const EN_CONTENT = {
       name: 'Military',
       flavor: 'Drill, discipline and engines of war.',
     },
+    command: {
+      name: 'Command',
+      flavor: 'Officers who can be trusted with an army of their own.',
+    },
     thievery: {
       name: 'Thievery',
       flavor: 'The quiet trade, practised properly.',
@@ -437,6 +441,14 @@ export const EN_CONTENT = {
     'military.siegeEngines': {
       name: 'Siege Engines',
       flavor: 'Walls stop being an argument.',
+    },
+    'command.warCaptains': {
+      name: 'War Captains',
+      flavor: 'A second column, and someone fit to lead it.',
+    },
+    'command.warGenerals': {
+      name: 'War Generals',
+      flavor: 'Three campaigns at once, and none of them yours to babysit.',
     },
     'thievery.lockpicks': {
       name: 'Lockpicks',

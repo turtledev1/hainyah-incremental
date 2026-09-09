@@ -1,11 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import { createRealm, testRegistry } from '../../test/realmFixtures'
+import { BALANCE } from '../content/balance'
 import { advanceGame } from '../engine/tick'
 import { deriveRealmView } from '../selectors/realmView'
 import type { GameState } from '../model/state'
-import { checkExpeditionRefusal, computeLegSeconds, launchExpedition } from './warfare'
+import {
+  checkExpeditionRefusal,
+  computeLegSeconds,
+  launchExpedition,
+  maximumArmiesInTheField,
+} from './warfare'
 
 const HAMLET = testRegistry.conquestTargetsById.get('hamlet')!
+
+/** The whole command line bought, so the realm may keep every army it can raise in the field. */
+function withCommandersHired(state: GameState): GameState {
+  state.purchasedUpgrades['command.warCaptains'] = 1
+  state.purchasedUpgrades['command.warGenerals'] = 1
+  return state
+}
 
 /** Enough barracks and drill-masters to hold the force, so nothing gets disbanded mid-test. */
 function armedRealm(soldiers: number, overrides: Partial<Parameters<typeof createRealm>[0]> = {}): GameState {
@@ -75,7 +88,7 @@ describe('sending an army', () => {
 
   it('refuses a further army once every place of that kind is under attack', () => {
     const twinThrones = testRegistry.conquestTargetsById.get('twinThrones')!
-    const state = armedRealm(twinThrones.recommendedSoldiers * 2)
+    const state = withCommandersHired(armedRealm(twinThrones.recommendedSoldiers * 2))
     launchExpedition(state, testRegistry, 'twinThrones', twinThrones.recommendedSoldiers)
 
     expect(twinThrones.placesInTheWorld).toBe(1)
@@ -84,19 +97,33 @@ describe('sending an army', () => {
     ).toBe('everyPlaceUnderAttack')
   })
 
-  it('lets as many armies out as the world has places of that kind', () => {
-    const capital = testRegistry.conquestTargetsById.get('capital')!
-    const state = armedRealm(capital.recommendedSoldiers * (capital.placesInTheWorld + 1))
+  it('lets only as many armies out at once as the realm can keep in the field', () => {
+    const state = withCommandersHired(armedRealm(HAMLET.recommendedSoldiers * 4))
+    const armies = maximumArmiesInTheField(state, testRegistry)
 
-    for (let army = 0; army < capital.placesInTheWorld; army += 1) {
+    expect(armies).toBeGreaterThan(BALANCE.warfare.baseArmiesInTheField)
+    expect(HAMLET.placesInTheWorld).toBeGreaterThan(armies)
+    for (let army = 0; army < armies; army += 1) {
       expect(
-        launchExpedition(state, testRegistry, 'capital', capital.recommendedSoldiers),
+        launchExpedition(state, testRegistry, 'hamlet', HAMLET.recommendedSoldiers),
       ).toBeUndefined()
     }
 
-    expect(
-      checkExpeditionRefusal(state, testRegistry, 'capital', capital.recommendedSoldiers),
-    ).toBe('everyPlaceUnderAttack')
+    expect(checkExpeditionRefusal(state, testRegistry, 'hamlet', HAMLET.recommendedSoldiers)).toBe(
+      'noCampaignSlotFree',
+    )
+  })
+
+  it('frees a campaign slot once an army is home, whatever it marched on', () => {
+    const state = withCommandersHired(armedRealm(HAMLET.recommendedSoldiers * 3))
+    for (let army = 0; army < maximumArmiesInTheField(state, testRegistry); army += 1) {
+      launchExpedition(state, testRegistry, 'hamlet', HAMLET.recommendedSoldiers)
+    }
+
+    const afterTheCampaign = advanceGame(state, HAMLET.travelSeconds * 2 + 2, testRegistry)
+
+    expect(afterTheCampaign.expeditions).toHaveLength(0)
+    expect(checkExpeditionRefusal(afterTheCampaign, testRegistry, 'hamlet', 1)).toBeUndefined()
   })
 
   it('frees a place again once the army is home', () => {

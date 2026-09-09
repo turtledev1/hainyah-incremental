@@ -36,6 +36,7 @@ import {
   checkExpeditionRefusal,
   computeAttackPowerEstimate,
   computeTargetDefenseEstimate,
+  freeCampaignSlots,
   launchExpedition,
 } from '../src/game/systems/warfare'
 import { assignWorkers, recruitSoldiers, recruitThieves } from '../src/game/systems/workforce'
@@ -240,19 +241,27 @@ function castWhateverHelps(state: GameState): void {
   }
 }
 
-/** Sends everything at home against the largest place it can comfortably beat. */
+/** Fills every campaign slot, each share sent against the largest place it can beat. */
 function attackWhatCanBeBeaten(state: GameState): void {
   const byDescendingTier = [...registry.conquestTargets].sort((left, right) => right.tier - left.tier)
-  const soldiers = state.soldiersAtHome
 
-  for (const target of byDescendingTier) {
-    if (checkExpeditionRefusal(state, registry, target.id, soldiers) !== undefined) {
-      continue
-    }
-    const power = computeAttackPowerEstimate(state, registry, soldiers, true)
-    const defense = computeTargetDefenseEstimate(state, registry, target.id, true)
-    if (power >= defense * REQUIRED_POWER_MARGIN) {
-      launchExpedition(state, registry, target.id, soldiers)
+  while (freeCampaignSlots(state, registry) > 0) {
+    // A share too small to win anything is worth nobody's march, so try fewer, larger ones.
+    const shares = freeCampaignSlots(state, registry)
+    const launched = Array.from({ length: shares }, (_unused, index) => shares - index).some(
+      (share) => {
+        const soldiers = Math.floor(state.soldiersAtHome / share)
+        const target = byDescendingTier.find(
+          (candidate) =>
+            checkExpeditionRefusal(state, registry, candidate.id, soldiers) === undefined &&
+            computeAttackPowerEstimate(state, registry, soldiers, true) >=
+              computeTargetDefenseEstimate(state, registry, candidate.id, true) *
+                REQUIRED_POWER_MARGIN,
+        )
+        return target !== undefined && launchExpedition(state, registry, target.id, soldiers) === undefined
+      },
+    )
+    if (!launched) {
       return
     }
   }
@@ -273,6 +282,9 @@ function pourIntoTheTemple(state: GameState): void {
   }
 }
 
+/** Stocked as a player with the bulk buttons would, so the serial queue is the limit. */
+const ORDERS_KEPT_QUEUED = 100
+
 /** Most-needed first: taking whatever is cheapest fills every acre with houses. */
 function buildSomething(state: GameState): void {
   const modifiers = buildModifierIndexForState(state, registry)
@@ -291,8 +303,13 @@ function buildSomething(state: GameState): void {
     return
   }
 
-  for (const buildingId of buildingsByNeed(state)) {
-    if (queueBuilding(state, registry, modifiers, buildingId) === undefined) {
+  while (state.constructionQueue.length < ORDERS_KEPT_QUEUED) {
+    const placedThisPass = buildingsByNeed(state).reduce(
+      (placed, buildingId) =>
+        placed + (queueBuilding(state, registry, modifiers, buildingId) === undefined ? 1 : 0),
+      0,
+    )
+    if (placedThisPass === 0) {
       return
     }
   }

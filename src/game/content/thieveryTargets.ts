@@ -8,7 +8,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
     requiredThieves: 1,
     baseSuccessChance: 0.8,
     baseCasualtyRate: 0.08,
-    durationSeconds: 45,
+    durationSeconds: 112,
     loot: { food: 90, wood: 30 },
   },
   {
@@ -17,7 +17,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
     requiredThieves: 2,
     baseSuccessChance: 0.72,
     baseCasualtyRate: 0.1,
-    durationSeconds: 70,
+    durationSeconds: 175,
     loot: { wood: 200, stone: 60 },
   },
   {
@@ -26,7 +26,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
     requiredThieves: 4,
     baseSuccessChance: 0.62,
     baseCasualtyRate: 0.14,
-    durationSeconds: 120,
+    durationSeconds: 300,
     loot: { stone: 520, wood: 180 },
   },
   {
@@ -35,7 +35,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
     requiredThieves: 8,
     baseSuccessChance: 0.5,
     baseCasualtyRate: 0.2,
-    durationSeconds: 210,
+    durationSeconds: 525,
     loot: { gold: 1_300, food: 400 },
   },
   {
@@ -44,7 +44,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
     requiredThieves: 18,
     baseSuccessChance: 0.4,
     baseCasualtyRate: 0.28,
-    durationSeconds: 360,
+    durationSeconds: 900,
     loot: { gold: 5_500, stone: 2_500, wood: 2_500 },
   },
   {
@@ -53,7 +53,7 @@ export const THIEVERY_TARGET_DEFINITIONS: readonly ThieveryTargetDefinition[] = 
     requiredThieves: 45,
     baseSuccessChance: 0.32,
     baseCasualtyRate: 0.35,
-    durationSeconds: 600,
+    durationSeconds: 1_500,
     loot: { gold: 30_000, food: 14_000, wood: 11_000, stone: 11_000 },
   },
 ]

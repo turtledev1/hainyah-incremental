@@ -108,6 +108,7 @@ export const frenchTranslations = {
     },
     expedition: {
       unknownTarget: 'Ce lieu n’existe pas.',
+      noCampaignSlotFree: 'Toutes les armées que ton royaume peut mener sont déjà en campagne.',
       everyPlaceUnderAttack: 'Tous les lieux de ce genre ont déjà une armée en route.',
       notEnoughSoldiersAtHome: 'Vous n’avez pas autant de soldats au pays.',
       noSoldiersSent: 'Envoyez au moins un soldat.',
@@ -153,6 +154,8 @@ export const frenchTranslations = {
         'Les acres se prennent. Les plus grands lieux coûtent plus de soldats et plus de temps.',
       campaignTitle: 'En campagne',
       campaignSubtitle: 'Les armées marchent, combattent à l’arrivée, puis rentrent à pied.',
+      armiesInTheField_one: '{{count}} armée en campagne sur {{maximum}}',
+      armiesInTheField_other: '{{count}} armées en campagne sur {{maximum}}',
       soldiersField: 'soldats',
       power: 'puissance {{power}}',
       targetSummary: '{{acres}} acres · {{garrison}} · {{travel}} par trajet',
@@ -317,6 +320,7 @@ export const frenchTranslations = {
     'warfare.travelSpeed': 'Vitesse de marche',
     'warfare.targetDefense': 'Défense ennemie',
     'warfare.plunder': 'Butin pris',
+    'warfare.campaignSlots': 'Armées en campagne',
   },
 
   realm: {

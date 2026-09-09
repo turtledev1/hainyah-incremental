@@ -6,6 +6,18 @@ import { buildModifierIndexForState, resolveMultiplier } from '../systems/modifi
 import { createRealm } from '../../test/realmFixtures'
 import { englishTranslations } from '../../i18n/locales/en'
 
+/** Tiers of one upgrade line supersede each other, so the best value applies, not the product. */
+function bestAttackPowerReachableBefore(tier: number): number {
+  return Math.max(
+    1,
+    ...testRegistry.upgrades
+      .filter((upgrade) => (upgrade.requires?.conquestTierDefeated ?? 0) < tier)
+      .flatMap((upgrade) => upgrade.modifiers)
+      .filter((modifier) => modifier.target === 'warfare.attackPower')
+      .map((modifier) => modifier.value),
+  )
+}
+
 describe('the content registry', () => {
   it('assembles without tripping any of its own consistency checks', () => {
     expect(testRegistry.races.length).toBeGreaterThan(0)
@@ -62,6 +74,20 @@ describe('the content registry', () => {
     for (let index = 1; index < byTier.length; index += 1) {
       expect(byTier[index]!.recommendedSoldiers).toBeGreaterThan(byTier[index - 1]!.recommendedSoldiers)
       expect(byTier[index]!.acresGained).toBeGreaterThan(byTier[index - 1]!.acresGained)
+    }
+  })
+
+  it('recommends a force that takes the place even on the worst attack roll', () => {
+    const worstRoll = 1 - BALANCE.warfare.attackPowerVariance
+
+    for (const target of testRegistry.conquestTargets) {
+      const power =
+        target.recommendedSoldiers *
+        BALANCE.warfare.powerPerSoldier *
+        bestAttackPowerReachableBefore(target.tier) *
+        worstRoll
+
+      expect(power).toBeGreaterThanOrEqual(target.defenseStrength)
     }
   })
 

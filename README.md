@@ -7,8 +7,10 @@ ruling the world. You start with ten acres and no buildings, and win by finishin
 Wonder of Hai and Yah.
 
 Every building takes one acre, and the only way to get more acres is to conquer them,
-so conquest paces everything else. A full run is a couple of days. The game saves to
-your browser and keeps simulating while you're away, up to 12 hours at a time.
+so conquest paces everything else. You can only keep one army in the field at a time
+until the Command upgrades raise that to three, which makes marching on somewhere
+larger worth more than raiding hamlets forever. A full run is about five days. The game
+saves to your browser and keeps simulating while you're away, up to 12 hours at a time.
 
 ## Development
 

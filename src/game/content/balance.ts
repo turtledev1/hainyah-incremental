@@ -6,8 +6,8 @@ export const BALANCE = {
   manualGatherCooldownSeconds: 0.25,
 
   population: {
-    arrivalsPerSecond: 0.035,
-    extraArrivalsPerRootCitizenPerSecond: 0.04,
+    arrivalsPerSecond: 0.025,
+    extraArrivalsPerRootCitizenPerSecond: 0.028,
     foodEatenPerCitizenPerSecond: 0.05,
     /** Growth pauses unless the granary holds this many seconds of food. */
     foodReserveSecondsRequiredForGrowth: 20,
@@ -55,6 +55,8 @@ export const BALANCE = {
   },
 
   warfare: {
+    /** The `command` upgrade line raises this, to three once both tiers are bought. */
+    baseArmiesInTheField: 1,
     /** Raw combat strength of one soldier before modifiers. */
     powerPerSoldier: 1,
     /** Random swing applied to attack power on resolution, +/- this fraction. */

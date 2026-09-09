@@ -21,6 +21,7 @@ export type ModifierTarget =
   | 'warfare.travelSpeed'
   | 'warfare.targetDefense'
   | 'warfare.plunder'
+  | 'warfare.campaignSlots'
 
 export type ModifierOperation = 'add' | 'multiply'
 

@@ -125,7 +125,8 @@ describe('crediting time away', () => {
       queueBuilding(state, testRegistry, modifiers, 'farm')
       return state
     }
-    const awaySeconds = 7
+    // Must stay under BALANCE.offline.tickAccurateSeconds for the replay path to be used.
+    const awaySeconds = testRegistry.buildingsById.get('house')!.baseConstructionSeconds + 2
 
     const { state: caughtUp } = applyOfflineProgress(queuedRealm(), testRegistry, awaySeconds)
     let watched = queuedRealm()

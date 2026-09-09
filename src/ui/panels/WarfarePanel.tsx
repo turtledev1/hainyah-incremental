@@ -26,9 +26,11 @@ interface WarfarePanelProps {
 function TargetCard({
   target,
   soldiersAtHome,
+  hasCampaignSlotFree,
 }: {
   readonly target: ConquestTargetView
   readonly soldiersAtHome: number
+  readonly hasCampaignSlotFree: boolean
 }) {
   const { t } = useTranslation()
   const attack = useGameStore((store) => store.attack)
@@ -36,7 +38,10 @@ function TargetCard({
 
   const refusal = target.refusalAtRecommendedForce
   const canSend =
-    target.placesFree > 0 && requestedSoldiers >= 1 && requestedSoldiers <= soldiersAtHome
+    hasCampaignSlotFree &&
+    target.placesFree > 0 &&
+    requestedSoldiers >= 1 &&
+    requestedSoldiers <= soldiersAtHome
   const powerPerSoldier =
     target.estimatedAttackPower / Math.max(1, target.definition.recommendedSoldiers)
   const projectedPower = powerPerSoldier * requestedSoldiers
@@ -96,7 +101,9 @@ function TargetCard({
 
         <Tooltip
           title={
-            target.placesFree <= 0
+            !hasCampaignSlotFree
+              ? t('refusals.expedition.noCampaignSlotFree')
+              : target.placesFree <= 0
               ? t('refusals.expedition.everyPlaceUnderAttack')
               : refusal && requestedSoldiers === target.definition.recommendedSoldiers
               ? t(`refusals.expedition.${refusal}`)
@@ -187,7 +194,10 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
 
       <SectionCard
         title={t('panels.conquest.title')}
-        subtitle={t('panels.conquest.subtitle')}
+        subtitle={`${t('panels.conquest.subtitle')} · ${t('panels.conquest.armiesInTheField', {
+          count: view.armiesInTheField,
+          maximum: view.maximumArmiesInTheField,
+        })}`}
       >
         <CardGrid minimumColumnWidth={280}>
           {view.conquestTargets
@@ -197,6 +207,7 @@ export function WarfarePanel({ state, view }: WarfarePanelProps) {
               key={target.definition.id}
               target={target}
               soldiersAtHome={state.soldiersAtHome}
+              hasCampaignSlotFree={view.armiesInTheField < view.maximumArmiesInTheField}
             />
           ))}
         </CardGrid>

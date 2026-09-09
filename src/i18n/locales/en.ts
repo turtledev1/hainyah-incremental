@@ -107,6 +107,7 @@ export const englishTranslations = {
     },
     expedition: {
       unknownTarget: 'No such place.',
+      noCampaignSlotFree: 'Every army you can keep in the field is already on campaign.',
       everyPlaceUnderAttack: 'Every place of that kind already has an army on the way.',
       notEnoughSoldiersAtHome: 'You do not have that many soldiers at home.',
       noSoldiersSent: 'Send at least one soldier.',
@@ -150,6 +151,8 @@ export const englishTranslations = {
       subtitle: 'Acres come from taking them. Larger places cost more soldiers and more time.',
       campaignTitle: 'On campaign',
       campaignSubtitle: 'Armies march, fight when they arrive, then walk home.',
+      armiesInTheField_one: '{{count}} of {{maximum}} armies in the field',
+      armiesInTheField_other: '{{count}} of {{maximum}} armies in the field',
       soldiersField: 'soldiers',
       power: 'power {{power}}',
       targetSummary: '{{acres}} acres · {{garrison}} · {{travel}} each way',
@@ -312,6 +315,7 @@ export const englishTranslations = {
     'warfare.travelSpeed': 'March speed',
     'warfare.targetDefense': 'Enemy defence',
     'warfare.plunder': 'Plunder taken',
+    'warfare.campaignSlots': 'Armies in the field',
   },
 
   realm: {
