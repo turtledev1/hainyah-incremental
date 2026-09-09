@@ -6,6 +6,8 @@
  *
  * SIMULATE_EXPORT_AT_HOURS=48 prints a save from that point, ready to paste into the
  * game's Settings tab — a repeatable way to get a realm of any size for testing.
+ *
+ * SIMULATE_STRATEGY=warlord plays without temples or thieves' guilds.
  */
 import { CONTENT_REGISTRY } from '../src/game/content'
 import { BALANCE } from '../src/game/content/balance'
@@ -51,8 +53,17 @@ const SIMULATION_STEP_SECONDS = 1
 const CLICKS_PER_DECISION_WHILE_TINY = 20
 const REQUIRED_POWER_MARGIN = 1.15
 
-/** Tools, then housing, then the barracks that make the first conquest possible. */
-const OPENING_BUILD_ORDER: readonly BuildingId[] = [
+interface Strategy {
+  /** Tools, then housing, then the barracks that make the first conquest possible. */
+  readonly openingBuildOrder: readonly BuildingId[]
+  readonly buildingShare: (state: GameState) => Record<BuildingId, number>
+  /** Share of the non-military workforce each kind of work should get once fed. */
+  readonly workerShare: readonly (readonly [BuildingId, number])[]
+  readonly castsSpells: boolean
+  readonly runsHeists: boolean
+}
+
+const OPENING_WITH_TEMPLE_AND_GUILD: readonly BuildingId[] = [
   'lumberCamp',
   'quarry',
   'house',
@@ -65,8 +76,7 @@ const OPENING_BUILD_ORDER: readonly BuildingId[] = [
   'thievesGuild',
 ]
 
-/** How the strategy wants its acres divided once the opening is done. */
-const TARGET_BUILDING_SHARE: Record<BuildingId, number> = {
+const BALANCED_BUILDING_SHARE: Record<BuildingId, number> = {
   house: 0.22,
   farm: 0.13,
   lumberCamp: 0.15,
@@ -77,6 +87,116 @@ const TARGET_BUILDING_SHARE: Record<BuildingId, number> = {
   temple: 0.06,
 }
 
+const BUILDING_SHARE_WITHOUT_TEMPLES: Record<BuildingId, number> = {
+  house: 0.22,
+  farm: 0.13,
+  lumberCamp: 0.15,
+  quarry: 0.18,
+  mine: 0.2,
+  barracks: 0.09,
+  thievesGuild: 0.03,
+  temple: 0,
+}
+
+const BALANCED_WORKER_SHARE: readonly (readonly [BuildingId, number])[] = [
+  ['mine', 0.22],
+  ['quarry', 0.24],
+  ['lumberCamp', 0.24],
+  ['temple', 0.14],
+  ['barracks', 0.11],
+  ['thievesGuild', 0.05],
+]
+
+/** The gate on `mining.blastingPowder`, a x2.9 mine multiplier a temple-less run forfeits. */
+const MAGIC_TIER_GATING_THE_BEST_MINE_UPGRADE = 2
+
+const STRATEGIES: Record<string, Strategy> = {
+  balanced: {
+    openingBuildOrder: OPENING_WITH_TEMPLE_AND_GUILD,
+    buildingShare: () => BALANCED_BUILDING_SHARE,
+    workerShare: BALANCED_WORKER_SHARE,
+    castsSpells: true,
+    runsHeists: true,
+  },
+  /** Gives up magic and thievery entirely, to price what they are worth. */
+  warlord: {
+    openingBuildOrder: [
+      'lumberCamp',
+      'quarry',
+      'house',
+      'farm',
+      'mine',
+      'house',
+      'barracks',
+      'house',
+    ],
+    buildingShare: () => ({
+      house: 0.22,
+      farm: 0.13,
+      lumberCamp: 0.16,
+      quarry: 0.2,
+      mine: 0.2,
+      barracks: 0.09,
+      thievesGuild: 0,
+      temple: 0,
+    }),
+    workerShare: [
+      ['mine', 0.27],
+      ['quarry', 0.29],
+      ['lumberCamp', 0.28],
+      ['barracks', 0.16],
+    ],
+    castsSpells: false,
+    runsHeists: false,
+  },
+  noTemples: {
+    openingBuildOrder: [
+      'lumberCamp',
+      'quarry',
+      'house',
+      'farm',
+      'mine',
+      'house',
+      'barracks',
+      'house',
+      'thievesGuild',
+    ],
+    buildingShare: () => BUILDING_SHARE_WITHOUT_TEMPLES,
+    workerShare: [
+      ['mine', 0.26],
+      ['quarry', 0.28],
+      ['lumberCamp', 0.28],
+      ['barracks', 0.13],
+      ['thievesGuild', 0.05],
+    ],
+    castsSpells: false,
+    runsHeists: true,
+  },
+  templesUntilMineUpgrade: {
+    openingBuildOrder: OPENING_WITH_TEMPLE_AND_GUILD,
+    buildingShare: (state) =>
+      highestTierUnlockedInAnyCircle(state, registry) >= MAGIC_TIER_GATING_THE_BEST_MINE_UPGRADE
+        ? BUILDING_SHARE_WITHOUT_TEMPLES
+        : BALANCED_BUILDING_SHARE,
+    workerShare: BALANCED_WORKER_SHARE,
+    castsSpells: true,
+    runsHeists: true,
+  },
+}
+
+function selectStrategy(name: string): Strategy {
+  const selected = STRATEGIES[name]
+  if (!selected) {
+    throw new Error(`Unknown SIMULATE_STRATEGY ${name}: try ${Object.keys(STRATEGIES).join(' or ')}`)
+  }
+  return selected
+}
+
+const STRATEGY_NAME = process.env.SIMULATE_STRATEGY ?? 'balanced'
+const strategy = selectStrategy(STRATEGY_NAME)
+
+const OPENING_BUILD_ORDER = strategy.openingBuildOrder
+
 function totalBuildings(state: GameState): number {
   return Object.values(state.buildings).reduce((runningTotal, count) => runningTotal + count, 0)
 }
@@ -84,7 +204,8 @@ function totalBuildings(state: GameState): number {
 /** Building types ordered by how far each is below its intended share of the realm. */
 function buildingsByNeed(state: GameState): readonly BuildingId[] {
   const built = Math.max(1, totalBuildings(state))
-  return (Object.entries(TARGET_BUILDING_SHARE) as [BuildingId, number][])
+  return (Object.entries(strategy.buildingShare(state)) as [BuildingId, number][])
+    .filter(([, share]) => share > 0)
     .map(([buildingId, share]) => ({
       buildingId,
       deficit: share - state.buildings[buildingId] / built,
@@ -102,15 +223,7 @@ function gatherByHandForOpening(state: GameState): void {
   }
 }
 
-/** Share of the non-military workforce each kind of work should get once fed. */
-const TARGET_WORKER_SHARE: readonly (readonly [BuildingId, number])[] = [
-  ['mine', 0.22],
-  ['quarry', 0.24],
-  ['lumberCamp', 0.24],
-  ['temple', 0.14],
-  ['barracks', 0.11],
-  ['thievesGuild', 0.05],
-]
+const TARGET_WORKER_SHARE = strategy.workerShare
 
 /** Fraction of the workforce held back each pass so the army can be recruited. */
 const WORKFORCE_RESERVED_FOR_RECRUITMENT = 0.3
@@ -376,9 +489,13 @@ function simulate(
       rebalanceWorkers(state)
       fillArmyAndGuild(state)
       buyWhateverIsAffordable(state)
-      castWhateverHelps(state)
+      if (strategy.castsSpells) {
+        castWhateverHelps(state)
+      }
       attackWhatCanBeBeaten(state)
-      runHeists(state)
+      if (strategy.runsHeists) {
+        runHeists(state)
+      }
       pourIntoTheTemple(state)
     }
 
@@ -437,7 +554,7 @@ const chosenCircles = [
   ...circleAccess.choosableCircleIds.slice(0, circleAccess.chosenCircleCount),
 ]
 
-console.log(`Simulating ${raceArgument} with ${chosenCircles.join(', ')} for up to ${maximumDays} days.`)
+console.log(`Simulating ${raceArgument} with ${chosenCircles.join(', ')} for up to ${maximumDays} days, playing ${STRATEGY_NAME}.`)
 console.log(`Offline credit cap: ${formatHours(BALANCE.offline.maximumCreditedSeconds)} (not used here — this is continuous play).`)
 
 const exportAtHours = Number(process.env.SIMULATE_EXPORT_AT_HOURS ?? 0)

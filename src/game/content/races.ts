@@ -57,4 +57,53 @@ export const RACE_DEFINITIONS: readonly RaceDefinition[] = [
       { target: 'warfare.casualtyRate', operation: 'multiply', value: 1.25 },
     ],
   },
+  {
+    id: 'gargoyle',
+    magicCircleAccess: { grantedCircleIds: ['air'], chosenCircleCount: 0, choosableCircleIds: [] },
+    modifiers: [
+      { target: 'warfare.travelSpeed', operation: 'multiply', value: 2 },
+      { target: 'thievery.speed', operation: 'multiply', value: 2 },
+      { target: 'warfare.casualtyRate', operation: 'multiply', value: 2 },
+      { target: 'thievery.casualtyRate', operation: 'multiply', value: 2 },
+      { target: 'populationGrowthRate', operation: 'multiply', value: 0.8 },
+      { target: 'constructionSpeed', operation: 'multiply', value: 0.8 },
+    ],
+  },
+  {
+    id: 'orc',
+    magicCircleAccess: {
+      grantedCircleIds: [],
+      chosenCircleCount: 1,
+      choosableCircleIds: ['fire', 'earth'],
+    },
+    /** Soldiers come out of the housing-capped pool, so army capacity pays the housing penalty back. */
+    modifiers: [
+      { target: 'warfare.attackPower', operation: 'multiply', value: 1.5 },
+      { target: 'capacity.army', operation: 'multiply', value: 2 },
+      { target: 'warfare.plunder', operation: 'multiply', value: 1.25 },
+      { target: 'manualGatherYield', operation: 'multiply', value: 1.5 },
+      { target: 'capacity.population', operation: 'multiply', value: 0.8 },
+      { target: 'consumption.food', operation: 'multiply', value: 1.4 },
+      { target: 'magic.experienceGain', operation: 'multiply', value: 0.75 },
+    ],
+  },
+  {
+    id: 'hobbit',
+    magicCircleAccess: {
+      grantedCircleIds: [],
+      chosenCircleCount: 1,
+      choosableCircleIds: ['air', 'water', 'earth'],
+    },
+    /** Never attack power: a realm that cannot take the first place on ten acres never gets more. */
+    modifiers: [
+      { target: 'thievery.successChance', operation: 'multiply', value: 1.6 },
+      { target: 'thievery.loot', operation: 'multiply', value: 1.4 },
+      { target: 'thievery.casualtyRate', operation: 'multiply', value: 0.4 },
+      { target: 'buildingOutput.farm', operation: 'multiply', value: 1.3 },
+      { target: 'thievery.speed', operation: 'multiply', value: 0.75 },
+      { target: 'warfare.travelSpeed', operation: 'multiply', value: 0.6 },
+      { target: 'warfare.plunder', operation: 'multiply', value: 0.7 },
+      { target: 'buildingOutput.mine', operation: 'multiply', value: 0.75 },
+    ],
+  },
 ]

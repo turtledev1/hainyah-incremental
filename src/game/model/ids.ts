@@ -23,7 +23,7 @@ export const BUILDING_IDS: readonly BuildingId[] = [
   'temple',
 ]
 
-export type RaceId = 'human' | 'dwarf' | 'undead' | 'elf'
+export type RaceId = 'human' | 'dwarf' | 'undead' | 'elf' | 'gargoyle' | 'orc' | 'hobbit'
 
 export type MagicCircleId = 'fire' | 'air' | 'water' | 'earth' | 'dark'
 

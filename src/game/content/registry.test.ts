@@ -136,10 +136,63 @@ describe('each playable race', () => {
   })
 
   it('keeps the Dark Circle away from races that were not promised it', () => {
-    for (const raceId of ['human', 'dwarf'] as const) {
+    for (const raceId of ['human', 'dwarf', 'gargoyle', 'orc', 'hobbit'] as const) {
       const access = testRegistry.racesById.get(raceId)!.magicCircleAccess
       expect(access.grantedCircleIds).not.toContain('dark')
       expect(access.choosableCircleIds).not.toContain('dark')
+    }
+  })
+
+  it('delivers the gargoyle promise: everything arrives twice as fast, and twice as broken', () => {
+    const modifiers = buildModifierIndexForState(
+      createRealm({ raceId: 'gargoyle', circleIds: ['air'] }),
+      testRegistry,
+    )
+
+    expect(resolveMultiplier(modifiers, 'warfare.travelSpeed')).toBe(2)
+    expect(resolveMultiplier(modifiers, 'thievery.speed')).toBe(2)
+    expect(resolveMultiplier(modifiers, 'warfare.casualtyRate')).toBe(2)
+    expect(resolveMultiplier(modifiers, 'thievery.casualtyRate')).toBe(2)
+  })
+
+  it('leaves the orcs stronger at war than a human despite their crowded houses', () => {
+    const modifiers = buildModifierIndexForState(
+      createRealm({ raceId: 'orc', circleIds: ['fire'] }),
+      testRegistry,
+    )
+
+    expect(resolveMultiplier(modifiers, 'capacity.population')).toBeLessThan(1)
+    expect(
+      resolveMultiplier(modifiers, 'warfare.attackPower') *
+        resolveMultiplier(modifiers, 'capacity.army') *
+        resolveMultiplier(modifiers, 'capacity.population'),
+    ).toBeGreaterThan(1)
+  })
+
+  it('delivers the hobbit promise: near-certain heists, and gold they have to steal', () => {
+    const modifiers = buildModifierIndexForState(
+      createRealm({ raceId: 'hobbit', circleIds: ['water'] }),
+      testRegistry,
+    )
+
+    expect(resolveMultiplier(modifiers, 'thievery.successChance')).toBeGreaterThan(1.5)
+    expect(resolveMultiplier(modifiers, 'thievery.casualtyRate')).toBeLessThan(0.5)
+    expect(resolveMultiplier(modifiers, 'buildingOutput.mine')).toBeLessThan(1)
+  })
+
+  /** Two modifiers that leave the food balance where it started are both invisible to the player. */
+  it('never feeds a race better and hungrier at once, which would cancel out', () => {
+    for (const race of testRegistry.races) {
+      const valueFor = (target: string): number =>
+        race.modifiers
+          .filter((modifier) => modifier.target === target && modifier.operation === 'multiply')
+          .reduce((product, modifier) => product * modifier.value, 1)
+
+      const richerFarms = valueFor('buildingOutput.farm')
+      const hungrierMouths = valueFor('consumption.food')
+      const pullBothWays = (richerFarms - 1) * (hungrierMouths - 1) < 0
+
+      expect(pullBothWays && Math.abs(richerFarms * hungrierMouths - 1) < 0.1, race.id).toBe(false)
     }
   })
 

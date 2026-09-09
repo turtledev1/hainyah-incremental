@@ -78,6 +78,53 @@ export const EN_CONTENT = {
         'Fragile in battle: 25% more casualties',
       ],
     },
+    gargoyle: {
+      name: 'Gargoyles',
+      tagline: 'Stone that flies. It arrives first, and it does not arrive whole.',
+      advantages: [
+        'Armies reach a target and return in half the time',
+        'Heists are over in half the time',
+        'The Circle of Air by right, which makes the swift swifter still',
+      ],
+      disadvantages: [
+        'Carved limbs shatter: twice the losses in battle',
+        'Twice the losses on a heist as well',
+        'Chiselled, not born: 20% slower population growth',
+        'Claws of stone are poor at carpentry: buildings rise 20% slower',
+      ],
+    },
+    orc: {
+      name: 'Orcs',
+      tagline: 'They live badly in peace and very well in war.',
+      advantages: [
+        'Every soldier strikes 50% harder',
+        'A barracks packs twice as many of them in',
+        'They sack a place thoroughly: 25% more plunder',
+        'Bare hands that shift 50% more when you gather yourself',
+      ],
+      disadvantages: [
+        'A house that holds five humans holds four orcs',
+        'They eat meat, and a lot of it: 40% more food per head',
+        'No patience for study: 25% less magical experience',
+        'Only the Fire or Earth Circle will have them',
+      ],
+    },
+    hobbit: {
+      name: 'Hobbits',
+      tagline: 'Six meals a day, and someone else always pays for them.',
+      advantages: [
+        'Unmatched thieves: 60% better odds on any job',
+        'They know what is worth taking: 40% more loot',
+        'They slip away: 60% fewer losses on a heist',
+        'The larder is never empty: farms yield 30% more food',
+      ],
+      disadvantages: [
+        'Nothing worth doing is worth rushing: heists take a third longer',
+        'Short legs: armies march 40% slower',
+        'Thieves, not looters: 30% less plunder from a battle',
+        'No love for deep dark places: mines yield 25% less gold',
+      ],
+    },
   },
   buildings: {
     house: {

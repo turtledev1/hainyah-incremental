@@ -78,6 +78,53 @@ export const FR_CONTENT = {
         'Fragiles au combat : 25 % de pertes en plus',
       ],
     },
+    gargoyle: {
+      name: 'Gargouilles',
+      tagline: 'De la pierre qui vole. Elle arrive la première, et elle n’arrive pas entière.',
+      advantages: [
+        'Les armées atteignent leur cible et rentrent en deux fois moins de temps',
+        'Les larcins sont bouclés en deux fois moins de temps',
+        'Le Cercle de l’Air de droit, qui rend les rapides plus rapides encore',
+      ],
+      disadvantages: [
+        'Les membres taillés se brisent : deux fois plus de pertes au combat',
+        'Deux fois plus de pertes en larcin également',
+        'Sculptées, non enfantées : croissance 20 % plus lente',
+        'Des griffes de pierre charpentent mal : bâtiments 20 % plus lents à dresser',
+      ],
+    },
+    orc: {
+      name: 'Orques',
+      tagline: 'Ils vivent mal en paix et très bien en guerre.',
+      advantages: [
+        'Chaque soldat frappe 50 % plus fort',
+        'Une caserne en entasse deux fois plus',
+        'Ils pillent une place à fond : 25 % de butin en plus',
+        'Des mains nues qui ramassent 50 % de plus quand vous récoltez vous-même',
+      ],
+      disadvantages: [
+        'Une maison qui loge cinq humains loge quatre orques',
+        'Ils mangent de la viande, et beaucoup : 40 % de nourriture en plus par tête',
+        'Aucune patience pour l’étude : 25 % d’expérience magique en moins',
+        'Seuls les Cercles du Feu ou de la Terre les accueillent',
+      ],
+    },
+    hobbit: {
+      name: 'Hobbits',
+      tagline: 'Six repas par jour, et c’est toujours un autre qui les paie.',
+      advantages: [
+        'Voleurs sans égal : 60 % de chances en plus sur n’importe quel coup',
+        'Ils savent ce qui vaut d’être pris : 40 % de butin en plus',
+        'Ils s’éclipsent : 60 % de pertes en moins en larcin',
+        'Le cellier n’est jamais vide : les fermes rendent 30 % de nourriture en plus',
+      ],
+      disadvantages: [
+        'Rien qui vaille la peine ne se bâcle : les larcins durent un tiers plus longtemps',
+        'Jambes courtes : les armées marchent 40 % plus lentement',
+        'Voleurs, non pillards : 30 % de butin en moins après une bataille',
+        'Aucun goût pour les profondeurs obscures : les mines rendent 25 % d’or en moins',
+      ],
+    },
   },
   buildings: {
     house: {
