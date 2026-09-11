@@ -9,8 +9,21 @@ Wonder of Hai and Yah.
 Every building takes one acre, and the only way to get more acres is to conquer them,
 so conquest paces everything else. You can only keep one army in the field at a time
 until the Command upgrades raise that to three, which makes marching on somewhere
-larger worth more than raiding hamlets forever. A full run is about five days. The game
-saves to your browser and keeps simulating while you're away, up to 12 hours at a time.
+larger worth more than raiding hamlets forever. A full run is about five days.
+
+## Features
+
+### Offline progress
+
+The game saves to your browser and keeps simulating while you're away, up to 12 hours
+at a time. Same tick as the live game, so nothing is estimated — you just come back to
+a bigger pile of resources and a chronicle of what happened.
+
+### Translations
+
+The game currently supports English and French, which you can pick in the settings.
+Every word lives in `src/i18n/locales`, so adding a language is a translation rather
+than a code change — pull requests welcome.
 
 ## Development
 
@@ -30,11 +43,7 @@ gives the same answer every time. That's how the balance numbers were picked.
 Set `SIMULATE_EXPORT_AT_HOURS=48` to also print an importable save from that point,
 which is handy for testing the late game without playing to it.
 
-## Deploying
-
-`.github/workflows/deploy.yml` publishes to GitHub Pages on push to `main`. Pages
-needs "GitHub Actions" as its source. Vite's `base` is `/hainyah-incremental/`, so it
-has to match the repo name.
+Merging to `main` automatically publishes to GitHub Pages.
 
 ## Layout
 
@@ -59,9 +68,7 @@ in `content/` — no system code. `content/index.ts` validates the whole registr
 start-up (duplicate ids, dangling prerequisites, spells in circles that don't exist)
 and throws rather than silently disabling something.
 
-## Notes
-
-**Modifiers.** Races, buildings, upgrades and spells all contribute the same shape:
+Races, buildings, upgrades and spells all contribute the same shape:
 
 ```ts
 interface Modifier {
@@ -75,12 +82,4 @@ Adds apply before multiplies, which is what lets a modifier remove a rule instea
 just reducing it: the Undead not eating is `consumption.food × 0`. No system knows
 what an Undead is.
 
-**Balance** lives in `content/balance.ts` plus the costs and rates in the content
-files.
-
-**Offline progress** runs the same tick as the browser loop, second by second for the
-first five minutes and then in one-minute buckets. A frame gap over two seconds (a
-throttled or sleeping tab) goes through the same path.
-
-**i18n.** Every word the game shows lives in `src/i18n/locales`, so adding a language is
-a translation rather than a code change. Pick one under Settings.
+Balance lives in `content/balance.ts` plus the costs and rates in the content files.
