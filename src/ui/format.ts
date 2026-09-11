@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 import { contentKeys } from '../i18n/contentKeys'
-import type { ResourceAmounts, ResourceId } from '../game/model/ids'
+import { RESOURCE_IDS, type ResourceAmounts, type ResourceId } from '../game/model/ids'
 
 /** Stops at trillions: past that a made-up suffix is less legible than an exponent. */
 const MAGNITUDE_SUFFIXES = ['', 'k', 'M', 'B', 'T'] as const
@@ -68,10 +68,12 @@ export function formatPercentage(fraction: number): string {
   return `${Math.round(fraction * 100)}%`
 }
 
+/** Ordered like the realm resource display, not like the content declaration. */
 export function amountEntries(amounts: ResourceAmounts): readonly [ResourceId, number][] {
-  return Object.entries(amounts)
-    .filter(([, amount]) => (amount ?? 0) > 0)
-    .map(([resourceId, amount]) => [resourceId as ResourceId, amount ?? 0])
+  return RESOURCE_IDS.filter((resourceId) => (amounts[resourceId] ?? 0) > 0).map((resourceId) => [
+    resourceId,
+    amounts[resourceId] ?? 0,
+  ])
 }
 
 export function formatAmounts(amounts: ResourceAmounts, translate: TFunction): string {

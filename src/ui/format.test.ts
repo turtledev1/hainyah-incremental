@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { formatDuration, formatNumber, formatPerHour, formatRate, formatStockpile } from './format'
+import {
+  amountEntries,
+  formatDuration,
+  formatNumber,
+  formatPerHour,
+  formatRate,
+  formatStockpile,
+} from './format'
 
 describe('a stockpile on screen', () => {
   it('shows whole units, whatever fraction has accrued', () => {
@@ -92,5 +99,27 @@ describe('numbers past the named magnitudes', () => {
 
   it('keeps the sign on an enormous negative', () => {
     expect(formatNumber(-4.98e24)).toBe('-4.98e24')
+  })
+})
+
+describe('a list of resource amounts', () => {
+  it('follows the realm resource display order, whatever order the content declares', () => {
+    expect(amountEntries({ gold: 5, food: 1, stone: 3, wood: 2 })).toEqual([
+      ['food', 1],
+      ['wood', 2],
+      ['stone', 3],
+      ['gold', 5],
+    ])
+  })
+
+  it('keeps that order when only some resources are required', () => {
+    expect(amountEntries({ gold: 10, wood: 4 })).toEqual([
+      ['wood', 4],
+      ['gold', 10],
+    ])
+  })
+
+  it('leaves out resources that cost nothing', () => {
+    expect(amountEntries({ food: 0, wood: 4 })).toEqual([['wood', 4]])
   })
 })
