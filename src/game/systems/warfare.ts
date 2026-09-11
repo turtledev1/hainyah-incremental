@@ -261,21 +261,30 @@ export const advanceExpeditions = ({ state, registry, deltaSeconds, random }: Ti
   }
 }
 
+/** An estimate counts boosts already paid for, or a cast spell changes nothing on screen. */
+function estimateModifierIndex(
+  state: GameState,
+  registry: ContentRegistry,
+  includePendingBoosts: boolean,
+): ModifierIndex {
+  const pendingExpeditionModifiers: readonly Modifier[] = includePendingBoosts
+    ? state.magic.pendingBoosts
+        .filter((boost) => boost.consumeOn === 'expedition')
+        .flatMap((boost) => boost.modifiers)
+    : []
+  return buildModifierIndex([
+    ...collectActiveModifiers(state, registry),
+    ...pendingExpeditionModifiers,
+  ])
+}
+
 export function computeAttackPowerEstimate(
   state: GameState,
   registry: ContentRegistry,
   soldiers: number,
   includePendingBoosts: boolean,
 ): number {
-  const pendingExpeditionModifiers: readonly Modifier[] = includePendingBoosts
-    ? state.magic.pendingBoosts
-        .filter((boost) => boost.consumeOn === 'expedition')
-        .flatMap((boost) => boost.modifiers)
-    : []
-  const index = buildModifierIndex([
-    ...collectActiveModifiers(state, registry),
-    ...pendingExpeditionModifiers,
-  ])
+  const index = estimateModifierIndex(state, registry, includePendingBoosts)
   return soldiers * BALANCE.warfare.powerPerSoldier * resolveMultiplier(index, 'warfare.attackPower')
 }
 
@@ -302,14 +311,20 @@ export function computeTargetDefenseEstimate(
   if (!target) {
     return 0
   }
-  const pendingExpeditionModifiers: readonly Modifier[] = includePendingBoosts
-    ? state.magic.pendingBoosts
-        .filter((boost) => boost.consumeOn === 'expedition')
-        .flatMap((boost) => boost.modifiers)
-    : []
-  const index = buildModifierIndex([
-    ...collectActiveModifiers(state, registry),
-    ...pendingExpeditionModifiers,
-  ])
+  const index = estimateModifierIndex(state, registry, includePendingBoosts)
   return target.defenseStrength * resolveMultiplier(index, 'warfare.targetDefense')
+}
+
+export function computePlunderEstimate(
+  state: GameState,
+  registry: ContentRegistry,
+  targetId: ConquestTargetId,
+  includePendingBoosts: boolean,
+): ResourceAmounts {
+  const target = registry.conquestTargetsById.get(targetId)
+  if (!target) {
+    return {}
+  }
+  const index = estimateModifierIndex(state, registry, includePendingBoosts)
+  return scalePlunder(target.plunder, resolveMultiplier(index, 'warfare.plunder'))
 }

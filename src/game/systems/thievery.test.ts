@@ -7,7 +7,7 @@ import { checkHeistRefusal, computeSuccessChance, launchHeist } from './thievery
 
 const GRANARY = testRegistry.thieveryTargetsById.get('granary')!
 
-function guildRealm(thieves: number, raceId: 'human' | 'undead' = 'human') {
+function guildRealm(thieves: number, raceId: 'human' | 'undead' | 'hobbit' = 'human') {
   return createRealm({
     raceId,
     circleIds: raceId === 'undead' ? ['dark'] : ['air'],
@@ -90,6 +90,62 @@ describe('what the guild shows a young realm', () => {
       'masonsCompound',
       'countingHouse',
     ])
+  })
+})
+
+describe('quoting the haul before the job runs', () => {
+  /** Wood only: the realm neither grows nor eats it, so a delta is pure loot. */
+  const quotedWood = (state: ReturnType<typeof guildRealm>): number =>
+    deriveRealmView(state, testRegistry).thieveryTargets.find(
+      (target) => target.definition.id === 'granary',
+    )!.estimatedBestLoot.wood ?? 0
+
+  it('quotes a human the haul the mark holds', () => {
+    expect(quotedWood(guildRealm(10))).toBe(GRANARY.loot.wood)
+  })
+
+  it('quotes a hobbit more, because hobbits know what is worth taking', () => {
+    expect(quotedWood(guildRealm(10, 'hobbit'))).toBeGreaterThan(GRANARY.loot.wood!)
+  })
+
+  it('quotes more once the guild has bought smoke bombs', () => {
+    const equippedRealm = guildRealm(10)
+    equippedRealm.purchasedUpgrades['thievery.smokeBombs'] = 1
+
+    expect(quotedWood(equippedRealm)).toBeGreaterThan(quotedWood(guildRealm(10)))
+  })
+
+  const quotedSeconds = (state: ReturnType<typeof guildRealm>): number =>
+    deriveRealmView(state, testRegistry).thieveryTargets.find(
+      (target) => target.definition.id === 'granary',
+    )!.estimatedDurationSeconds
+
+  it('quotes a hobbit the longer job time their slow care really costs', () => {
+    expect(quotedSeconds(guildRealm(10))).toBe(GRANARY.durationSeconds)
+    expect(quotedSeconds(guildRealm(10, 'hobbit'))).toBeGreaterThan(GRANARY.durationSeconds)
+  })
+
+  it('never promises a hobbit more than a job brings home, nor much less', () => {
+    let state = guildRealm(GRANARY.requiredThieves * 5, 'hobbit')
+    const quoted = quotedWood(state)
+    const jobSeconds = quotedSeconds(state)
+    state.resources.wood = 0
+    let jobsThatPaid = 0
+
+    for (let job = 0; job < 5; job += 1) {
+      const woodBefore = state.resources.wood
+      launchHeist(state, testRegistry, 'granary')
+      state = advanceGame(state, jobSeconds + 1, testRegistry)
+
+      const taken = state.resources.wood - woodBefore
+      expect(taken).toBeLessThanOrEqual(quoted)
+      if (taken > 0) {
+        jobsThatPaid += 1
+        expect(taken).toBeGreaterThanOrEqual(quoted * BALANCE.thievery.minimumLootFraction)
+      }
+    }
+
+    expect(jobsThatPaid).toBeGreaterThan(0)
   })
 })
 

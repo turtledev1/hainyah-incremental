@@ -196,6 +196,50 @@ describe('estimating the journey', () => {
   })
 })
 
+describe('quoting the plunder before the army marches', () => {
+  const quotedGold = (state: GameState): number =>
+    deriveRealmView(state, testRegistry).conquestTargets.find(
+      (target) => target.definition.id === 'hamlet',
+    )!.estimatedPlunder.gold ?? 0
+
+  it('quotes a human the plunder the map lists', () => {
+    expect(quotedGold(armedRealm(60))).toBe(HAMLET.plunder.gold)
+  })
+
+  it('quotes an orc more than the map lists, because orcs sack a place thoroughly', () => {
+    expect(quotedGold(armedRealm(60, { raceId: 'orc' }))).toBeGreaterThan(HAMLET.plunder.gold!)
+  })
+
+  it('quotes a hobbit less than the map lists, because hobbits are no looters', () => {
+    expect(quotedGold(armedRealm(60, { raceId: 'hobbit' }))).toBeLessThan(HAMLET.plunder.gold!)
+  })
+
+  it('quotes what a victory actually pays an orc, so the card never lies', () => {
+    const state = armedRealm(60, { raceId: 'orc', resources: { food: 0, gold: 0 } })
+    const quoted = quotedGold(state)
+    launchExpedition(state, testRegistry, 'hamlet', 60)
+
+    const afterBattle = advanceGame(state, HAMLET.travelSeconds + 1, testRegistry)
+    const afterReturn = advanceGame(afterBattle, HAMLET.travelSeconds + 1, testRegistry)
+
+    expect(afterReturn.statistics.battlesWon).toBe(1)
+    expect(afterReturn.resources.gold).toBeCloseTo(quoted, 5)
+  })
+
+  it('raises the quote while a plunder spell is running', () => {
+    const soulHarvest = testRegistry.spellsById.get('dark.soulHarvest')!
+    const state = armedRealm(60, { raceId: 'undead', circleIds: ['dark'] })
+    const quotedBefore = quotedGold(state)
+    state.magic.activeBuffs.push({
+      spellId: soulHarvest.id,
+      remainingSeconds: 30,
+      modifiers: soulHarvest.effect.kind === 'buff' ? soulHarvest.effect.modifiers : [],
+    })
+
+    expect(quotedGold(state)).toBeGreaterThan(quotedBefore)
+  })
+})
+
 describe('resolving a battle', () => {
   it('gives the walk home the same length as the march out', () => {
     const state = armedRealm(60, { raceId: 'dwarf' })

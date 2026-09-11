@@ -50,6 +50,8 @@ import {
 import { canAfford, idleCitizens, soldiersAway, thievesAway } from '../systems/stateHelpers'
 import {
   checkHeistRefusal,
+  computeBestLootEstimate,
+  computeHeistSeconds,
   computeSuccessChance,
   type HeistRefusal,
 } from '../systems/thievery'
@@ -68,6 +70,7 @@ import {
   maximumArmiesInTheField,
   computeAttackPowerEstimate,
   computeLegSeconds,
+  computePlunderEstimate,
   computeTargetDefenseEstimate,
   timesConquered,
   type ExpeditionRefusal,
@@ -117,12 +120,15 @@ export interface ConquestTargetView {
   readonly estimatedAttackPower: number
   readonly estimatedDefense: number
   readonly estimatedLegSeconds: number
+  readonly estimatedPlunder: ResourceAmounts
   readonly refusalAtRecommendedForce?: ExpeditionRefusal
 }
 
 export interface ThieveryTargetView {
   readonly definition: ThieveryTargetDefinition
   readonly successChance: number
+  readonly estimatedBestLoot: ResourceAmounts
+  readonly estimatedDurationSeconds: number
   readonly isRevealed: boolean
   readonly refusal?: HeistRefusal
 }
@@ -265,6 +271,7 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
       ),
       estimatedDefense: computeTargetDefenseEstimate(state, registry, definition.id, true),
       estimatedLegSeconds: computeLegSeconds(state, registry, definition.id),
+      estimatedPlunder: computePlunderEstimate(state, registry, definition.id, true),
       refusalAtRecommendedForce: checkExpeditionRefusal(
         state,
         registry,
@@ -277,6 +284,8 @@ export function deriveRealmView(state: GameState, registry: ContentRegistry): Re
   const thieveryTargets: ThieveryTargetView[] = registry.thieveryTargets.map((definition) => ({
     definition,
     successChance: computeSuccessChance(state, registry, definition.id),
+    estimatedBestLoot: computeBestLootEstimate(state, registry, definition.id),
+    estimatedDurationSeconds: computeHeistSeconds(state, registry, definition.id),
     isRevealed: definition.tier <= state.highestThieveryTierRobbed + 2,
     refusal: checkHeistRefusal(state, registry, definition.id),
   }))

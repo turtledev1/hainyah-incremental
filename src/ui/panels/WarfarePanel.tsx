@@ -81,7 +81,7 @@ function TargetCard({
         </Typography>
 
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          {t('panels.conquest.plunder', { loot: formatAmounts(target.definition.plunder, t) })}
+          {t('panels.conquest.plunder', { loot: formatAmounts(target.estimatedPlunder, t) })}
         </Typography>
 
         <Stack direction="row" sx={{ gap: 1, alignItems: "center" }}>

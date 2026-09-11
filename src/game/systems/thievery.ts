@@ -54,6 +54,35 @@ export function computeSuccessChance(
   )
 }
 
+/** A real haul rolls between the minimum fraction and the full amount; this is the top of it. */
+export function computeBestLootEstimate(
+  state: GameState,
+  registry: ContentRegistry,
+  targetId: ThieveryTargetId,
+  extraModifiers: readonly Modifier[] = [],
+): ResourceAmounts {
+  const target = registry.thieveryTargetsById.get(targetId)
+  if (!target) {
+    return {}
+  }
+  const index = buildModifierIndex([...collectActiveModifiers(state, registry), ...extraModifiers])
+  return scaleLoot(target.loot, resolveMultiplier(index, 'thievery.loot'))
+}
+
+export function computeHeistSeconds(
+  state: GameState,
+  registry: ContentRegistry,
+  targetId: ThieveryTargetId,
+  extraModifiers: readonly Modifier[] = [],
+): number {
+  const target = registry.thieveryTargetsById.get(targetId)
+  if (!target) {
+    return 0
+  }
+  const index = buildModifierIndex([...collectActiveModifiers(state, registry), ...extraModifiers])
+  return safeDivide(target.durationSeconds, resolveMultiplier(index, 'thievery.speed'))
+}
+
 export function launchHeist(
   state: GameState,
   registry: ContentRegistry,
@@ -66,13 +95,11 @@ export function launchHeist(
   const target = registry.thieveryTargetsById.get(targetId)!
 
   const appliedBoostSpellIds = consumePendingBoosts(state, 'heist')
-  const index = buildModifierIndex([
-    ...collectActiveModifiers(state, registry),
-    ...modifiersFromSpellIds(registry, appliedBoostSpellIds),
-  ])
-  const durationSeconds = safeDivide(
-    target.durationSeconds,
-    resolveMultiplier(index, 'thievery.speed'),
+  const durationSeconds = computeHeistSeconds(
+    state,
+    registry,
+    targetId,
+    modifiersFromSpellIds(registry, appliedBoostSpellIds),
   )
 
   state.thievesAtHome -= target.requiredThieves

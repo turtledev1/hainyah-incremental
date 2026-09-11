@@ -38,11 +38,11 @@ function MarkCard({ target }: { readonly target: ThieveryTargetView }) {
           {t('panels.thievery.targetSummary', {
             count: target.definition.requiredThieves,
             success: formatPercentage(target.successChance),
-            duration: formatDuration(target.definition.durationSeconds),
+            duration: formatDuration(target.estimatedDurationSeconds),
           })}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ fontFamily: NUMERIC_FONT_FAMILY }}>
-          {t('panels.thievery.takes', { loot: formatAmounts(target.definition.loot, t) })}
+          {t('panels.thievery.takes', { loot: formatAmounts(target.estimatedBestLoot, t) })}
         </Typography>
         <Tooltip
           title={target.refusal ? t(`refusals.heist.${target.refusal}`) : t('actions.sendThemOut')}
