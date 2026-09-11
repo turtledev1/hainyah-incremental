@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
+import type { ModifierIndex } from '../../game/model/modifiers'
 import type { GameState } from '../../game/model/state'
 import type { BuildingView, RealmView } from '../../game/selectors/realmView'
 import { useGameStore } from '../../game/store/gameStore'
@@ -103,11 +104,13 @@ function WorkerControls({
 function BuildingCard({
   building,
   state,
+  modifiers,
   bulkSteps,
   idleCitizens,
 }: {
   readonly building: BuildingView
   readonly state: GameState
+  readonly modifiers: ModifierIndex
   readonly bulkSteps: readonly number[]
   readonly idleCitizens: number
 }) {
@@ -148,6 +151,7 @@ function BuildingCard({
         {describeWorkerContribution(
           building.definition,
           registry,
+          modifiers,
           building.outputPerWorkerPerSecond,
           t,
         ).map((contribution) => (
@@ -254,6 +258,7 @@ export function BuildingsPanel({ state, view }: BuildingsPanelProps) {
             key={building.definition.id}
             building={building}
             state={state}
+            modifiers={view.modifiers}
             bulkSteps={view.bulkSteps}
             idleCitizens={view.idleCitizens}
           />
